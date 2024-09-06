@@ -1,4 +1,4 @@
-G.AddData({
+	G.AddData({
 name:'Homosapientlegacy',
 author:'CX61',
 desc:'We do a little human history replicating and then make up some shit. Some code structure from !pelletsstarPLs magix mod which is amazing.',
@@ -2975,7 +2975,7 @@ func:function()
 		name:'hunting',
 		desc:'@unlocks [hunter]s<>It is a common tragedy that a creature should die so that another may survive.',
 		icon:[15,1],
-		cost:{'experience':5},
+		cost:{'experience':10},
 		req:{'language':true,'tribalism':true},
 		effects:[
 			{type:'show context',what:['hunt']},
@@ -2987,7 +2987,7 @@ func:function()
 		name:'fishing',
 		desc:'@unlocks [fisher]s<>Fishing is more than simply catching fish; it involves knowing where the fish like to gather and which ones are good to eat.//It would be wise to check whether any of your territory contains fish before investing in this technology.',
 		icon:[25,1],
-		cost:{'experience':5},
+		cost:{'experience':10},
 		req:{'language':true,'tribalism':true},
 		effects:[
 			{type:'show context',what:['fish']},
@@ -2998,7 +2998,7 @@ func:function()
 		name:'oral tradition',
 		desc:'@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 		icon:[5,1],
-		cost:{'insight':1,'experience':10},
+		cost:{'insight':1,'experience':20},
 		req:{'language':true},
 		effects:[
 			{type:'provide res',what:{'inspiration':5}},
@@ -3010,7 +3010,7 @@ func:function()
 		name:'tool-making',
 		desc:'@[artisan]s can now create [stone tools]<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
 		icon:[4,1],
-		cost:{'insight':1,'experience':10},
+		cost:{'insight':1,'experience':20},
 		req:{'stone-knapping':true,'carving':true},
 		effects:[
 		],
@@ -3022,7 +3022,7 @@ func:function()
 		name:'basket-weaving',
 		desc:'@[artisan]s can now craft [basket]s<>Baskets are a cheap, if flimsy means of storing food.',
 		icon:[7,1],
-		cost:{'insight':10},
+		cost:{'insight':2,'experience':20},
 		req:{'tool-making':true,'bone-working':true},
 		effects:[
 		],
@@ -3033,7 +3033,7 @@ func:function()
 		name:'scouting',
 		desc:'@unlocks [scout]s, which can discover new territory<>The [scout] is an intrepid traveler equipped to deal with the unknown.',
 		icon:[24,7],
-		cost:{'insight':10,'recording medium':1},
+		cost:{'insight':5,'experience':20},
 		req:{'tool-making':true,'chieftains':true},
 		effects:[
 		],
@@ -3045,7 +3045,7 @@ func:function()
 		//TODO : fishing boats
 		desc:'@allows exploring through ocean shores<>',
 		icon:[26,7],
-		cost:{'insight':15,'recording medium':1},
+		cost:{'insight':10,'experience':50},
 		req:{'tool-making':true,'woodcutting':true},
 		effects:[
 			{type:'allow',what:['shore exploring']},
@@ -3057,7 +3057,7 @@ func:function()
 		//TODO : in the future, boats will be units or resources
 		desc:'@allows full ocean exploring<>',
 		icon:[28,7],
-		cost:{'insight':40,'recording medium':5},
+		cost:{'insight':50,'experience':200},
 		req:{'canoes':true,'carpentry':true,'construction':true},
 		effects:[
 			{type:'allow',what:['ocean exploring']},
@@ -3080,7 +3080,7 @@ func:function()
 		name:'building',
 		desc:'@unlocks [village]s@unlocks [stockpile]s<>',
 		icon:[9,1],
-		cost:{'insight':25,'recording medium':5},
+		cost:{'insight':25,'experience':100},
 		req:{'sedentism':true,'tool-making':true,'stockpiling':true,'burial':true},
 		effects:[
 		],
@@ -3091,7 +3091,7 @@ func:function()
 		name:'cities',
 		desc:'@unlocks [city]s<>',
 		icon:[29,7],
-		cost:{'insight':50,'recording medium':10},
+		cost:{'insight':50,'experience':100},
 		req:{'construction':true,'code of law':true,'well-digging':true},
 		effects:[
 		],
@@ -3099,9 +3099,9 @@ func:function()
 	});
 	new G.Tech({
 		name:'construction',
-		desc:'@unlocks [house]s@unlocks [warehouse]s (with [stockpiling])<>',
+		desc:'@unlocks [treasury]s@unlocks [warehouse]s (with [stockpiling])<>',
 		icon:[30,7],
-		cost:{'insight':40,'recording medium':10},
+		cost:{'insight':50,'experience':100},
 		req:{'building':true,'masonry':true,'carpentry':true,'quarrying':true,'basic drawing':true},
 		effects:[
 		],
@@ -3112,7 +3112,7 @@ func:function()
 		name:'city planning',
 		desc:'@unlocks [architect]s@Adds 1000 housing space and 20 building slots to each city.<>',
 		icon:[22,8],
-		cost:{'insight':25,'recording medium':10},
+		cost:{'insight':75,'experience':50},
 		req:{'construction':true,'cities':true,'writing':true},
 		effects:[
 		],
@@ -3122,7 +3122,7 @@ func:function()
 		name:'stockpiling',
 		desc:'@unlocks [storage pit]s<>The foresight to store sustenance and materials ahead of time can make or break a budding civilization.',
 		icon:[10,1],
-		cost:{'insight':15},
+		cost:{'insight':25,'experience':50},
 		req:{'digging':true},
 		effects:[
 			{type:'show res',what:['food storage']},
@@ -3136,7 +3136,7 @@ func:function()
 		name:'digging',
 		desc:'@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
 		icon:[11,1],
-		cost:{'insight':10},
+		cost:{'insight':5,'experience':25},
 		req:{'stone-knapping':true},
 		effects:[
 			{type:'show context',what:['dig']},
@@ -3147,8 +3147,8 @@ func:function()
 		name:'well-digging',
 		desc:'@unlocks [well]s<>It takes some thinking to figure out that water can be found if you dig deep enough.//It takes a lot of bravery, however, to find out if it is safe to drink.',
 		icon:[22,7],
-		cost:{'insight':30,'recording medium':5},
-		req:{'building':true,'tool-making':true},
+		cost:{'insight':30,'experience':100},
+		req:{'digging':true,'tool-making':true},
 		effects:[
 		],
 		category:'disc'
@@ -3157,7 +3157,7 @@ func:function()
 		name:'woodcutting',
 		desc:'@unlocks [woodcutter]s<>',//TODO : desc
 		icon:[23,5],
-		cost:{'insight':10},
+		cost:{'insight':5,'experience':30},
 		req:{'stone-knapping':true},
 		effects:[
 			{type:'show context',what:['chop']},
@@ -3169,7 +3169,7 @@ func:function()
 		name:'plant lore',
 		desc:'@[gatherer]s find more [herb]s and [fruit]s@unlock a mode for gatheres to gather more type of herbs<>The knowledge of which plants are good to eat and which mean certain death is a slow and perilous one to learn.',
 		icon:[23,7],
-		cost:{'insight':20},
+		cost:{'experience':50},
 		req:{'oral tradition':true,'basket-weaving':true},
 		effects:[
 			{type:'show context',what:['herbgather']},
@@ -3180,7 +3180,7 @@ func:function()
 		name:'healing',
 		desc:'@unlocks [healer]s<>',
 		icon:[25,7],
-		cost:{'insight':20},
+		cost:{'insight':20,'experience':50},
 		req:{'plant lore':true,'stone-knapping':true},
 		effects:[
 		],
@@ -3192,7 +3192,7 @@ func:function()
 		name:'ritualism',
 		desc:'@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
 		icon:[12,1],
-		cost:{'culture':15},
+		cost:{'culture':30,'experience':5},
 		req:{'oral tradition':true},
 		effects:[
 			{type:'provide res',what:{'spirituality':10}},
@@ -3204,7 +3204,7 @@ func:function()
 		name:'symbolism',
 		desc:'@[scholar]s produce 50% more [insight]@[storyteller]s produce 50% more [culture]@[soothsayer]s produce 50% more [faith]<>The manifestation of one thing for the meaning of another - to make the cosmos relate to itself.',
 		icon:[13,1],
-		cost:{'culture':15,'insight':15},
+		cost:{'culture':25,'insight':25},
 		req:{'oral tradition':true},
 		effects:[
 		],
@@ -3215,7 +3215,7 @@ func:function()
 		name:'burial',
 		desc:'@unlocks [grave]s@exposed [corpse]s make people even more unhappy<>It is the belief that there might be more to death than is first apparent that drives us to bury our deceased.',
 		icon:[14,1],
-		cost:{'insight':20},
+		cost:{'culture':25,'insight':25,'experience':100,},
 		req:{'ritualism':true,'digging':true},
 		effects:[
 		],
@@ -3229,7 +3229,7 @@ func:function()
 		name:'bone-working',
 		desc:'@[artisan]s can now make [knapped tools] out of [bone]@[bone]s can now be used as [archaic building materials]<>',
 		icon:[22,5],
-		cost:{'insight':5},
+		cost:{'insight':5,'experience':25},
 		req:{'stone-knapping':true},
 		effects:[
 			{type:'make part of',what:['bone'],parent:'archaic building materials'},
@@ -3242,7 +3242,7 @@ func:function()
 		displayName:'Spears and maces',
 		desc:'@[artisan]s can now craft [stone weapons]@unlocks new modes for [hunter]s and [fisher]s<>Using tools as weapons opens a world of possibilities, from hunting to warfare.',
 		icon:[26,1],
-		cost:{'insight':15},
+		cost:{'insight':7,'experience':25},
 		req:{'stone-knapping':true},
 		category:'inno'
 	});
@@ -3250,7 +3250,7 @@ func:function()
 		name:'bows',
 		desc:'@[artisan]s can now craft [bow]s@unlocks new modes for [hunter]s<>',//TODO : desc
 		icon:[27,1],
-		cost:{'insight':15},
+		cost:{'insight':25,'experience':75},
 		req:{'spears':true},
 		category:'inno'
 	});
@@ -3258,7 +3258,7 @@ func:function()
 		name:'fishing hooks',
 		desc:'@unlocks new modes for [fisher]s<>',//TODO : desc
 		icon:[28,1],
-		cost:{'insight':15},
+		cost:{'experience':50},
 		req:{'fishing':true,'spears':true},
 		category:'inno'
 	});
@@ -3266,7 +3266,7 @@ func:function()
 		name:'cooking',
 		desc:'@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
 		icon:[17,1],
-		cost:{'insight':10},
+		cost:{'insight':1,'experience':10},
 		req:{'fire-making':true},
 		category:'disc'
 	});
@@ -3274,7 +3274,7 @@ func:function()
 		name:'curing',
 		desc:'@[firekeeper]s can now prepare [cured meat] and [cured seafood] with [salt], which last much longer<>Storing food with special preparations seems to ward off rot, and comes along with the advent of delicious jerky.',
 		icon:[27,7],
-		cost:{'insight':20},
+		cost:{'experience':50},
 		req:{'cooking':true,'stockpiling':true},
 		category:'disc'
 	});
@@ -3283,7 +3283,7 @@ func:function()
 		name:'sewing',
 		desc:'@unlocks [clothier]s, who work with fabric and can sew [primitive clothes]<>',//TODO : desc
 		icon:[29,1],
-		cost:{'insight':10},
+		cost:{'insight':15,'experience':50},
 		req:{'bone-working':true},
 		effects:[
 		],
@@ -3293,7 +3293,7 @@ func:function()
 		name:'weaving',
 		desc:'@[clothier]s can now sew [basic clothes]<>',
 		icon:[30,1],
-		cost:{'insight':20},
+		cost:{'insight':30,'experience':50},
 		req:{'sewing':true},
 		category:'indu'
 	});
@@ -3301,7 +3301,7 @@ func:function()
 		name:'leather-working',
 		desc:'@[clothier]s can now cure [hide]s into [leather] and use leather in cloth-making (with [weaving])<>',
 		icon:[31,1],
-		cost:{'insight':20},
+		cost:{'experience':75},
 		req:{'sewing':true},
 		category:'indu'
 	});
@@ -3310,7 +3310,7 @@ func:function()
 		name:'smelting',
 		desc:'@unlocks [furnace]s, which turn ore into metal ingots@unlocks [blacksmith workshop]s, which forge metal ingots into metal goods<>',//TODO : desc
 		icon:[26,5],
-		cost:{'insight':30,'recording medium':10},
+		cost:{'insight':30,'experience':75},
 		req:{'fire-making':true,'construction':true},
 		effects:[
 		],
@@ -3321,7 +3321,7 @@ func:function()
 		name:'bronze-working',
 		desc:'@[furnace]s can now make [hard metal ingot]s from [copper ore] and [tin ore]<>',//TODO : desc
 		icon:[28,5],
-		cost:{'insight':30,'recording medium':10},
+		cost:{'insight':50,'experience':200},
 		req:{'smelting':true},
 		effects:[
 		],
@@ -3331,7 +3331,7 @@ func:function()
 		name:'iron-working',
 		desc:'@[furnace]s can now make [hard metal ingot]s from [iron ore]<>',//TODO : desc
 		icon:[27,5],
-		cost:{'insight':30,'recording medium':10},
+		cost:{'insight':100,'experience':400},
 		req:{'smelting':true},
 		effects:[
 		],
@@ -3341,7 +3341,7 @@ func:function()
 		name:'gold-working',
 		desc:'@[furnace]s can now make [precious metal ingot]s from [gold ore]@[blacksmith workshop]s can now forge [gold block]s out of [precious metal ingot]s<>',//TODO : desc
 		icon:[29,5],
-		cost:{'insight':40,'recording medium':10},
+		cost:{'culture':10,'insight':50,'experience':100},
 		req:{'smelting':true},
 		effects:[
 		],
@@ -3351,7 +3351,7 @@ func:function()
 		name:'steel-making',
 		desc:'@[furnace]s can now make [strong metal ingot]s from [iron ore] and [coal]<>',//TODO : desc
 		icon:[30,5],
-		cost:{'insight':40,'recording medium':10},
+		cost:{'insight':200,'experience':1000,'science':1},
 		req:{'iron-working':true},
 		effects:[
 		],
