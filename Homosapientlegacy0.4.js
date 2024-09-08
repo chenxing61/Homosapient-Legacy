@@ -1,4 +1,4 @@
-	G.AddData({
+G.AddData({
 name:'Homosapientlegacy',
 author:'CX61',
 desc:'We do a little human history replicating and then make up some shit. Some code structure from !pelletsstarPLs magix mod which is amazing.',
