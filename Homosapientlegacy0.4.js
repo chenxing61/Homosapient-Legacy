@@ -29,7 +29,9 @@ func:function()
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('elder'))+'"></div><div class="freelabel">x1</div>','1 Elder')+
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('child'))+'"></div><div class="freelabel">x2</div>','4 Children')+
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('baby'))+'"></div><div class="freelabel">x2</div>','A baby to take care of')+
-		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('fruit'))+'"></div><div class="freelabel">x250</div>','250 Fruit')+
+=======
+		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('cured meat'))+'"></div><div class="freelabel">x250</div>','250 cured meat')+
+>>>>>>> d33eec1237b26b5acb211adc7a3175d5473ba503
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('water'))+'"></div><div class="freelabel">x250</div>','250 Water')+
 		'</div>'+
 		'<div class="par fancyText bitBiggerText" style="color:blue"><b>Interested in the mod?<a href="https://discord.com/invite/7XcgfTp7V8" target="_blank">Join the discord!</a></b></div>'+
@@ -1102,7 +1104,6 @@ func:function()
 		name:'fruit',
 		desc:'[fruit,Fruits], whether gathered from berry bushes or fruit trees, are both sweet-tasting and good for you.',
 		icon:[4,7],
-		startWith:250,
 		turnToByContext:{'eating':{'health':0.02,'happiness':0.01},'decay':{'spoiled food':1}},
 		partOf:'food',
 		category:'food',
@@ -1137,6 +1138,7 @@ func:function()
 		name:'cured meat',
 		desc:'[cured meat] is interestingly tough and can keep for months without spoiling.',
 		icon:[11,6],
+		startWith:250,
 		turnToByContext:{'eating':{'health':0.02,'happiness':0.05,'bone':0.1},'decay':{'cured meat':0.95,'spoiled food':0.05}},
 		partOf:'food',
 		category:'food',
@@ -2139,11 +2141,11 @@ func:function()
 	
 		},
 		effects:[
-			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:10,mode:'drilling wood to start fire'},
-			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:5,mode:'flint and stone'},
+			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:2,mode:'drilling wood to start fire'},
+			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:2,mode:'flint and stone'},
 			{type:'convert',from:{'stick':5,'herb':2},into:{'torch':1},every:1,mode:'make torches'},
-			{type:'convert',from:{'meat':1,'fire pit':0.01},into:{'cooked meat':1},every:1,repeat:5,mode:'cook'},
-			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:1,repeat:5,mode:'cook'},
+			{type:'convert',from:{'meat':1,'fire pit':0.01},into:{'cooked meat':1},every:2,repeat:5,mode:'cook'},
+			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:2,repeat:5,mode:'cook'},
 			{type:'convert',from:{'meat':1,'salt':1,'fire pit':0.01},into:{'cured meat':2},every:1,repeat:10,mode:'cure'},
 			{type:'convert',from:{'seafood':1,'salt':1,'fire pit':0.01},into:{'cured seafood':2},every:1,repeat:10,mode:'cure'},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -2166,13 +2168,12 @@ func:function()
 		upkeep:{'coin':0.2},
 		gizmos:true,
 		modes:{
-			'clay pots':{name:'Craft pots out of clay',icon:[1,7,13,5],desc:'Craft [pot]s from 3 [clay] each; requires [fire pit]s.'},
-			'mud pots':{name:'Craft pots out of mud',icon:[0,7,13,5],desc:'Craft [pot]s from 10 [mud] each; requires [fire pit]s.'},
+			'any':{name:'Craft pots out of basic materials',icon:[1,7,13,5],desc:'Craft [pot]s from 3 [clay] or 10 [mud] each; requires [fire pit]s.'},
 			'preserve knowledge':{name:'Carve knowledge by firing them onto the clay ',icon:[1,7,13,5],desc:'Craft [recording medium]s from 50 [clay] each; requires [fire pit]s.'},
 		},
 		effects:[
-			{type:'convert',from:{'clay':3,'fire pit':0.01},into:{'pot':1},every:3,repeat:2,mode:'clay pots'},
-			{type:'convert',from:{'mud':10,'fire pit':0.01},into:{'pot':1},every:6,mode:'mud pots'},
+			{type:'convert',from:{'clay':3,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
+			{type:'convert',from:{'mud':10,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
 			{type:'convert',from:{'mud':50,'fire pit':0.05},into:{'recording medium':1},every:1,mode:'preserve knowledge'},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
