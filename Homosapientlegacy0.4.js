@@ -2146,11 +2146,11 @@ func:function()
 	
 		},
 		effects:[
-			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:10,mode:'drilling wood to start fire'},
-			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:5,mode:'flint and stone'},
+			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:2,mode:'drilling wood to start fire'},
+			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:2,mode:'flint and stone'},
 			{type:'convert',from:{'stick':5,'herb':2},into:{'torch':1},every:1,mode:'make torches'},
-			{type:'convert',from:{'meat':1,'fire pit':0.01},into:{'cooked meat':1},every:1,repeat:5,mode:'cook'},
-			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:1,repeat:5,mode:'cook'},
+			{type:'convert',from:{'meat':1,'fire pit':0.01},into:{'cooked meat':1},every:2,repeat:5,mode:'cook'},
+			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:2,repeat:5,mode:'cook'},
 			{type:'convert',from:{'meat':1,'salt':1,'fire pit':0.01},into:{'cured meat':2},every:1,repeat:10,mode:'cure'},
 			{type:'convert',from:{'seafood':1,'salt':1,'fire pit':0.01},into:{'cured seafood':2},every:1,repeat:10,mode:'cure'},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -2173,13 +2173,12 @@ func:function()
 		upkeep:{'coin':0.2},
 		gizmos:true,
 		modes:{
-			'clay pots':{name:'Craft pots out of clay',icon:[1,7,13,5],desc:'Craft [pot]s from 3 [clay] each; requires [fire pit]s.'},
-			'mud pots':{name:'Craft pots out of mud',icon:[0,7,13,5],desc:'Craft [pot]s from 10 [mud] each; requires [fire pit]s.'},
+			'any':{name:'Craft pots out of basic materials',icon:[1,7,13,5],desc:'Craft [pot]s from 3 [clay] or 10 [mud] each; requires [fire pit]s.'},
 			'preserve knowledge':{name:'Carve knowledge by firing them onto the clay ',icon:[1,7,13,5],desc:'Craft [recording medium]s from 50 [clay] each; requires [fire pit]s.'},
 		},
 		effects:[
-			{type:'convert',from:{'clay':3,'fire pit':0.01},into:{'pot':1},every:3,repeat:2,mode:'clay pots'},
-			{type:'convert',from:{'mud':10,'fire pit':0.01},into:{'pot':1},every:6,mode:'mud pots'},
+			{type:'convert',from:{'clay':3,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
+			{type:'convert',from:{'mud':10,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
 			{type:'convert',from:{'mud':50,'fire pit':0.05},into:{'recording medium':1},every:1,mode:'preserve knowledge'},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
