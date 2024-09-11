@@ -3060,7 +3060,7 @@ func:function()
 		desc:'@[artisan]s can now craft [basket]s<>Baskets are a cheap, if flimsy means of storing food.',
 		icon:[7,1],
 		cost:{'insight':2,'experience':20},
-		req:{'tool-making':true,'bone-working':true},
+		req:{'tool-making':true},
 		effects:[
 		],
 		category:'indu'
