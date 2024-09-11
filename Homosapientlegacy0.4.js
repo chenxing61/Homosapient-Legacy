@@ -29,9 +29,7 @@ func:function()
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('elder'))+'"></div><div class="freelabel">x1</div>','1 Elder')+
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('child'))+'"></div><div class="freelabel">x2</div>','4 Children')+
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('baby'))+'"></div><div class="freelabel">x2</div>','A baby to take care of')+
-=======
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('cured meat'))+'"></div><div class="freelabel">x250</div>','250 cured meat')+
->>>>>>> d33eec1237b26b5acb211adc7a3175d5473ba503
 		G.textWithTooltip('<div class="icon freestanding" style="'+G.getIconUsedBy(G.getRes('water'))+'"></div><div class="freelabel">x250</div>','250 Water')+
 		'</div>'+
 		'<div class="par fancyText bitBiggerText" style="color:blue"><b>Interested in the mod?<a href="https://discord.com/invite/7XcgfTp7V8" target="_blank">Join the discord!</a></b></div>'+
