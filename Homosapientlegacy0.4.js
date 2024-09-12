@@ -1,4 +1,4 @@
-	G.AddData({
+G.AddData({
 name:'Homosapientlegacy',
 author:'CX61',
 desc:'We do a little human history replicating and then make up some shit. Some code structure from !pelletsstarPLs magix mod which is amazing.',
@@ -240,14 +240,7 @@ func:function()
 		}
 		return mult;
 	}
-	G.deleteTrait=function(me)
-	{
-			var index=G.traitsOwned.indexOf(me);
-			G.traitsOwned.splice(index,1);//remove trait
-			G.traitsOwnedNames.splice(index,1);
-			G.applyKnowEffects(me,true,true);
-			G.update['trait']();
-	}
+
 	
 	
 	/*=====================================================================================
@@ -1109,7 +1102,6 @@ func:function()
 		name:'fruit',
 		desc:'[fruit,Fruits], whether gathered from berry bushes or fruit trees, are both sweet-tasting and good for you.',
 		icon:[4,7],
-		startWith:250,
 		turnToByContext:{'eating':{'health':0.02,'happiness':0.01},'decay':{'spoiled food':1}},
 		partOf:'food',
 		category:'food',
@@ -1144,6 +1136,7 @@ func:function()
 		name:'cured meat',
 		desc:'[cured meat] is interestingly tough and can keep for months without spoiling.',
 		icon:[11,6],
+		startWith:250,
 		turnToByContext:{'eating':{'health':0.02,'happiness':0.05,'bone':0.1},'decay':{'cured meat':0.95,'spoiled food':0.05}},
 		partOf:'food',
 		category:'food',
@@ -1886,7 +1879,7 @@ func:function()
 			'carry water':{name:'carry water',use:{'pot':1},icon:[7,6],desc:'Making use of pots and carry liquids back to settlements.',req:{'pottery':true}}
 		},
 		effects:[
-			{type:'gather',what:{'water':6},context:'watergather',amount:6,max:12,mode:'carry water'},
+			{type:'gather',what:{'water':10},context:'watergather',amount:10,max:20,mode:'carry water'},
 			{type:'provide',what:{'infrastructure':10},mode:'carry material'},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -2852,7 +2845,7 @@ func:function()
 			return '<div class="info"><div class="par">'+(this.choices.length==0?'Generate new research opportunities.<br>The cost scales with your Wisdom resource.':'Reroll into new research opportunities if none of the available choices suit you.<br>Cost increases with each reroll, but will decrease again over time.')+'</div><div>Cost : '+G.getCostString(this.getCosts(),true)+'.</div></div>';
 		}
 	});
-	
+/// T0
 	new G.Tech({
 		name:'forest origin',
 		desc:'Your people came from tribes of the forests, which granted them better eyesights in gathering.<>@[gatherer] efficiency increased by 10%.',
@@ -2946,6 +2939,7 @@ func:function()
 		],
 		category:'indu'
 	});
+///T1
 	new G.Tech({
 		name:'language',
 		desc:'@[chieftain] generates more insights @provides 5 [inspiration]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
@@ -2993,6 +2987,7 @@ func:function()
 		],
 		category:'disc'
 	});
+///T2
 	new G.Tech({
 		name:'oral tradition',
 		desc:'@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
@@ -3006,6 +3001,28 @@ func:function()
 		category:'wisd'
 	});
 	new G.Tech({
+		name:'ritualism',
+		desc:'@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
+		icon:[12,1],
+		cost:{'culture':30,'experience':5},
+		req:{'oral tradition':true},
+		effects:[
+			{type:'provide res',what:{'spirituality':10}},
+		],
+		category:'reli'
+	});
+	new G.Tech({
+		name:'chieftains',
+		desc:'@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
+		icon:[22,6],
+		cost:{'insight':5,'experience':25},
+		req:{'oral tradition':true},
+		effects:[
+			{type:'provide res',what:{'authority':10}},
+		],
+		category:'order'
+	});
+	new G.Tech({
 		name:'tool-making',
 		desc:'@[artisan]s can now create [stone tools]<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
 		icon:[4,1],
@@ -3016,16 +3033,92 @@ func:function()
 		chance:3,
 		category:'indu'
 	});
-	
+	new G.Tech({
+		name:'digging',
+		desc:'@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
+		icon:[11,1],
+		cost:{'insight':5,'experience':25},
+		req:{'stone-knapping':true},
+		effects:[
+			{type:'show context',what:['dig']},
+		],
+		category:'disc'
+	});
+	new G.Tech({
+		name:'woodcutting',
+		desc:'@unlocks [woodcutter]s<>',//TODO : desc
+		icon:[23,5],
+		cost:{'insight':5,'experience':30},
+		req:{'stone-knapping':true},
+		effects:[
+			{type:'show context',what:['chop']},
+		],
+		category:'indu'
+	});
 	new G.Tech({
 		name:'basket-weaving',
 		desc:'@[artisan]s can now craft [basket]s<>Baskets are a cheap, if flimsy means of storing food.',
 		icon:[7,1],
 		cost:{'insight':2,'experience':20},
-		req:{'tool-making':true,'bone-working':true},
+		req:{'tool-making':true},
 		effects:[
 		],
 		category:'indu'
+	});
+	new G.Tech({
+		name:'plant lore',
+		desc:'@[gatherer]s find more [herb]s and [fruit]s@unlock a mode for gatheres to gather more type of herbs<>The knowledge of which plants are good to eat and which mean certain death is a slow and perilous one to learn.',
+		icon:[23,7],
+		cost:{'experience':50},
+		req:{'oral tradition':true,'basket-weaving':true},
+		effects:[
+			{type:'show context',what:['herbgather']},
+		],
+		category:'disc'
+	});
+	new G.Tech({
+		name:'sedentism',
+		desc:'@unlocks [primitive settlement]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
+		icon:[8,1],
+		cost:{'insight':5,'experience':50},
+		req:{'digging':true,'language':true},
+		effects:[
+		],
+		chance:3,
+		category:'tradi'
+	});
+	new G.Tech({
+		name:'healing',
+		desc:'@unlocks [healer]s<>',
+		icon:[25,7],
+		cost:{'insight':20,'experience':50},
+		req:{'plant lore':true,'stone-knapping':true},
+		effects:[
+		],
+		chance:2,
+		category:'disc'
+	});
+	new G.Tech({
+		name:'symbolism',
+		desc:'@[scholar]s produce 50% more [insight]@[storyteller]s produce 50% more [culture]@[soothsayer]s produce 50% more [faith]<>The manifestation of one thing for the meaning of another - to make the cosmos relate to itself.',
+		icon:[13,1],
+		cost:{'culture':25,'insight':25},
+		req:{'oral tradition':true},
+		effects:[
+		],
+		category:'wisd'
+	});
+	
+	new G.Tech({
+		name:'burial',
+		desc:'@unlocks [grave]s@exposed [corpse]s make people even more unhappy<>It is the belief that there might be more to death than is first apparent that drives us to bury our deceased.',
+		icon:[14,1],
+		cost:{'culture':25,'insight':25,'experience':100,},
+		req:{'ritualism':true,'digging':true},
+		effects:[
+		],
+		chance:2,
+		category:'reli'
 	});
 	
 	new G.Tech({
@@ -3064,17 +3157,7 @@ func:function()
 		category:'indu'
 	});
 	
-	new G.Tech({
-		name:'sedentism',
-		desc:'@unlocks [primitive settlement]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
-		icon:[8,1],
-		cost:{'insight':5,'experience':50},
-		req:{'digging':true,'language':true},
-		effects:[
-		],
-		chance:3,
-		category:'tradi'
-	});
+
 	new G.Tech({
 		name:'building',
 		desc:'@unlocks [village]s@unlocks [stockpile]s<>',
@@ -3131,17 +3214,7 @@ func:function()
 		category:'indu'
 	});
 	
-	new G.Tech({
-		name:'digging',
-		desc:'@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
-		icon:[11,1],
-		cost:{'insight':5,'experience':25},
-		req:{'stone-knapping':true},
-		effects:[
-			{type:'show context',what:['dig']},
-		],
-		category:'disc'
-	});
+
 	new G.Tech({
 		name:'well-digging',
 		desc:'@unlocks [well]s<>It takes some thinking to figure out that water can be found if you dig deep enough.//It takes a lot of bravery, however, to find out if it is safe to drink.',
@@ -3152,78 +3225,7 @@ func:function()
 		],
 		category:'disc'
 	});
-	new G.Tech({
-		name:'woodcutting',
-		desc:'@unlocks [woodcutter]s<>',//TODO : desc
-		icon:[23,5],
-		cost:{'insight':5,'experience':30},
-		req:{'stone-knapping':true},
-		effects:[
-			{type:'show context',what:['chop']},
-		],
-		category:'indu'
-	});
-	
-	new G.Tech({
-		name:'plant lore',
-		desc:'@[gatherer]s find more [herb]s and [fruit]s@unlock a mode for gatheres to gather more type of herbs<>The knowledge of which plants are good to eat and which mean certain death is a slow and perilous one to learn.',
-		icon:[23,7],
-		cost:{'experience':50},
-		req:{'oral tradition':true,'basket-weaving':true},
-		effects:[
-			{type:'show context',what:['herbgather']},
-		],
-		category:'disc'
-	});
-	new G.Tech({
-		name:'healing',
-		desc:'@unlocks [healer]s<>',
-		icon:[25,7],
-		cost:{'insight':20,'experience':50},
-		req:{'plant lore':true,'stone-knapping':true},
-		effects:[
-		],
-		chance:2,
-		category:'disc'
-	});
-	
-	new G.Tech({
-		name:'ritualism',
-		desc:'@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
-		icon:[12,1],
-		cost:{'culture':30,'experience':5},
-		req:{'oral tradition':true},
-		effects:[
-			{type:'provide res',what:{'spirituality':10}},
-		],
-		category:'reli'
-	});
-	
-	new G.Tech({
-		name:'symbolism',
-		desc:'@[scholar]s produce 50% more [insight]@[storyteller]s produce 50% more [culture]@[soothsayer]s produce 50% more [faith]<>The manifestation of one thing for the meaning of another - to make the cosmos relate to itself.',
-		icon:[13,1],
-		cost:{'culture':25,'insight':25},
-		req:{'oral tradition':true},
-		effects:[
-		],
-		category:'wisd'
-	});
-	
-	new G.Tech({
-		name:'burial',
-		desc:'@unlocks [grave]s@exposed [corpse]s make people even more unhappy<>It is the belief that there might be more to death than is first apparent that drives us to bury our deceased.',
-		icon:[14,1],
-		cost:{'culture':25,'insight':25,'experience':100,},
-		req:{'ritualism':true,'digging':true},
-		effects:[
-		],
-		chance:2,
-		category:'reli'
-	});
-	
 
-	
 	new G.Tech({
 		name:'bone-working',
 		desc:'@[artisan]s can now make [knapped tools] out of [bone]@[bone]s can now be used as [archaic building materials]<>',
@@ -3357,22 +3359,12 @@ func:function()
 		category:'indu'
 	});
 	
-	new G.Tech({
-		name:'chieftains',
-		desc:'@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
-		icon:[22,6],
-		cost:{'insight':10},
-		req:{'oral tradition':true},
-		effects:[
-			{type:'provide res',what:{'authority':10}},
-		],
-		category:'order'
-	});
+
 	new G.Tech({
 		name:'clans',
 		desc:'@unlocks [clan leader]s, which generate [influence]@provides 10 [authority]<>',//TODO : desc
 		icon:[23,6],
-		cost:{'insight':25},
+		cost:{'insight':15,'experience':25},
 		req:{'chieftains':true,'code of law':true},
 		effects:[
 			{type:'provide res',what:{'authority':10}},
@@ -3383,7 +3375,7 @@ func:function()
 		name:'code of law',
 		desc:'@provides 15 [authority]@political units generate more [influence]@[clan leader]s provide [authority]<>',//TODO : desc
 		icon:[24,6],
-		cost:{'insight':20,'recording medium':1},
+		cost:{'insight':20,'experience':20},
 		req:{'symbolism':true,'sedentism':true},
 		effects:[
 			{type:'provide res',what:{'authority':15}},
@@ -3395,7 +3387,7 @@ func:function()
 		name:'mining',
 		desc:'@unlocks [mine]s<>Strike the earth!',
 		icon:[24,5],
-		cost:{'insight':20,'recording medium':5},
+		cost:{'insight':20,'experience':250},
 		req:{'digging':true,'building':true},
 		effects:[
 			{type:'show context',what:['mine']}
@@ -3406,7 +3398,7 @@ func:function()
 		name:'prospecting',
 		desc:'@[mine]s can now be set to mine for specific ores',
 		icon:[25,5],
-		cost:{'insight':35,'recording medium':5},
+		cost:{'insight':50,'experience':500},
 		req:{'mining':true},
 		effects:[
 		],
@@ -3417,7 +3409,7 @@ func:function()
 		name:'quarrying',
 		desc:'@unlocks [quarry,Quarries]<>',
 		icon:[25,6],
-		cost:{'insight':35,'recording medium':5},
+		cost:{'insight':35,'experience':250},
 		req:{'digging':true,'building':true},
 		effects:[
 			{type:'show context',what:['quarry']}
@@ -3429,7 +3421,7 @@ func:function()
 		name:'carving',
 		desc:'@unlocks [carver]s, which can produce a variety of goods out of stone, wood and bone@may lead to the knowledge of better tools<>',
 		icon:[26,6],
-		cost:{'insight':5},
+		cost:{'insight':5,'experience':20},
 		req:{'stone-knapping':true},
 		effects:[
 		],
@@ -3441,7 +3433,7 @@ func:function()
 		name:'gem-cutting',
 		desc:'@[carver]s can now make [gem block]s out of [gems]<>',//TODO : desc
 		icon:[27,6],
-		cost:{'insight':20},
+		cost:{'insight':25,'experience':250},
 		req:{'masonry':true,'tool-making':true},
 		effects:[
 		],
@@ -3452,7 +3444,7 @@ func:function()
 		name:'pottery',
 		desc:'@unlocks [potter]s, which produce goods such as [pot]s out of [clay] and [mud]@unlocks [granary,Granaries] (with [stockpiling])@[digger]s find more [clay]<>',
 		icon:[28,6],
-		cost:{'insight':20},
+		cost:{'insight':5,'experience':250},
 		req:{'fire-making':true,'digging':true,'tool-making':true},
 		effects:[
 		],
@@ -3462,7 +3454,7 @@ func:function()
 		name:'masonry',
 		desc:'@unlocks [kiln]s, which produce a variety of goods such as [brick]s@[carver]s can now turn [stone]s into [cut stone] slowly<>',
 		icon:[29,6],
-		cost:{'insight':35,'recording medium':5},
+		cost:{'insight':25,'experience':250},
 		req:{'building':true,'pottery':true},
 		effects:[
 		],
@@ -3539,7 +3531,14 @@ func:function()
 	TRAITS
 	=======================================================================================*/
 	//chances are evaluated every day and represent how many years (on average) it takes to randomly discover them once they fulfill the requirements
-
+	G.deleteTrait=function(me)
+	{
+			var index=G.traitsOwned.indexOf(me);
+			G.traitsOwned.splice(index,1);//remove trait
+			G.traitsOwnedNames.splice(index,1);
+			G.applyKnowEffects(me,true,true);
+			G.update['trait']();
+	}
 	new G.Trait({
 		name:'end of a period',
 		desc:'@This particular historical period is about to end after 300 days.@The traits earned during this period will wear off.<>Research the permanent trait while they are still avaliable!',
@@ -3762,6 +3761,7 @@ func:function()
 			'none':{name:'none',desc:'Your [worker]s will focus on their profession.'},
 			'gatherer':{name:'gatherer',desc:'Make every [worker] also be a low efficiency gatherer but halfs their original productivity'},
 		},
+		effects:{},
 		req:{'tribalism':true},
 		category:'work',
 	});
