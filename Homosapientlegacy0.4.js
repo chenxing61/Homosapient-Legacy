@@ -3464,7 +3464,7 @@ func:function()
 		name:'carpentry',
 		desc:'@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>',
 		icon:[30,6],
-		cost:{'insight':35,'recording medium':5},
+		cost:{'insight':35,'experience':250},
 		req:{'building':true,'woodcutting':true},
 		effects:[
 		],
