@@ -2146,9 +2146,9 @@ func:function()
 	
 		},
 		effects:[
-			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:2,mode:'drilling wood to start fire'},
-			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:2,mode:'flint and stone'},
-			{type:'convert',from:{'stick':5,'herb':2},into:{'torch':1},every:1,mode:'make torches'},
+			{type:'convert',from:{'stick':24},into:{'fire pit':1},every:4,mode:'drilling wood to start fire'},
+			{type:'convert',from:{'stick':12},into:{'fire pit':1},every:4,mode:'flint and stone'},
+			{type:'convert',from:{'stick':5,'herb':2},into:{'torch':1},every:8,mode:'make torches'},
 			{type:'convert',from:{'meat':1,'fire pit':0.01},into:{'cooked meat':1},every:2,repeat:5,mode:'cook'},
 			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:2,repeat:5,mode:'cook'},
 			{type:'convert',from:{'meat':1,'salt':1,'fire pit':0.01},into:{'cured meat':2},every:1,repeat:10,mode:'cure'},
