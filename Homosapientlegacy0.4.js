@@ -3226,15 +3226,6 @@ func:function()
 		category:'disc'
 	});
 
-	
-
-
-	
-
-	
-
-
-	
 	new G.Tech({
 		name:'bone-working',
 		desc:'@[artisan]s can now make [knapped tools] out of [bone]@[bone]s can now be used as [archaic building materials]<>',
