@@ -1486,7 +1486,7 @@ func:function()
 		},
 	});
 	new G.Res({
-		name:'bow',
+		name:'primitive bow',
 		desc:'A weapon made of [stick,Wood] that fires [stone]-tipped arrows at a distance.'+numbersInfo,
 		icon:[6,9,'H1sheet'],
 		displayUsed:true,
@@ -1855,12 +1855,14 @@ func:function()
 			{type:'gather',context:'foodgather',amount:2,max:4,mode:'gather food only'},
 			{type:'gather',context:'foodgather',what:{'resource depletion':0.05},mode:'gather food only'},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:3,max:6,mode:'gather water only'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:3,max:6,mode:'gather water only',req:{'humid weather':true}},
 			{type:'gather',context:'materialgather',what:{'stick':1,'stone':1,'mud':1},amount:1,max:2,mode:'gather archaic materials',req:{'use of tool':true}},
 			{type:'gather',context:'foodgather',what:{'vegetable':0.5,'fruit':0.5,'herb':-0.5},amount:1,max:1,mode:'gather food only',req:{'plant lore':true}},
 			{type:'gather',context:'herbgather',amount:2,max:2,mode:'gather rare herb',req:{'plant lore':true},use:{'basket':1}},
 			{type:'mult',value:1.1,req:{'forest origin':true}},
 			{type:'mult',value:1.25,req:{'side job of the population':'gatherer'}},
+			
 			
 		],
 		req:{'tribalism':true},
@@ -1876,11 +1878,12 @@ func:function()
 		gizmos:true,
 		modes:{
 			'carry material':{name:'carry materials',icon:[13,3,'H1sheet'],desc:'Provide 10 [infrastructure]'},
-			'carry water':{name:'carry water',use:{'pot':1},icon:[7,6],desc:'Making use of pots and carry liquids back to settlements.',req:{'pottery':true}}
+			'carry water':{name:'carry water',use:{'pot':1},icon:[7,6],desc:'Making use of pots and carry liquids back to settlements. Better than gathering by barehand.',req:{'pottery':true}}
 		},
 		effects:[
 			{type:'gather',what:{'water':10},context:'watergather',amount:10,max:20,mode:'carry water'},
-			{type:'provide',what:{'infrastructure':10},mode:'carry material'},
+			{type:'provide',what:{'infrastructure':50},mode:'carry material'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -1951,7 +1954,7 @@ func:function()
 		effects:[
 			{type:'gather',what:{'culture':0.05},mode:'tell stories'},
 			{type:'gather',what:{'culture':0.05},mode:'tell stories',req:{'symbolism':true}},
-			{type:'convert',from:{'statuette':1},into:{'culture':0.5},mode:'statuette story telling'},
+			{type:'convert',from:{'statuette':1},into:{'culture':0.25},mode:'statuette story telling'},
 			{type:'mult',value:1.2,req:{'wisdom rituals':'on'}},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -1981,10 +1984,11 @@ func:function()
 		effects:[
 			{type:'convert',from:{'stone':1},into:{'knapped tools':1},every:5,mode:'knap'},
 			{type:'convert',from:{'bone':1},into:{'knapped tools':1},every:5,mode:'knap bone'},
-			{type:'convert',from:{'stick':1,'stone':1},into:{'stone tools':1},every:8,mode:'stone tools'},
-			{type:'convert',from:{'stick':1,'stone':1},into:{'stone weapons':1},every:8,mode:'stone weapons'},
-			{type:'convert',from:{'stick':1,'stone':1},into:{'bow':1},every:10,mode:'bows'},
-			{type:'convert',from:{'stick':15},into:{'basket':1},every:10,mode:'baskets'},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone tools':1},every:3,mode:'stone tools'},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone weapons':1},every:3,mode:'stone weapons'},
+			{type:'convert',from:{'stick':4,'stone':1},into:{'primitive bow':1},every:1,mode:'bows'},
+			{type:'convert',from:{'stick':8},into:{'basket':1},every:1,mode:'baskets'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2017,6 +2021,7 @@ func:function()
 			{type:'convert',from:{'stone':10},into:{'cut stone':1},every:15,mode:'cut stone'},
 			{type:'convert',from:{'cut stone':1},into:{'stone':9},every:5,mode:'smash cut stone'},
 			{type:'convert',from:{'gems':10},into:{'gem block':1},every:15,mode:'gem blocks'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2049,6 +2054,7 @@ func:function()
 			{type:'convert',from:{'herb':50},into:{'basic clothes':1},every:20,mode:'weave fiber clothing'},
 			{type:'convert',from:{'hide':1,'water':5,'salt':1,'log':0.1},into:{'leather':1},every:15,mode:'make leather'},
 			{type:'convert',from:{'hide':1,'muddy water':5,'herb':10},into:{'leather':1},every:30,mode:'cheap make leather'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2069,7 +2075,7 @@ func:function()
 		modes:{
 			'endurance hunting':{name:'Endurance hunting',icon:[0,6],desc:'Hunt animals by simply running after them until they get exhausted.//Slow and tedious.'},
 			'spear hunting':{name:'Spear hunting',icon:[5,9],desc:'Hunt animals with spears.',use:{'stone weapons':1},req:{'spears':true}},
-			'bow hunting':{name:'Bow hunting',icon:[6,9],desc:'Hunt animals with bows.',use:{'bow':1},req:{'bows':true}},
+			'bow hunting':{name:'Bow hunting',icon:[6,9],desc:'Hunt animals with bows.',use:{'primitive bow':1},req:{'bows':true}},
 		},
 		effects:[
 			{type:'gather',context:'hunt',amount:1,max:5,mode:'endurance hunting'},
@@ -2078,6 +2084,7 @@ func:function()
 			{type:'gather',context:'hunt',what:{'resource depletion':0.075},mode:'spear hunting'},
 			{type:'gather',context:'hunt',amount:4,max:5,mode:'bow hunting'},
 			{type:'gather',context:'hunt',what:{'resource depletion':0.1},mode:'bow hunting'},//TODO : consuming arrows?
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'function',func:unitGetsConverted({'wounded':1},0.001,0.03,'[X] [people] wounded while hunting.','hunter was','hunters were'),chance:1/30},
 			{type:'mult',value:1.2,req:{'systematic gathering':'on'}},
 			{type:'mult',value:1.15,req:{'jungle origin':true}},
@@ -2111,6 +2118,7 @@ func:function()
 			{type:'gather',context:'fish',what:{'resource depletion':0.05},mode:'catch by hand'},
 			{type:'gather',context:'fish',what:{'resource depletion':0.075},mode:'spear fishing'},
 			{type:'gather',context:'fish',what:{'resource depletion':0.1},mode:'line fishing'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'mult',value:1.2,req:{'systematic gathering':'on'}},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -2146,6 +2154,7 @@ func:function()
 			{type:'convert',from:{'seafood':1,'fire pit':0.01},into:{'cooked seafood':1},every:2,repeat:5,mode:'cook'},
 			{type:'convert',from:{'meat':1,'salt':1,'fire pit':0.01},into:{'cured meat':2},every:1,repeat:10,mode:'cure'},
 			{type:'convert',from:{'seafood':1,'salt':1,'fire pit':0.01},into:{'cured seafood':2},every:1,repeat:10,mode:'cure'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2173,6 +2182,7 @@ func:function()
 			{type:'convert',from:{'clay':3,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
 			{type:'convert',from:{'mud':10,'fire pit':0.01},into:{'pot':1},every:1,mode:'any'},
 			{type:'convert',from:{'mud':50,'fire pit':0.05},into:{'recording medium':1},every:1,mode:'preserve knowledge'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2229,6 +2239,7 @@ func:function()
 		effects:[
 			{type:'gather',context:'dig',amount:1,max:1},
 			{type:'gather',context:'dig',what:{'clay':5},max:1,req:{'pottery':true}},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2254,6 +2265,7 @@ func:function()
 			{type:'gather',context:'quarry',what:{'cut stone':1},max:5,notMode:'off'},
 			{type:'gather',context:'mine',amount:0.005,max:0.05,notMode:'off'},
 			{type:'gather',context:'quarry',amount:10,max:30,every:3,mode:'advanced quarry'},
+			{type:'gather',what:{'experience':3},amount:0.03},
 			{type:'function',func:unitGetsConverted({'wounded':1},0.001,0.01,'[X] [people].','quarry collapsed, wounding its workers','quarries collapsed, wounding their workers'),chance:1/50},
 		],
 		gizmos:true,
@@ -2286,6 +2298,7 @@ func:function()
 			{type:'gather',context:'mine',what:{'tin ore':50},max:30,mode:'tin'},
 			{type:'gather',context:'mine',what:{'iron ore':50},max:30,mode:'iron'},
 			{type:'gather',context:'mine',what:{'gold ore':50},max:30,mode:'gold'},
+			{type:'gather',what:{'experience':3},amount:0.03},
 			{type:'function',func:unitGetsConverted({'wounded':1},0.001,0.01,'[X] [people].','mine collapsed, wounding its miners','mines collapsed, wounding their miners'),chance:1/50},
 		],
 		gizmos:true,
@@ -2315,6 +2328,7 @@ func:function()
 			{type:'convert',from:{'gold ore':9},into:{'precious metal ingot':1},repeat:1,mode:'gold'},
 			{type:'convert',from:{'tin ore':2,'copper ore':9},into:{'hard metal ingot':1},repeat:3,mode:'bronze'},
 			{type:'convert',from:{'iron ore':19,'coal':1},into:{'strong metal ingot':1},repeat:1,mode:'steel'},
+			{type:'gather',what:{'experience':2},amount:0.02},
 			{type:'waste',chance:0.001/1000},
 		],
 		gizmos:true,
@@ -2338,6 +2352,7 @@ func:function()
 			{type:'convert',from:{'soft metal ingot':12},into:{'metal tools':1},repeat:2,mode:'metal tools'},
 			{type:'convert',from:{'hard metal ingot':3},into:{'metal tools':1},repeat:2,mode:'hard metal tools'},
 			{type:'convert',from:{'precious metal ingot':9},into:{'gold block':1},mode:'gold blocks'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'waste',chance:0.001/1000},
 			//TODO : better metal tools, weapons etc
 		],
@@ -2372,6 +2387,7 @@ func:function()
 		upkeep:{'coin':0.1},
 		effects:[
 			{type:'gather',wwhat:{'resource depletion':0.05},context:'chop',amount:1,max:1},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2395,6 +2411,7 @@ func:function()
 		effects:[
 			{type:'convert',from:{'log':1},into:{'lumber':3},repeat:2,mode:'lumber'},
 			{type:'convert',from:{'log':1},into:{'stick':21},repeat:2,mode:'lumber'},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'waste',chance:0.001/1000},
 			
 		],
@@ -2432,6 +2449,7 @@ func:function()
 		effects:[
 			{type:'convert',from:{'sick':1,'medical herb':2.5},into:{'adult':1},chance:1/5,every:5},
 			{type:'convert',from:{'wounded':1,'medical herb':2.5},into:{'adult':1},chance:1/10,every:5},
+			{type:'gather',what:{'experience':1},amount:0.01},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
@@ -2470,9 +2488,8 @@ func:function()
 		use:{'worker':1},
 		upkeep:{'coin':0.75},
 		effects:[
-			{type:'gather',what:{'influence':0.05}},
-			{type:'gather',what:{'influence':0.05},req:{'code of law':true}},
-			{type:'provide',what:{'authority':2},req:{'code of law':true}},
+			{type:'gather',what:{'influence':0.1}},
+			{type:'provide',what:{'authority':2}},
 			{type:'mult',value:1.1,req:{'arctic origin':true}}
 		],
 		limitPer:{'population':500},
@@ -2514,7 +2531,7 @@ func:function()
 	});
 	new G.Unit({
 		name:'village',
-		desc:'@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisation.',
+		desc:'@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
 		icon:[5,14,'H1sheet'],
 		wideIcon:[6,14,'H1sheet'],
 		cost:{'basic building materials':1e3,'stone tools':50,'authority':1},
@@ -2536,9 +2553,7 @@ func:function()
 		cost:{'basic building materials':1e4,'metal tools':100,'authority':5},
 		use:{'land':200,'infrastructure':100},
 		effects:[
-			{type:'function',func:function(me){
-				G.buyUnitByName('village',-1,true);	
-			}},
+
 			{type:'provide',what:{'housing':2000}},
 			{type:'provide',what:{'housing':1000},req:{'city planning':true}},
             {type:'provide',what:{'building slot':100}},
@@ -2594,7 +2609,7 @@ func:function()
 	});
 	new G.Unit({
 		name:'treasury',
-		desc:'@provides 4000 [treasury storage]<>A large building for storing materials. Staffed with five guards to prevent theft.',
+		desc:'@provides 1000 [treasury storage]<>A large building for storing materials. Staffed with five guards to prevent theft.',
 		icon:[20,4,'H1sheet'],
 		cost:{'basic building materials':500},
 		use:{'building slot':1,'infrastructure':20},
