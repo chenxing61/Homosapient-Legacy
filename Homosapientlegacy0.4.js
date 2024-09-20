@@ -93,7 +93,6 @@ func:function()
 			
 			//influence trickle
 			if (G.getRes('influence').amount<=G.getRes('authority').amount-1)G.gain('influence',1);
-			if (G.getRes('resource depletion').amount>=0)G.gain('resource depletion',-100);
 		}
 	}
 	
@@ -145,9 +144,9 @@ func:function()
 				G.Message({text:msg});
 			}
 			if (G.has('humid weather'))G.gain('resource depletion',-5);
-			else (G.gain('resource depletion',-1));
+			else (G.gain('resource depletion',-0.5));
 			if (G.has('dry weather'))
-			G.gain('resource depletion',0.5);
+			G.gain('resource depletion',0.25);
 			
 			//possibility to gain random traits everyday
 			for (var i in G.trait)
@@ -1561,7 +1560,7 @@ func:function()
 	});
 	new G.Res({
 		name:'recording medium',
-		desc:'A civilisation depends on effective storage of its information.<>Embracement of trait, and lots of technology need it to store experience.',
+		desc:'A civilisation depends on effective storage of its information.<>Increases the limit of experience by 1.',
 		icon:[16,5,'H1sheet'],
 		partOf:'misc materials',
 		category:'misc',
@@ -2369,7 +2368,7 @@ func:function()
 		use:{'building slot':1,'worker':2,'infrastructure':5},
 		//require:{'worker':2,'knapped tools':2},
 		effects:[
-			{type:'provide',what:{'wisdom':5}},
+			{type:'provide',what:{'record':100}},
 			{type:'waste',chance:0.001/1000}
 		],
 		limitPer:{'population':100},
@@ -2468,11 +2467,11 @@ func:function()
 		use:{'worker':1},
 		upkeep:{'coin':0.5},
 		effects:[
-			{type:'gather',what:{'influence':0.1}},
+			{type:'gather',what:{'influence':0.05}},
 			{type:'gather',what:{'insight':0.05}},
 			{type:'gather',what:{'insight':0.05},req:{'speech':true}},
-			{type:'gather',what:{'influence':0.025},req:{'chieftain':true}},
-			{type:'gather',what:{'influence':0.025},req:{'code of law':true}},
+			{type:'gather',what:{'influence':0.05},req:{'chieftain':true}},
+			{type:'gather',what:{'influence':0.05},req:{'code of law':true}},
 			{type:'mult',value:1.1,req:{'arctic origin':true}}
 		],
 		limitPer:{'population':50},
@@ -2940,6 +2939,7 @@ func:function()
 		startWith:true,
 		effects:[
 			{type:'provide res',what:{'wisdom':5}},
+			{type:'provide res',what:{'record':25}},
 			{type:'show res',what:['insight']},
 		],
 		category:'wisd'
@@ -2959,7 +2959,7 @@ func:function()
 		name:'language',
 		desc:'@[chieftain] generates more insights @provides 5 [inspiration]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
 		icon:[2,1],
-		cost:{'insight':0.5},
+		cost:{'insight':1,'influence':1},
 		req:{'speech':true},
 		effects:[
 			{type:'provide res',what:{'inspiration':5}},
@@ -2971,7 +2971,7 @@ func:function()
 		name:'stone-knapping',
 		desc:'@unlocks [artisan]s, which can create [knapped tools]<>[stone-knapping] allows you to make your very first tools - simple rocks that have been smashed against each other to fashion rather crude cleavers, choppers, and hand axes.//Tools have little use by themselves, but may be used in many other industries.',
 		icon:[3,1],
-		cost:{'insight':1,'experience':10},
+		cost:{'insight':1,'experience':10,'stone':10},
 		req:{'use of tool':true},
 		effects:[
 		],
@@ -2983,7 +2983,7 @@ func:function()
 		name:'hunting',
 		desc:'@unlocks [hunter]s<>It is a common tragedy that a creature should die so that another may survive.',
 		icon:[15,1],
-		cost:{'experience':10},
+		cost:{'experience':10,'spoiled food':25},
 		req:{'language':true,'tribalism':true},
 		effects:[
 			{type:'show context',what:['hunt']},
@@ -2995,11 +2995,19 @@ func:function()
 		name:'fishing',
 		desc:'@unlocks [fisher]s<>Fishing is more than simply catching fish; it involves knowing where the fish like to gather and which ones are good to eat.//It would be wise to check whether any of your territory contains fish before investing in this technology.',
 		icon:[25,1],
-		cost:{'experience':10},
+		cost:{'experience':10,'spoiled food':25},
 		req:{'language':true,'tribalism':true},
 		effects:[
 			{type:'show context',what:['fish']},
 		],
+		category:'disc'
+	});
+	new G.Tech({
+		name:'cooking',
+		desc:'@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
+		icon:[17,1],
+		cost:{'experience':10,'fireplace':1,'meat':1},
+		req:{'fire-making':true},
 		category:'disc'
 	});
 ///T2
@@ -3007,35 +3015,13 @@ func:function()
 		name:'oral tradition',
 		desc:'@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 		icon:[5,1],
-		cost:{'insight':1,'experience':20},
+		cost:{'insight':8,'experience':20},
 		req:{'language':true},
 		effects:[
 			{type:'provide res',what:{'inspiration':5}},
 		],
 		chance:50,
 		category:'wisd'
-	});
-	new G.Tech({
-		name:'ritualism',
-		desc:'@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
-		icon:[12,1],
-		cost:{'culture':30,'experience':5},
-		req:{'oral tradition':true},
-		effects:[
-			{type:'provide res',what:{'spirituality':10}},
-		],
-		category:'reli'
-	});
-	new G.Tech({
-		name:'chieftains',
-		desc:'@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
-		icon:[22,6],
-		cost:{'insight':5,'experience':25},
-		req:{'oral tradition':true},
-		effects:[
-			{type:'provide res',what:{'authority':10}},
-		],
-		category:'order'
 	});
 	new G.Tech({
 		name:'tool-making',
@@ -3069,6 +3055,28 @@ func:function()
 			{type:'show context',what:['chop']},
 		],
 		category:'indu'
+	});
+	new G.Tech({
+		name:'chieftains',
+		desc:'@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
+		icon:[22,6],
+		cost:{'insight':8,'experience':20},
+		req:{'oral tradition':true},
+		effects:[
+			{type:'provide res',what:{'authority':10}},
+		],
+		category:'order'
+	});
+	new G.Tech({
+		name:'ritualism',
+		desc:'@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
+		icon:[12,1],
+		cost:{'insight':8,'experience':20},
+		req:{'oral tradition':true},
+		effects:[
+			{type:'provide res',what:{'spirituality':10}},
+		],
+		category:'reli'
 	});
 	new G.Tech({
 		name:'basket-weaving',
@@ -3278,14 +3286,7 @@ func:function()
 		req:{'fishing':true,'spears':true},
 		category:'inno'
 	});
-	new G.Tech({
-		name:'cooking',
-		desc:'@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
-		icon:[17,1],
-		cost:{'insight':1,'experience':10},
-		req:{'fire-making':true},
-		category:'disc'
-	});
+
 	new G.Tech({
 		name:'curing',
 		desc:'@[firekeeper]s can now prepare [cured meat] and [cured seafood] with [salt], which last much longer<>Storing food with special preparations seems to ward off rot, and comes along with the advent of delicious jerky.',
@@ -3642,7 +3643,7 @@ func:function()
 	});
 	new G.Trait({
 		name:'bliss',
-		desc:'@People are happy for... no particular reasons.//@Peoples overall happniness increases.@Religions increase the chance of this occurance(Not implemented yet)',
+		desc:'@People are happy for... no particular reasons.//@Peoples overall happniness increases.@Exploration in [faith] related discovery increase the chance of this traits occurance (Not implemented yet)',
 		icon:[8,31,'H1sheet'],
 		cost:{},
 		chance:20,
@@ -3713,7 +3714,7 @@ func:function()
 
 	new G.Trait({
 		name:'bountifulness',
-		desc:'@increased gather rate<>The nature is very kind to our civilization.',
+		desc:'@increased gather rate<>The nature shows its kindness.',
 		icon:[14,1,'H1sheet'],
 		cost:{},
 		chance:50,
@@ -3723,7 +3724,7 @@ func:function()
 	});
 	new G.Trait({
 		name:'tribe migration',
-		desc:'@unlock [wanderer] to recuit people.<>Some random tribe migrated by...',
+		desc:'@enable [wanderer]s to recuit people.<>Some random tribe passed by your land...',
 		icon:[15,1,'H1sheet'],
 		cost:{},
 		chance:20,
