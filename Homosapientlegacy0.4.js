@@ -2000,11 +2000,11 @@ func:function()
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
 			{type:'mult',value:0.5,req:{'side job of the population':'gatherer'}},
 			//any
-			{type:'convert',from:{'stone':1},into:{'knapped tools':1},every:5,mode:'any'},
-			{type:'convert',from:{'stick':1,'stone':1},into:{'stone tools':1},every:3,mode:'any',req:{'tool-making':true}},
-			{type:'convert',from:{'stick':1,'stone':1},into:{'stone weapons':1},every:3,mode:'any',req:{'spears':true}},
-			{type:'convert',from:{'stick':4,'stone':1},into:{'primitive bow':1},every:1,mode:'any',req:{'bows':true}},
-			{type:'convert',from:{'stick':8},into:{'basket':1},every:1,mode:'any',req:{'basket-weaving':true}},
+			{type:'convert',from:{'stone':1},into:{'knapped tools':1},every:15,mode:'any'},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone tools':1},every:15,mode:'any',req:{'tool-making':true}},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone weapons':1},every:15,mode:'any',req:{'spears':true}},
+			{type:'convert',from:{'stick':4,'stone':1},into:{'primitive bow':1},every:15,mode:'any',req:{'bows':true}},
+			{type:'convert',from:{'stick':8},into:{'basket':1},every:15,mode:'any',req:{'basket-weaving':true}},
 		],
 		req:{'stone-knapping':true},
 		category:'crafting',
@@ -2024,7 +2024,8 @@ func:function()
 			'carve knowledge':{name:'Carve knowledge',icon:[8,9],desc:'Turn [insight] and [log]s into [recording medium] slowly',use:{'stone tools':1},req:{'basic drawing':true}},
 			'cut stone':{name:'Cut stones',icon:[0,8],desc:'Slowly turn 10 [stone]s into 1 [cut stone].',req:{'masonry':true},use:{'stone tools':1}},
 			'smash cut stone':{name:'Smash stone blocks',icon:[2,6],desc:'Turn [cut stone]s into 9 [stone]s each.',req:{'quarrying':true},use:{'stone tools':1}},
-			'gem blocks':{name:'Carve gem blocks',icon:[7,9],desc:'Slowly turn 10 [gems] into 1 [gem block].',req:{'lapidary':true},use:{'stone tools':1}}
+			'gem blocks':{name:'Carve gem blocks',icon:[7,9],desc:'Slowly turn 10 [gems] into 1 [gem block].',req:{'lapidary':true},use:{'stone tools':1}},
+			'any':{name:'Any',desc:'Make every carved product currently avaliable in a slow rate, but not the repetitive ones, like smashing stones and carving them.'},
 		},
 		effects:[
 			{type:'convert',from:{'stone':1},into:{'statuette':1},every:5,mode:'stone statuettes'},
@@ -2037,6 +2038,11 @@ func:function()
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
 			{type:'mult',value:0.5,req:{'side job of the population':'gatherer'}},
+			//any
+			{type:'convert',from:{'stone':1},into:{'statuette':1},every:15,mode:'any'},
+			{type:'convert',from:{'bone':1},into:{'statuette':1},every:15,mode:'any'},
+			{type:'convert',from:{'insight':1,'log':5},into:{'recording medium':1},every:20,mode:'any',req:{'basic drawing':true}},
+			{type:'convert',from:{'gems':10},into:{'gem block':1},every:45,mode:'any',req:{'lapidary':true}},
 		],
 		req:{'carving':true},
 		category:'crafting',
@@ -2057,6 +2063,7 @@ func:function()
 			'weave leather clothing':{name:'Weave leather clothing',icon:[16,7],desc:'Craft [basic clothes] from 2 [leather] each.',use:{'stone tools':1},req:{'weaving':true,'leather-working':true}},
 			'make leather':{name:'Make leather',icon:[10,7],desc:'Produce [leather] from [hide]s, [water], [salt] and [log]s.',use:{'stone tools':1},req:{'leather-working':true}},
 			'cheap make leather':{name:'Make leather (cheap)',icon:[10,7],desc:'Slowly produce [leather] from [hide]s, [muddy water] and [herb]s.',use:{'stone tools':1}},
+			'any':{name:'Any',desc:'Make every carved product currently avaliable in a slow rate.'},
 		},
 		effects:[
 			{type:'convert',from:{'hide':3},into:{'primitive clothes':1},every:8,mode:'sew hide clothing'},
@@ -2070,6 +2077,12 @@ func:function()
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
 			{type:'mult',value:0.5,req:{'side job of the population':'gatherer'}},
+			//any
+			{type:'convert',from:{'hide':3},into:{'primitive clothes':1},every:16,mode:'any'},
+			{type:'convert',from:{'herb':30},into:{'primitive clothes':1},every:40,mode:'any'},
+			{type:'convert',from:{'leather':2},into:{'basic clothes':1},every:16,mode:'any',req:{'weaving':true}},
+			{type:'convert',from:{'herb':50},into:{'basic clothes':1},every:40,mode:'any',req:{'weaving':true}},
+			{type:'convert',from:{'hide':1,'water':5,'salt':1,'log':0.1},into:{'leather':1},every:30,mode:'any',req:{'leather-working':true}}
 		],
 		req:{'sewing':true},
 		category:'crafting',
