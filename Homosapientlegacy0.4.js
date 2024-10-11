@@ -1687,7 +1687,7 @@ func:function()
 	new G.Res({
 			name:'experience',
 			desc:'[experience] represents your people\'s discovery in the world.//'+limitDesc('[record]')+'//Many technologies require experience to be researched.',
-			icon:[8,4],
+			icon:[6,4],
 			category:'main',
 			limit:'record',
 			getDisplayAmount:researchGetDisplayAmount,
@@ -1926,9 +1926,14 @@ func:function()
 		cost:{},
 		use:{'worker':1},
 		//upkeep:{'coin':0.2},
+		gizmos:true,
+		modes:{
+			'preserver':{name:'preserver',icon:[16,5,'H1sheet'],desc:'Provide 10 [record]<>He remebers.'},
+			'researcher':{name:'researcher',icon:[7,4],desc:'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.'}
+		},
 		effects:[
-			{type:'provide res',what:{'record':10}},
-			{type:'gather',what:{'insight':0.005},req:{'symbolism':true}},
+			{type:'provide res',what:{'record':10},mode:'preserver'},
+			{type:'convert',from:{'experience':10},into:{'insight':0.1},mode:'researcher'},
 			{type:'mult',value:1.2,req:{'wisdom rituals':'on'}},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -1949,13 +1954,13 @@ func:function()
 		upkeep:{'coin':0.1},
 		gizmos:true,
 		modes:{
-			'tell stories':{name:'tell stories',icon:[10,4],desc:'Make up stories to generate small amount of cultrue.'},
+			'tell stories':{name:'tell stories',icon:[10,4],desc:'Make up stories to convert experience to cultrue.'},
 			'statuette story telling':{name:'statuette story telling',icon:[8,9],desc:'Use statuette to tell stories in a more intuitive way',req:{'carving':true}},
 		},
 		effects:[
-			{type:'gather',what:{'culture':0.05},mode:'tell stories'},
-			{type:'gather',what:{'culture':0.05},mode:'tell stories',req:{'symbolism':true}},
-			{type:'convert',from:{'statuette':1},into:{'culture':0.25},mode:'statuette story telling'},
+			{type:'convert',from:{'experience':10},into:{'culture':0.2},mode:'tell stories'},
+			{type:'convert',from:{'experience':5},into:{'culture':0.2},mode:'tell stories',req:{'symbolism':true}},
+			{type:'convert',from:{'statuette':1,'experience':10},into:{'culture':0.4},mode:'statuette story telling'},
 			{type:'mult',value:1.2,req:{'wisdom rituals':'on'}},
 			{type:'gather',context:'foodgather',amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
@@ -1981,6 +1986,7 @@ func:function()
 			'stone weapons':{name:'Craft stone weapons',icon:[5,9],desc:'Turn [stone]s and [stick]s into [stone weapons].',req:{'spears':true},use:{'knapped tools':1}},
 			'bows':{name:'Craft bows',icon:[6,9],desc:'Turn [stone]s and [stick]s into [bow]s.',req:{'bows':true},use:{'stone tools':1}},
 			'baskets':{name:'Weave baskets',icon:[14,7],desc:'Turn [stick]s into [basket]s.',req:{'basket-weaving':true},use:{'knapped tools':1}},
+			'any':{name:'Any',desc:'Make every tools currently avaliable in a slow rate.'},
 		},
 		effects:[
 			{type:'convert',from:{'stone':1},into:{'knapped tools':1},every:5,mode:'knap'},
@@ -1993,6 +1999,12 @@ func:function()
 			{type:'gather',context:'watergather',what:{'water':2,'muddy water':4},amount:0.25,max:1,req:{'side job of the population':'gatherer'}},
 			{type:'gather',what:{'resource depletion':0.001},req:{'side job of the population':'gatherer'}},
 			{type:'mult',value:0.5,req:{'side job of the population':'gatherer'}},
+			//any
+			{type:'convert',from:{'stone':1},into:{'knapped tools':1},every:5,mode:'any'},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone tools':1},every:3,mode:'any',req:{'tool-making':true}},
+			{type:'convert',from:{'stick':1,'stone':1},into:{'stone weapons':1},every:3,mode:'any',req:{'spears':true}},
+			{type:'convert',from:{'stick':4,'stone':1},into:{'primitive bow':1},every:1,mode:'any',req:{'bows':true}},
+			{type:'convert',from:{'stick':8},into:{'basket':1},every:1,mode:'any',req:{'basket-weaving':true}},
 		],
 		req:{'stone-knapping':true},
 		category:'crafting',
@@ -3006,7 +3018,7 @@ func:function()
 		name:'cooking',
 		desc:'@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
 		icon:[17,1],
-		cost:{'experience':10,'fireplace':1,'meat':1},
+		cost:{'experience':10,'fireplace':1,'food':1},
 		req:{'fire-making':true},
 		category:'disc'
 	});
@@ -3027,7 +3039,7 @@ func:function()
 		name:'tool-making',
 		desc:'@[artisan]s can now create [stone tools]<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
 		icon:[4,1],
-		cost:{'insight':1,'experience':20},
+		cost:{'insight':1,'experience':20,'stick':5},
 		req:{'stone-knapping':true,'carving':true},
 		effects:[
 		],
