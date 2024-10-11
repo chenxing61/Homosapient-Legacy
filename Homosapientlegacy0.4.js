@@ -160,7 +160,7 @@ func:function()
 					me.lifetime -= 1
 					if (me.lifetime === 0 && me.lifetime!=Infinity)
 					{	
-						G.Message({type:'important tall',text:'A trait has lost its effect </b>.'});		
+						G.Message({type:'important tall',text:'The trait has lost its effect </b>.'+me.displayName+'</b>.',icon:me.icon});		
 						G.deleteTrait(me);
 						me.lifetime += 150
 					}
