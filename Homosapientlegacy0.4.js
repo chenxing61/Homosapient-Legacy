@@ -2344,6 +2344,7 @@ func:function()
 			'gold':{name:'Gold smelting',icon:[11,9],desc:'Cast [precious metal ingot]s out of 9 [gold ore]s each.',use:{'worker':2,'metal tools':2},req:{'gold-working':true}},
 			'bronze':{name:'Bronze alloying',icon:[10,9],desc:'Cast [hard metal ingot]s out of 9 [copper ore]s and 2 [tin ore]s each.',use:{'worker':2,'metal tools':2},req:{'bronze-working':true}},
 			'steel':{name:'Steel alloying',icon:[12,9],desc:'Cast [strong metal ingot]s out of 19 [iron ore]s and 1 [coal] each.',use:{'worker':2,'metal tools':2},req:{'steel-making':true}},
+			'any':{name:'Any',desc:'Smelt without focusing on specific ores.',use:{'worker':2,'stone tools':2}},
 		},
 		effects:[
 			{type:'convert',from:{'copper ore':9},into:{'soft metal ingot':1},repeat:3,mode:'copper'},
@@ -2354,6 +2355,13 @@ func:function()
 			{type:'convert',from:{'iron ore':19,'coal':1},into:{'strong metal ingot':1},repeat:1,mode:'steel'},
 			{type:'gather',what:{'experience':2},amount:0.02},
 			{type:'waste',chance:0.001/1000},
+			//any
+			{type:'convert',from:{'copper ore':9},into:{'soft metal ingot':1},repeat:1,mode:'any'},
+			{type:'convert',from:{'tin ore':9},into:{'soft metal ingot':1},repeat:1,mode:'any'},
+			{type:'convert',from:{'iron ore':6},into:{'hard metal ingot':1},repeat:1,mode:'any',req:{'iron-working':true}},
+			{type:'convert',from:{'gold ore':9},into:{'precious metal ingot':1},repeat:1,every:2,mode:'any',req:{'gold-working':true}},
+			{type:'convert',from:{'tin ore':2,'copper ore':9},into:{'hard metal ingot':1},repeat:3,mode:'any',req:{'bronze-working':true}},
+			{type:'convert',from:{'iron ore':19,'coal':1},into:{'strong metal ingot':1},repeat:1,every:2,mode:'any',req:{'steel-making':true}},
 		],
 		gizmos:true,
 		req:{'smelting':true},
@@ -2371,6 +2379,7 @@ func:function()
 			'metal tools':{name:'Forge tools from soft metals',icon:[2,9],desc:'Forge [metal tools] out of 2 [soft metal ingot]s each.',use:{'worker':1,'stone tools':1},req:{}},
 			'hard metal tools':{name:'Forge tools from hard metals',icon:[2,9],desc:'Forge 6 [metal tools] out of 1 [hard metal ingot].',use:{'worker':1,'metal tools':1},req:{}},
 			'gold blocks':{name:'Forge gold blocks',icon:[14,8],desc:'Forge [gold block]s out of 10 [precious metal ingot]s each.',use:{'worker':1,'stone tools':1},req:{'gold-working':true}},
+			'any':{name:'Any',desc:'Forging without focusing on specific products.',use:{'worker':2,'stone tools':2}},
 		},
 		effects:[
 			{type:'convert',from:{'soft metal ingot':12},into:{'metal tools':1},repeat:2,mode:'metal tools'},
