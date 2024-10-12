@@ -235,10 +235,10 @@ func:function()
 			var happiness=(G.getRes('happiness').amount/G.getRes('population').amount)/100;
 			var infrastructure=(G.getDict('infrastructure').amount-G.getDict('infrastructure').used)
 			happiness=Math.max(-2,Math.min(2,happiness));
-			if (happiness>=0) mult=(Math.pow(2,happiness+1)/2);
+			if (happiness>=0) {mult=(Math.pow(2,happiness+1)/2);}
 			else mult=1/(Math.pow(2,-happiness+1)/2);
 			if (infrastructure >= 0.1*G.getDict('infrastructure').amount)
-			mult += 0.2 
+			{mult += 0.2 }
 		}
 		return mult;
 	}
@@ -1170,7 +1170,7 @@ func:function()
 
 	new G.Res({
 		name:'egg',
-		desc:'[egg] can be eaten in all ways, and it is pretty nutritious.',
+		desc:'[egg] can be eaten raw, cooked in countless ways, and it is pretty nutritious.',
 		icon:[13,6,'H1sheet'],
 		turnToByContext:{'eating':{'health':0.01},'decay':{'spoiled food':1}},
 		partOf:'food',
@@ -1179,7 +1179,7 @@ func:function()
 	
 	new G.Res({
 		name:'bread',
-		desc:'[bread] is filling, nutritious, and usually not unpleasant to eat; for these reasons, it is often adopted as staple food by those who can produce it.',
+		desc:'[bread] is filling, nutritious, has long shelf life and is usually not unpleasant to eat; for these reasons, it is often adopted as staple food by those who can produce it.',
 		icon:[7,7],
 		turnToByContext:{'eating':{'health':0.02,'happiness':0.02},'decay':{'spoiled food':1}},
 		partOf:'food',
