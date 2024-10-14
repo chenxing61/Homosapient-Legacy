@@ -17,8 +17,8 @@ G.AddData({
 		/*=====================================================================================
 		PROPS & FUNCTIONS
 		=======================================================================================*/
+		//propsAndFunctions
 		G.props['fastTicksOnResearch'] = 200;
-
 		G.funcs['new game blurb'] = function () {
 			var str =
 				'<b>Your tribe :</b><div class="thingBox">' +
@@ -212,6 +212,7 @@ G.AddData({
 		/*=====================================================================================
 		RESOURCES
 		=======================================================================================*/
+		//resCategories
 		G.resCategories = {
 			'main': {
 				name: 'Essentials',
@@ -251,8 +252,8 @@ G.AddData({
 				base: [],
 			},
 		};
-		new G.Res({ name: 'died this year', hidden: true });
-		new G.Res({ name: 'born this year', hidden: true });
+		
+		
 		var numbersInfo = '//The number on the left is how many are in use, while the number on the right is how many you have in total.';
 		new G.Res({
 			name: 'coin',
@@ -265,6 +266,8 @@ G.AddData({
 			}
 		});
 		//popRes
+		new G.Res({ name: 'died this year', hidden: true });
+		new G.Res({ name: 'born this year', hidden: true });
 		new G.Res({
 			name: 'population',
 			desc: 'Your [population] represents everyone living under your rule. These are the people that look to you for protection, survival, and glory.',
@@ -923,7 +926,7 @@ G.AddData({
 			icon: [15, 5, 'H1sheet'],
 			hidden: true,
 		});
-		//ComsumeRes
+		//comsumptionRes
 		new G.Res({
 			name: 'water',
 			desc: '[water] is required to keep your [population,people] hydrated, at the rate of half a unit per person every 3 ticks (although babies and children drink less).//Without water, people will resort to drinking [muddy water], which is unhealthy; if that runs out too, your people will simply die off.//Most terrains have some fresh water up for gathering - from ponds, streams and rain; drier locations will have to rely on well digging.//Water turns into [muddy water] over time, if your water storage is insufficient.',
@@ -1093,7 +1096,7 @@ G.AddData({
 			}
 		});
 
-
+	//materialRes
 		G.props['perishable materials list'] = [];
 		G.props['perishable treasury list'] = [];
 		var loseMaterialsTick = function (me, tick) {
@@ -1326,7 +1329,7 @@ G.AddData({
 			partOf: 'misc materials',
 			category: 'build',
 		});
-
+		//toolRes
 		new G.Res({
 			name: 'knapped tools',
 			desc: 'Rudimentary tools made by hitting [stone]s, usually flint, until their edges are sharp enough.' + numbersInfo,
@@ -1405,7 +1408,7 @@ G.AddData({
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
-
+		//miscRes
 		new G.Res({
 			name: 'bone',
 			desc: 'Obtained from the corpse of an animal, or discarded from eating flesh.',
@@ -1459,7 +1462,7 @@ G.AddData({
 				G.gain('water', randomFloor(spent * 10), 'ice melting');
 			},
 		});
-
+		//goodRes
 		new G.Res({
 			name: 'salt',
 			desc: 'Gives flavor to [food], rendering it more enjoyable to eat; may also be used to preserve food and make it last longer.',
@@ -1512,7 +1515,7 @@ G.AddData({
 			},
 		});
 
-
+		//containerRes
 		new G.Res({
 			name: 'basket',
 			desc: 'Each basket stores 10 [food].//Will decay over time.',
@@ -1536,7 +1539,7 @@ G.AddData({
 
 
 
-
+		//mindRes
 		var limitDesc = function (limit) { return 'It is limited by your ' + limit + '; the closer to the limit, the slower it is to produce more.'; };
 		var researchGetDisplayAmount = function () {
 			var limit = G.getDict(this.limit).displayedAmount;
@@ -1654,6 +1657,7 @@ G.AddData({
 		/*=====================================================================================
 		UNITS
 		=======================================================================================*/
+		//unitCategories
 		G.unitCategories.push(
 			{ id: 'debug', name: 'Debug' },
 			{ id: 'civil', name: 'Civil' },
@@ -1704,7 +1708,7 @@ G.AddData({
 				}
 			}
 		}
-
+		//basicUnit
 		new G.Unit({
 			name: 'gatherer',
 			startWith: 4,
@@ -1763,30 +1767,71 @@ G.AddData({
 			priority: 5,
 		});
 		new G.Unit({
-			name: 'mud road',
-			desc: '@Provide 5 [infrastructure]<>A convenient way for stuff to move faster...',
-			icon: [27, 3, 'H1sheet'],
-			cost: { 'stone tools': 4 },
+			name: 'hunter',
+			desc: '@hunts wild animals for [meat], [bone]s and [hide]s@may get wounded<>[hunter]s go out into the wilderness and come back days later covered in blood and the meat of a fresh kill.',
+			icon: [18, 2],
+			cost: {},
+			use: { 'worker': 1 },
+			//upkeep:{'coin':0.2},
+			gizmos: true,
+			modes: {
+				'endurance hunting': { name: 'Endurance hunting', icon: [0, 6], desc: 'Hunt animals by simply running after them until they get exhausted.//Slow and tedious.' },
+				'spear hunting': { name: 'Spear hunting', icon: [5, 9], desc: 'Hunt animals with spears.', use: { 'stone weapons': 1 }, req: { 'spears': true } },
+				'bow hunting': { name: 'Bow hunting', icon: [6, 9], desc: 'Hunt animals with bows.', use: { 'primitive bow': 1 }, req: { 'bows': true } },
+			},
 			effects: [
-				{ type: 'provide', what: { 'infrastructure': 5 } },
-				{ type: 'waste', chance: 0.005 / 1000 },
+				{ type: 'gather', context: 'hunt', amount: 1, max: 5, mode: 'endurance hunting' },
+				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.05 }, mode: 'endurance hunting' },
+				{ type: 'gather', context: 'hunt', amount: 2.5, max: 5, mode: 'spear hunting' },
+				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.075 }, mode: 'spear hunting' },
+				{ type: 'gather', context: 'hunt', amount: 4, max: 5, mode: 'bow hunting' },
+				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.1 }, mode: 'bow hunting' },//TODO : consuming arrows?
+
+				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.03, '[X] [people] wounded while hunting.', 'hunter was', 'hunters were'), chance: 1 / 30 },
+				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
+				{ type: 'mult', value: 1.15, req: { 'jungle origin': true } },
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
-			req: { 'digging': true },
-			category: 'infrastructure',
+			req: { 'hunting': true },
+			category: 'production',
+			priority: 5,
 		});
 		new G.Unit({
-			name: 'stone road',
-			desc: '@Provide 20 [infrastructure]<>A convenient way for stuff to move faster...',
-			icon: [27, 3, 'H1sheet'],
-			cost: { 'cut stone': 50 },
-			upkeep: { 'cut stone': 0.01 },
+			name: 'fisher',
+			desc: '@catches [seafood] from rivers and shores<>[fisher]s arm themselves with patience and whatever bait they can find, hoping to trick another creature into becoming dinner.',
+			icon: [17, 2],
+			cost: {},
+			use: { 'worker': 1 },
+			//upkeep:{'coin':0.2},
+			gizmos: true,
+			modes: {
+				'catch by hand': { name: 'Catch by hand', icon: [0, 6], desc: 'Catch fish with nothing but bare hands.//Slow and tedious.' },
+				'spear fishing': { name: 'Spear fishing', icon: [5, 9], desc: 'Catch fish with spears.', use: { 'stone weapons': 1 }, req: { 'spears': true } },
+				'line fishing': { name: 'Line fishing', icon: [5, 9], desc: 'Catch fish with fishing poles.', use: { 'stone tools': 1 }, req: { 'fishing hooks': true } },
+				//TODO : nets
+			},
 			effects: [
-				{ type: 'provide', what: { 'infrastructure': 20 } },
-				{ type: 'waste', chance: 0.001 / 1000 },
+				{ type: 'gather', context: 'fish', amount: 1, max: 5, mode: 'catch by hand' },
+				{ type: 'gather', context: 'fish', amount: 2.5, max: 5, mode: 'spear fishing' },
+				{ type: 'gather', context: 'fish', amount: 4, max: 5, mode: 'line fishing' },
+				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.05 }, mode: 'catch by hand' },
+				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.075 }, mode: 'spear fishing' },
+				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.1 }, mode: 'line fishing' },
+
+				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
-			req: { 'masonry': true },
-			category: 'infrastructure',
+			req: { 'fishing': true },
+			category: 'production',
+			priority: 5,
 		});
+		//mindUnit
 		new G.Unit({
 			name: 'scholar',
 			desc: '@generates [insight] every now and then, which you can use to research early technologies<>A [scholar] spends their time observing, thinking, and wondering why things are the way they are.',
@@ -1838,7 +1883,7 @@ G.AddData({
 			req: { 'oral tradition': true },
 			category: 'cultural',
 		});
-
+		//artisanUnit
 		new G.Unit({
 			name: 'artisan',
 			desc: '@starts with the ability to turn [stone]s into [knapped tools]@gains more modes as technology progresses<>An [artisan] dedicates their life to crafting various little objects by hand.//Note : artisans will gain new modes of operation when you discover new technologies, such as crafting stone tools; you can press the button with 3 dots on the side of this unit to switch between those modes.',
@@ -1955,72 +2000,6 @@ G.AddData({
 			req: { 'sewing': true },
 			category: 'crafting',
 		});
-
-		new G.Unit({
-			name: 'hunter',
-			desc: '@hunts wild animals for [meat], [bone]s and [hide]s@may get wounded<>[hunter]s go out into the wilderness and come back days later covered in blood and the meat of a fresh kill.',
-			icon: [18, 2],
-			cost: {},
-			use: { 'worker': 1 },
-			//upkeep:{'coin':0.2},
-			gizmos: true,
-			modes: {
-				'endurance hunting': { name: 'Endurance hunting', icon: [0, 6], desc: 'Hunt animals by simply running after them until they get exhausted.//Slow and tedious.' },
-				'spear hunting': { name: 'Spear hunting', icon: [5, 9], desc: 'Hunt animals with spears.', use: { 'stone weapons': 1 }, req: { 'spears': true } },
-				'bow hunting': { name: 'Bow hunting', icon: [6, 9], desc: 'Hunt animals with bows.', use: { 'primitive bow': 1 }, req: { 'bows': true } },
-			},
-			effects: [
-				{ type: 'gather', context: 'hunt', amount: 1, max: 5, mode: 'endurance hunting' },
-				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.05 }, mode: 'endurance hunting' },
-				{ type: 'gather', context: 'hunt', amount: 2.5, max: 5, mode: 'spear hunting' },
-				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.075 }, mode: 'spear hunting' },
-				{ type: 'gather', context: 'hunt', amount: 4, max: 5, mode: 'bow hunting' },
-				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.1 }, mode: 'bow hunting' },//TODO : consuming arrows?
-
-				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.03, '[X] [people] wounded while hunting.', 'hunter was', 'hunters were'), chance: 1 / 30 },
-				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
-				{ type: 'mult', value: 1.15, req: { 'jungle origin': true } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'hunting': true },
-			category: 'production',
-			priority: 5,
-		});
-		new G.Unit({
-			name: 'fisher',
-			desc: '@catches [seafood] from rivers and shores<>[fisher]s arm themselves with patience and whatever bait they can find, hoping to trick another creature into becoming dinner.',
-			icon: [17, 2],
-			cost: {},
-			use: { 'worker': 1 },
-			//upkeep:{'coin':0.2},
-			gizmos: true,
-			modes: {
-				'catch by hand': { name: 'Catch by hand', icon: [0, 6], desc: 'Catch fish with nothing but bare hands.//Slow and tedious.' },
-				'spear fishing': { name: 'Spear fishing', icon: [5, 9], desc: 'Catch fish with spears.', use: { 'stone weapons': 1 }, req: { 'spears': true } },
-				'line fishing': { name: 'Line fishing', icon: [5, 9], desc: 'Catch fish with fishing poles.', use: { 'stone tools': 1 }, req: { 'fishing hooks': true } },
-				//TODO : nets
-			},
-			effects: [
-				{ type: 'gather', context: 'fish', amount: 1, max: 5, mode: 'catch by hand' },
-				{ type: 'gather', context: 'fish', amount: 2.5, max: 5, mode: 'spear fishing' },
-				{ type: 'gather', context: 'fish', amount: 4, max: 5, mode: 'line fishing' },
-				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.05 }, mode: 'catch by hand' },
-				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.075 }, mode: 'spear fishing' },
-				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.1 }, mode: 'line fishing' },
-
-				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'fishing': true },
-			category: 'production',
-			priority: 5,
-		});
 		new G.Unit({
 			name: 'firekeeper',
 			desc: '@creates [fire pit]s from fuel@gains more fuel types as technology progresses@handles other fire-related tasks<>The [firekeeper] is tasked with starting and maintaining fires to keep the tribe warm.',
@@ -2082,6 +2061,31 @@ G.AddData({
 			],
 			req: { 'pottery': true },
 			category: 'crafting',
+		});
+		new G.Unit({
+			name: 'mud road',
+			desc: '@Provide 5 [infrastructure]<>A convenient way for stuff to move faster...',
+			icon: [27, 3, 'H1sheet'],
+			cost: { 'stone tools': 4 },
+			effects: [
+				{ type: 'provide', what: { 'infrastructure': 5 } },
+				{ type: 'waste', chance: 0.005 / 1000 },
+			],
+			req: { 'digging': true },
+			category: 'infrastructure',
+		});
+		new G.Unit({
+			name: 'stone road',
+			desc: '@Provide 20 [infrastructure]<>A convenient way for stuff to move faster...',
+			icon: [27, 3, 'H1sheet'],
+			cost: { 'cut stone': 50 },
+			upkeep: { 'cut stone': 0.01 },
+			effects: [
+				{ type: 'provide', what: { 'infrastructure': 20 } },
+				{ type: 'waste', chance: 0.001 / 1000 },
+			],
+			req: { 'masonry': true },
+			category: 'infrastructure',
 		});
 		new G.Unit({
 			name: 'kiln',
