@@ -222,7 +222,7 @@ G.AddData({
 			'stats': {
 				name: 'Statistics',
 				base: ['baby', 'child', 'adult', 'elder', 'worker', 'sick', 'wounded'],
-				side: ['population', 'infrastructure', 'housing', 'building slot', 'corpse', 'burial spot', 'resource depletion'],
+				side: ['population', 'infrastructure', 'labour power', 'housing', 'building slot', 'corpse', 'burial spot', 'resource depletion'],
 			},
 			'food': {
 				name: 'Food & Water',
@@ -683,15 +683,7 @@ G.AddData({
 				return B(this.displayedUsedAmount) + '<wbr>/' + B(this.displayedAmount);
 			},
 		});
-		new G.Res({
-			name: 'infrastructure',
-			desc: '[infrastructure] is the blood vessel of civilzations. Which population and goods flow through. Productive structures take up it. If you dont have enough of it. [productivity] will decrease.If you have enough spare [infrastructure], [productivity] will increase.',
-			icon: [13, 3, 'H1sheet'],
-			displayUsed: true,
-			getDisplayAmount: function () {
-				return B(this.displayedUsedAmount) + '<wbr>/' + B(this.displayedAmount);
-			},
-		});
+		
 		//statsRes
 		new G.Res({
 			name: 'resource depletion',
@@ -1657,7 +1649,21 @@ G.AddData({
 			icon: [11, 5],
 			category: 'main',
 		});
-
+		new G.Res({
+			name: 'infrastructure',
+			desc: '[infrastructure] is the blood vessel of civilzations. Which population and goods flow through. Productive structures take up it.<>@If you dont have enough of it. [productivity] will decrease.@If you have enough spare [infrastructure], [productivity] will increase.',
+			icon: [13, 3, 'H1sheet'],
+			displayUsed: true,
+			getDisplayAmount: function () {
+				return B(this.displayedUsedAmount) + '<wbr>/' + B(this.displayedAmount);
+			},
+		});
+		new G.Res({
+			name: 'labour power',
+			desc: '[labour power] repersents the capability of your civlization to build or maintain structures. //' + limitDesc('[infrastructure]'),
+			icon: [13, 3, 'H1sheet'],
+			limit: 'infrastructure',
+		});
 		/*=====================================================================================
 		UNITS
 		=======================================================================================*/
@@ -1776,7 +1782,6 @@ G.AddData({
 			icon: [18, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			//upkeep:{'coin':0.2},
 			gizmos: true,
 			modes: {
 				'endurance hunting': { name: 'Endurance hunting', icon: [0, 6], desc: 'Hunt animals by simply running after them until they get exhausted.//Slow and tedious.' },
@@ -1809,7 +1814,6 @@ G.AddData({
 			icon: [17, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			//upkeep:{'coin':0.2},
 			gizmos: true,
 			modes: {
 				'catch by hand': { name: 'Catch by hand', icon: [0, 6], desc: 'Catch fish with nothing but bare hands.//Slow and tedious.' },
@@ -1842,7 +1846,7 @@ G.AddData({
 			cost: {},
 			use: { 'worker': 1 },
 			staff: { 'knapped tools': 1 },
-			upkeep: { 'coin': 0.1 },
+			
 			effects: [
 				{ type: 'gather', context: 'dig', amount: 1, max: 1 },
 				{ type: 'gather', context: 'dig', what: { 'clay': 5 }, max: 1, req: { 'pottery': true } },
@@ -1862,7 +1866,7 @@ G.AddData({
 			cost: {},
 			use: { 'worker': 1 },
 			staff: { 'knapped tools': 1 },
-			upkeep: { 'coin': 0.1 },
+			
 			effects: [
 				{ type: 'gather', wwhat: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
 
@@ -1881,7 +1885,6 @@ G.AddData({
 			icon: [1, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			//upkeep:{'coin':0.2},
 			gizmos: true,
 			modes: {
 				'preserver': { name: 'preserver', icon: [16, 5, 'H1sheet'], desc: 'Provide 10 [record]<>He remebers.' },
@@ -1907,7 +1910,7 @@ G.AddData({
 			icon: [14, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.1 },
+			
 			gizmos: true,
 			modes: {
 				'tell stories': { name: 'tell stories', icon: [10, 4], desc: 'Make up stories to convert experience to cultrue.' },
@@ -1933,7 +1936,7 @@ G.AddData({
 			icon: [6, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.1 },
+			
 			gizmos: true,
 			modes: {
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
@@ -1972,7 +1975,7 @@ G.AddData({
 			icon: [21, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.1 },
+			
 			gizmos: true,
 			modes: {
 				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { 'knapped tools': 1 } },
@@ -2010,7 +2013,7 @@ G.AddData({
 			icon: [19, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.2 },
+			
 			gizmos: true,
 			modes: {
 				'sew grass clothing': { name: 'Sew grass clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 30 [herb]s each.', use: { 'stone tools': 1 } },
@@ -2050,7 +2053,7 @@ G.AddData({
 			cost: {},
 			use: { 'worker': 1 },
 			staff: {},
-			upkeep: { 'coin': 0.1 },
+			
 			gizmos: true,
 			modes: {
 				'drilling wood to start fire': { name: 'drilling wood to start fire', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 24 [stick]s each slowly.' },
@@ -2086,7 +2089,7 @@ G.AddData({
 			cost: {},
 			use: { 'worker': 1 },
 			staff: { 'stone tools': 1 },
-			upkeep: { 'coin': 0.2 },
+			
 			gizmos: true,
 			modes: {
 				'any': { name: 'Craft pots out of basic materials', icon: [1, 7, 13, 5], desc: 'Craft [pot]s from 3 [clay] or 10 [mud] each; requires [fire pit]s.' },
@@ -2111,7 +2114,7 @@ G.AddData({
 			icon: [15, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.2 },
+			
 			effects: [
 				{ type: 'gather', what: { 'faith': 0.1, 'happiness': 0.1 } },
 				{ type: 'gather', what: { 'faith': 0.05 }, req: { 'symbolism': true } },
@@ -2130,7 +2133,7 @@ G.AddData({
 			cost: {},
 			use: { 'worker': 1 },
 			staff: { 'stone tools': 1 },
-			upkeep: { 'coin': 0.2 },
+			
 			effects: [
 				{ type: 'convert', from: { 'sick': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 5, every: 5 },
 				{ type: 'convert', from: { 'wounded': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 10, every: 5 },
@@ -2151,7 +2154,7 @@ G.AddData({
 			icon: [18, 3],
 			cost: { 'food': 25 },
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.5 },
+			
 			effects: [
 				{ type: 'gather', what: { 'influence': 0.05 } },
 				{ type: 'gather', what: { 'insight': 0.05 } },
@@ -2171,7 +2174,6 @@ G.AddData({
 			icon: [19, 3, 'H1sheet'],
 			cost: { 'food': 100 },
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.75 },
 			effects: [
 				{ type: 'gather', what: { 'influence': 0.1 } },
 				{ type: 'provide', what: { 'authority': 2 } },
@@ -2189,7 +2191,7 @@ G.AddData({
 			icon: [26, 4],
 			cost: {},
 			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.5 },
+			
 			gizmos: true,
 			modes: {
 				'off': G.MODE_OFF,
@@ -2307,8 +2309,6 @@ G.AddData({
 			icon: [25, 3],
 			cost: { 'stone': 50, 'basic building materials': 20 },
 			use: { 'building slot': 1, 'infrastructure': 10 },
-			//require:{'worker':2,'stone tools':2},
-			//upkeep:{'coin':0.2},
 			effects: [
 				{ type: 'gather', what: { 'water': 10 } },
 				{ type: 'mult', value: 1.5, req: { 'humid weather': true } }
