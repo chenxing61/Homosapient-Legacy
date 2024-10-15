@@ -138,53 +138,19 @@ G.parse=function(what)
 								else if (effect.type=='explore')
 								{
 									var limit=500;
-									if(G.modsByName["Default dataset"]){
-										limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("map details") ? 14500 : 0)+(G.has("scouting") ? 1000 : 0) +(G.has("focused scouting") ? 20000 : 0));
-										if(G.getRes("wtr").amount+G.getRes("land").amount<limit && G.isMap==0){
+									limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("map details") ? 14500 : 0)+(G.has("scouting") ? 1000 : 0) +(G.has("focused scouting") ? 20000 : 0));
+									if(G.getRes("land").amount<limit && G.isMap==0){
 											if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
 											if (effect.unexplored) G.exploreNewTiles+=Math.random()*effect.unexplored*myAmount;
 											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=0.01;
 											G.getDict('scout').effects[G.unitByName['scout'].effects.length-1].chance=0.01;
-										}else{
+									}
+									else
+									{
 											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=1e-300;
 											G.getDict('scout').effects[G.unitByName['scout'].effects.length-1].chance=1e-300;
-										}
-									}else{
-										//limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6000 : 0)+(G.has("map details") ? 14000 : 0));
-										limit+=(G.has("map details") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("scouting") ? 300 : 0)); //for now since advanced mapping isn't available for C2 yet
-										if(G.getRes("wtr").amount+G.getRes("land").amount<limit && G.isMap==false){
-											if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
-											if (effect.unexplored) G.exploreNewTiles+=Math.random()*effect.unexplored*myAmount;
-										}else{
-											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=1e-300;
-											G.getDict('scout').effects[G.unitByName['scout'].effects.length-1].chance=1e-300;
-										}
 									}
-								}
-								else if (effect.type=='exploreAlt')
-								{
-									var limit=750;
-									if(G.modsByName["Default dataset"]){
-										limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("map details") ? 14000 : 0)+(G.has("scouting") ? 1000 : 0) +(G.has("focused scouting") ? 20000 : 0));
-										if(G.getRes("wtr").amount+G.getRes("land").amount<limit && G.isMap==0){
-											if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
-											if (effect.unexplored) G.exploreNewTilesAlternate+=Math.random()*effect.unexplored*myAmount;
-											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=0.01;
-										
-										}else{
-											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=1e-300;
-	
-										}
-									}else{
-										//limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6000 : 0)+(G.has("map details") ? 14000 : 0));
-										limit+=(G.has("map details") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("scouting") ? 300 : 0)); //for now since advanced mapping isn't available for C2 yet
-										if(G.getRes("wtr").amount+G.getRes("land").amount<limit && G.isMap==false){
-											if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
-											if (effect.unexplored) G.exploreNewTilesAlternate+=Math.random()*effect.unexplored*myAmount;
-										}else{
-											G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length-1].chance=1e-300;
-										}
-									}
+									
 								}
 								else if (effect.type=='exploreOcean')//exploreOcean : discover new tiles or explore owned ocean
 								{

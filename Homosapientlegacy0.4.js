@@ -686,7 +686,7 @@ G.AddData({
 		new G.Res({
 			name: 'infrastructure',
 			desc: '[infrastructure] is the blood vessel of civlizations. Which population and goods flow through. Productive structures take up it. If you dont have enough of it. [productivity] will decrease.If you have enough spare [infrastructure], [productivity] will increase.',
-			icon: [12, 3, 'H1sheet'],
+			icon: [13, 3, 'H1sheet'],
 			displayUsed: true,
 			getDisplayAmount: function () {
 				return B(this.displayedUsedAmount) + '<wbr>/' + B(this.displayedAmount);
@@ -1831,6 +1831,45 @@ G.AddData({
 			category: 'production',
 			priority: 5,
 		});
+		new G.Unit({
+			name: 'digger',
+			desc: '@digs the soil for [mud] and [stone]<>[digger]s yield various materials that can be used for tool-making and rudimentary construction.',
+			icon: [7, 2],
+			cost: {},
+			use: { 'worker': 1 },
+			staff: { 'knapped tools': 1 },
+			upkeep: { 'coin': 0.1 },
+			effects: [
+				{ type: 'gather', context: 'dig', amount: 1, max: 1 },
+				{ type: 'gather', context: 'dig', what: { 'clay': 5 }, max: 1, req: { 'pottery': true } },
+
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+			],
+			req: { 'digging': true },
+			category: 'production',
+		});
+		new G.Unit({
+			name: 'woodcutter',
+			desc: '@cuts trees, producing [log]s<>[woodcutter]s turn forests into precious wood that can be used as fuel or construction materials.',
+			icon: [8, 2],
+			cost: {},
+			use: { 'worker': 1 },
+			staff: { 'knapped tools': 1 },
+			upkeep: { 'coin': 0.1 },
+			effects: [
+				{ type: 'gather', wwhat: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
+
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+			],
+			req: { 'woodcutting': true },
+			category: 'production',
+		});
 		//mindUnit
 		new G.Unit({
 			name: 'scholar',
@@ -2063,6 +2102,157 @@ G.AddData({
 			category: 'crafting',
 		});
 		new G.Unit({
+			name: 'soothsayer',
+			desc: '@generates [faith] and [happiness] every now and then<>[soothsayer]s tell the tales of the dead, helping tribespeople deal with grief.',
+			icon: [15, 2],
+			cost: {},
+			use: { 'worker': 1 },
+			upkeep: { 'coin': 0.2 },
+			effects: [
+				{ type: 'gather', what: { 'faith': 0.1, 'happiness': 0.1 } },
+				{ type: 'gather', what: { 'faith': 0.05 }, req: { 'symbolism': true } },
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+			],
+			req: { 'ritualism': true },
+			category: 'spiritual',
+		});
+		new G.Unit({
+			name: 'healer',
+			desc: '@uses [medical herb]s to heal the [sick] and the [wounded] slowly<>The [healer] knows the secrets of special plants that make illness stay away.',
+			icon: [23, 3],
+			cost: {},
+			use: { 'worker': 1 },
+			staff: { 'stone tools': 1 },
+			upkeep: { 'coin': 0.2 },
+			effects: [
+				{ type: 'convert', from: { 'sick': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 5, every: 5 },
+				{ type: 'convert', from: { 'wounded': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 10, every: 5 },
+
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+			],
+			req: { 'healing': true },
+			category: 'spiritual',
+			priority: 5,
+		});
+
+		new G.Unit({
+			name: 'chieftain',
+			desc: '@generates [insight] and [influence] every now and then<>The [chieftain] leads over a small group of people, guiding them in their decisions.',
+			icon: [18, 3],
+			cost: { 'food': 25 },
+			use: { 'worker': 1 },
+			upkeep: { 'coin': 0.5 },
+			effects: [
+				{ type: 'gather', what: { 'influence': 0.05 } },
+				{ type: 'gather', what: { 'insight': 0.05 } },
+				{ type: 'gather', what: { 'insight': 0.05 }, req: { 'speech': true } },
+				{ type: 'gather', what: { 'influence': 0.05 }, req: { 'chieftain': true } },
+				{ type: 'gather', what: { 'influence': 0.05 }, req: { 'code of law': true } },
+				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
+			],
+			limitPer: { 'population': 50 },
+			req: { 'tribalism': true },
+			category: 'political',
+			priority: 5,
+		});
+		new G.Unit({
+			name: 'clan leader',
+			desc: '@generates [influence] every now and then<>The [clan leader] is followed by many, and is trusted with defending the honor and safety of their people.',
+			icon: [19, 3, 'H1sheet'],
+			cost: { 'food': 100 },
+			use: { 'worker': 1 },
+			upkeep: { 'coin': 0.75 },
+			effects: [
+				{ type: 'gather', what: { 'influence': 0.1 } },
+				{ type: 'provide', what: { 'authority': 2 } },
+				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
+			],
+			limitPer: { 'population': 500 },
+			req: { 'clans': true },
+			category: 'political',
+			priority: 5,
+		});
+		//specialUnit
+		new G.Unit({
+			name: 'architect',
+			desc: '@can be set to manage automatic building construction<>The [architect] is tasked with fulfilling your people\'s housing needs so that you don\'t have to worry about it too much.',
+			icon: [26, 4],
+			cost: {},
+			use: { 'worker': 1 },
+			upkeep: { 'coin': 0.5 },
+			gizmos: true,
+			modes: {
+				'off': G.MODE_OFF,
+				'undertaker': { name: 'Undertaker', icon: [13, 2], desc: 'Dig [grave]s as long as there are unburied corpses.' },
+			},
+			effects: [
+				{
+					type: 'function', func: function (me) {
+						var wiggleRoom = 50;
+						var toMake = Math.min(me.amount - me.idle, Math.max(0, (G.getRes('corpse').amount + wiggleRoom) - 10 * (G.getRes('burial spot').amount - 10 * G.getRes('burial spot').used)));
+						if (toMake > 0 && G.canBuyUnitByName('grave', toMake)) {
+							G.buyUnitByName('grave', toMake, true);
+						}
+					}, mode: 'undertaker'
+				},
+				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+			],
+			limitPer: { 'land': 100 },
+			req: { 'city planning': true },
+			category: 'civil',
+		});
+
+		new G.Unit({
+			name: 'wanderer',
+			desc: '@explores occupied tiles for [land]@cannot discover new tiles@may sometimes get lost<>[wanderer]s walk about in search of new places to settle, reporting what they saw when they come back.<>They also acts as out-going personel between human organizations.',
+			icon: [2, 2],
+			cost: { 'food': 10 },
+			upkeep: { 'food': 1 },
+			use: { 'worker': 1 },
+			gizmos: true,
+			modes: {
+				'careful exploration': { name: 'Careful exploration', desc: '[wanderer]s would mark their path and have the patience, making them explore slower and harder to get lost' },
+				'aggressive exploration': { name: 'Aggresive exploration', desc: '[wanderer]s would explore at normal rate, the chance of getting lost is normal' },
+				'recuit wild human': { name: 'Recuit wild human', desc: '[wanderer]s will try to intergrate any wild man they can communicate into our tribe, they use up [culture] and [food]s in this process.', req: { 'chieftains': true, 'tribe migration': true } },
+			},
+			effects: [
+				{ type: 'explore', explored: 0.075, unexplored: 0, mode: 'careful exploration' },
+				{ type: 'explore', explored: 0.125, unexplored: 0, mode: 'aggressive exploration' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'adult': 1 }, chance: 1 / 100, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'elder': 1 }, chance: 1 / 150, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'child': 1 }, chance: 1 / 80, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 200, mode: 'careful exploration' },
+				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 50, mode: 'aggressive exploration' },
+				{ type: 'mult', value: 1.1, req: { 'mountain origin': true } },
+			],
+			req: { 'speech': true },
+			category: 'exploration',
+		});
+		new G.Unit({
+			name: 'scout',
+			desc: '@discovers new tiles for [land]@cannot explore occupied tiles@may sometimes get lost<>[scout]s explore the world in search of new territories.',
+			icon: [24, 3],
+			cost: { 'food': 100 },
+			use: { 'worker': 1 },
+			staff: { 'stone tools': 1 },
+			effects: [
+				{ type: 'explore', explored: 0, unexplored: 0.01 },
+				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'scout got lost', 'scouts got lost'), chance: 1 / 300 }
+			],
+			req: { 'scouting': true },
+			category: 'exploration',
+		});
+		//smallBuildings
+		new G.Unit({
 			name: 'mud road',
 			desc: '@Provide 5 [infrastructure]<>A convenient way for stuff to move faster...',
 			icon: [27, 3, 'H1sheet'],
@@ -2122,84 +2312,6 @@ G.AddData({
 			category: 'production',
 			req: { 'well-digging': true },
 			limitPer: { 'land': 10 },
-		});
-
-		new G.Unit({
-			name: 'digger',
-			desc: '@digs the soil for [mud] and [stone]<>[digger]s yield various materials that can be used for tool-making and rudimentary construction.',
-			icon: [7, 2],
-			cost: {},
-			use: { 'worker': 1 },
-			staff: { 'knapped tools': 1 },
-			upkeep: { 'coin': 0.1 },
-			effects: [
-				{ type: 'gather', context: 'dig', amount: 1, max: 1 },
-				{ type: 'gather', context: 'dig', what: { 'clay': 5 }, max: 1, req: { 'pottery': true } },
-
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'digging': true },
-			category: 'production',
-		});
-		new G.Unit({
-			name: 'quarry',
-			desc: '@carves [cut stone] out of the ground@may find other minerals such as [limestone] and [marble]<>The [quarry] dismantles the ground we stand on so that our children may reach higher heights.',
-			icon: [22, 3],
-			cost: { 'archaic building materials': 100 },
-			use: { 'land': 1, 'building slot': 1, 'infrastructure': 10 },
-			//require:{'worker':3,'stone tools':3},
-			modes: {
-				'off': G.MODE_OFF,
-				'quarry': { name: 'Quarry stone', icon: [0, 8], desc: 'Produce [cut stone] and other minerals.', use: { 'worker': 3, 'stone tools': 3 } },
-				'advanced quarry': { name: 'Advanced quarry stone', icon: [8, 12, 0, 8], desc: 'Produce [cut stone] and other minerals at a superior rate with metal tools.', use: { 'worker': 3, 'metal tools': 3 } },
-			},
-			effects: [
-				{ type: 'gather', context: 'quarry', amount: 5, max: 10, every: 3, mode: 'quarry' },
-				{ type: 'gather', context: 'quarry', what: { 'cut stone': 1 }, max: 5, notMode: 'off' },
-				{ type: 'gather', context: 'mine', amount: 0.005, max: 0.05, notMode: 'off' },
-				{ type: 'gather', context: 'quarry', amount: 10, max: 30, every: 3, mode: 'advanced quarry' },
-				{ type: 'gather', what: { 'experience': 3 }, amount: 0.03 },
-				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.01, '[X] [people].', 'quarry collapsed, wounding its workers', 'quarries collapsed, wounding their workers'), chance: 1 / 50 },
-			],
-			gizmos: true,
-			req: { 'quarrying': true },
-			category: 'production',
-		});
-		new G.Unit({
-			name: 'mine',
-			desc: '@extracts ores, [coal] and [stone] out of the ground@may occasionally collapse<>The workers in [mine]s burrow deep into the earth to provide all kinds of minerals.',
-			icon: [22, 2],
-			cost: { 'archaic building materials': 100 },
-			use: { 'land': 1, 'building slot': 1, 'infrastructure': 10 },
-			//require:{'worker':3,'stone tools':3},
-			modes: {
-				'off': G.MODE_OFF,
-				'any': { name: 'Any', icon: [8, 8], desc: 'Mine without focusing on specific ores.', use: { 'worker': 5, 'stone tools': 5 } },
-				'coal': { name: 'Coal', icon: [12, 8], desc: 'Mine for [coal] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'salt': { name: 'Salt', icon: [11, 7], desc: 'Mine for [salt].', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'copper': { name: 'Copper', icon: [9, 8], desc: 'Mine for [copper ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'tin': { name: 'Tin', icon: [13, 8], desc: 'Mine for [tin ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'iron': { name: 'Iron', icon: [10, 8], desc: 'Mine for [iron ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'gold': { name: 'Gold', icon: [11, 8], desc: 'Mine for [gold ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-			},
-			effects: [
-				{ type: 'gather', context: 'mine', amount: 10, max: 30, mode: 'any' },
-				{ type: 'gather', context: 'mine', what: { 'stone': 10 }, max: 30, notMode: 'off' },
-				{ type: 'gather', context: 'mine', what: { 'coal': 50 }, max: 30, mode: 'coal' },
-				{ type: 'gather', context: 'mine', what: { 'salt': 50 }, max: 30, mode: 'salt' },
-				{ type: 'gather', context: 'mine', what: { 'copper ore': 50 }, max: 30, mode: 'copper' },
-				{ type: 'gather', context: 'mine', what: { 'tin ore': 50 }, max: 30, mode: 'tin' },
-				{ type: 'gather', context: 'mine', what: { 'iron ore': 50 }, max: 30, mode: 'iron' },
-				{ type: 'gather', context: 'mine', what: { 'gold ore': 50 }, max: 30, mode: 'gold' },
-				{ type: 'gather', what: { 'experience': 3 }, amount: 0.03 },
-				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.01, '[X] [people].', 'mine collapsed, wounding its miners', 'mines collapsed, wounding their miners'), chance: 1 / 50 },
-			],
-			gizmos: true,
-			req: { 'mining': true },
-			category: 'production',
 		});
 		new G.Unit({
 			name: 'furnace',
@@ -2281,26 +2393,6 @@ G.AddData({
 			req: { 'writing': true },
 			category: 'storage',
 		});
-
-		new G.Unit({
-			name: 'woodcutter',
-			desc: '@cuts trees, producing [log]s<>[woodcutter]s turn forests into precious wood that can be used as fuel or construction materials.',
-			icon: [8, 2],
-			cost: {},
-			use: { 'worker': 1 },
-			staff: { 'knapped tools': 1 },
-			upkeep: { 'coin': 0.1 },
-			effects: [
-				{ type: 'gather', wwhat: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
-
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'woodcutting': true },
-			category: 'production',
-		});
 		new G.Unit({
 			name: 'carpenter workshop',
 			desc: '@processes wood<>The [carpenter workshop,Carpenter] is equipped with all kinds of tools to coerce wood into more useful shapes.',
@@ -2323,165 +2415,6 @@ G.AddData({
 			gizmos: true,
 			req: { 'carpentry': true },
 			category: 'crafting',
-		});
-
-		new G.Unit({
-			name: 'soothsayer',
-			desc: '@generates [faith] and [happiness] every now and then<>[soothsayer]s tell the tales of the dead, helping tribespeople deal with grief.',
-			icon: [15, 2],
-			cost: {},
-			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.2 },
-			effects: [
-				{ type: 'gather', what: { 'faith': 0.1, 'happiness': 0.1 } },
-				{ type: 'gather', what: { 'faith': 0.05 }, req: { 'symbolism': true } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'ritualism': true },
-			category: 'spiritual',
-		});
-		new G.Unit({
-			name: 'healer',
-			desc: '@uses [medical herb]s to heal the [sick] and the [wounded] slowly<>The [healer] knows the secrets of special plants that make illness stay away.',
-			icon: [23, 3],
-			cost: {},
-			use: { 'worker': 1 },
-			staff: { 'stone tools': 1 },
-			upkeep: { 'coin': 0.2 },
-			effects: [
-				{ type: 'convert', from: { 'sick': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 5, every: 5 },
-				{ type: 'convert', from: { 'wounded': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 10, every: 5 },
-
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
-			],
-			req: { 'healing': true },
-			category: 'spiritual',
-			priority: 5,
-		});
-
-		new G.Unit({
-			name: 'chieftain',
-			desc: '@generates [insight] and [influence] every now and then<>The [chieftain] leads over a small group of people, guiding them in their decisions.',
-			icon: [18, 3],
-			cost: { 'food': 25 },
-			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.5 },
-			effects: [
-				{ type: 'gather', what: { 'influence': 0.05 } },
-				{ type: 'gather', what: { 'insight': 0.05 } },
-				{ type: 'gather', what: { 'insight': 0.05 }, req: { 'speech': true } },
-				{ type: 'gather', what: { 'influence': 0.05 }, req: { 'chieftain': true } },
-				{ type: 'gather', what: { 'influence': 0.05 }, req: { 'code of law': true } },
-				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
-			],
-			limitPer: { 'population': 50 },
-			req: { 'tribalism': true },
-			category: 'political',
-			priority: 5,
-		});
-		new G.Unit({
-			name: 'clan leader',
-			desc: '@generates [influence] every now and then<>The [clan leader] is followed by many, and is trusted with defending the honor and safety of their people.',
-			icon: [19, 3, 'H1sheet'],
-			cost: { 'food': 100 },
-			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.75 },
-			effects: [
-				{ type: 'gather', what: { 'influence': 0.1 } },
-				{ type: 'provide', what: { 'authority': 2 } },
-				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
-			],
-			limitPer: { 'population': 500 },
-			req: { 'clans': true },
-			category: 'political',
-			priority: 5,
-		});
-
-		new G.Unit({
-			name: 'grave',
-			desc: '@provides 10 [burial spot], in which the [corpse,dead] are automatically interred one by one@graves with buried corpses decay over time, freeing up land for more graves<>A simple grave dug into the earth, where the dead may find rest.//Burying your dead helps prevent [health,disease] and makes your people slightly [happiness,happier].',
-			icon: [13, 2],
-			cost: {},
-			use: { 'land': 1 },
-			//require:{'worker':1,'knapped tools':1},
-			effects: [
-				{ type: 'provide', what: { 'burial spot': 10 } },
-				{ type: 'waste', chance: 1 / 100 },
-			],
-			req: { 'burial': true },
-			category: 'civil',
-		});
-
-		new G.Unit({
-			name: 'primitive settlement',
-			desc: '@provides 20 [housing]@provides 5 [building slot]s<>A settlement made out of mud, stick and stone.',
-			icon: [2, 14, 'H1sheet'],
-			wideIcon: [3, 14, 'H1sheet'],
-			cost: { 'archaic building materials': 300, 'knapped tools': 10 },
-			use: { 'land': 10 },
-			effects: [
-				{ type: 'provide', what: { 'housing': 20 } },
-				{ type: 'provide', what: { 'building slot': 5 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
-			],
-			req: { 'sedentism': true },
-			limitPer: { 'population': 10 },
-			category: 'settlement',
-		});
-		new G.Unit({
-			name: 'village',
-			desc: '@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
-			icon: [5, 14, 'H1sheet'],
-			wideIcon: [6, 14, 'H1sheet'],
-			cost: { 'basic building materials': 1e3, 'stone tools': 50, 'authority': 1 },
-			use: { 'land': 50, 'infrastructure': 20 },
-			effects: [
-				{ type: 'provide', what: { 'housing': 100 } },
-				{ type: 'provide', what: { 'building slot': 20 } },
-				{ type: 'waste', chance: 0.0005 / 1000 },
-			],
-			req: { 'building': true },
-			limitPer: { 'population': 50 },
-			category: 'settlement',
-		});
-		new G.Unit({
-			name: 'city',
-			desc: '@Develop a village.@provides 2000 [housing].@provides 100 [building slot]s.<>A tile full of human stuctures.',
-			icon: [8, 14, 'H1sheet'],
-			wideIcon: [9, 14, 'H1sheet'],
-			cost: { 'basic building materials': 1e4, 'metal tools': 100, 'authority': 5 },
-			use: { 'land': 200, 'infrastructure': 100 },
-			effects: [
-
-				{ type: 'provide', what: { 'housing': 2000 } },
-				{ type: 'provide', what: { 'housing': 1000 }, req: { 'city planning': true } },
-				{ type: 'provide', what: { 'building slot': 100 } },
-				{ type: 'provide', what: { 'building slot': 20 }, req: { 'city planning': true } },
-				{ type: 'waste', chance: 0.0005 / 1000 },
-			],
-			req: { 'cities': true },
-			category: 'settlement',
-		});
-		new G.Unit({
-			name: 'storage pit',
-			desc: '@provides 400 [food storage] and 400 [material storage]<>A simple hole in the ground, lined with stones.//Prevents some amount of food from perishing and some goods from being stolen, but may crumble away over time.',
-			icon: [12, 2],
-			cost: { 'archaic building materials': 50 },
-			use: { 'land': 1, 'infrastructure': 10 },
-			//require:{'worker':2,'knapped tools':2},
-			effects: [
-				{ type: 'provide', what: { 'added food storage': 400 } },
-				{ type: 'provide', what: { 'added material storage': 400 } },
-				{ type: 'waste', chance: 0.8 / 1000 }
-			],
-			req: { 'stockpiling': true },
-			category: 'storage',
 		});
 		new G.Unit({
 			name: 'stockpile',
@@ -2556,79 +2489,145 @@ G.AddData({
 			req: { 'stockpiling': true, 'carpentry': true },
 			category: 'storage',
 		});
-
+		//bigBuildings
 		new G.Unit({
-			name: 'architect',
-			desc: '@can be set to manage automatic building construction<>The [architect] is tasked with fulfilling your people\'s housing needs so that you don\'t have to worry about it too much.',
-			icon: [26, 4],
-			cost: {},
-			use: { 'worker': 1 },
-			upkeep: { 'coin': 0.5 },
-			gizmos: true,
+			name: 'quarry',
+			desc: '@carves [cut stone] out of the ground@may find other minerals such as [limestone] and [marble]<>The [quarry] dismantles the ground we stand on so that our children may reach higher heights.',
+			icon: [22, 3],
+			cost: { 'archaic building materials': 100 },
+			use: { 'land': 1, 'building slot': 1, 'infrastructure': 10 },
+			//require:{'worker':3,'stone tools':3},
 			modes: {
 				'off': G.MODE_OFF,
-				'undertaker': { name: 'Undertaker', icon: [13, 2], desc: 'Dig [grave]s as long as there are unburied corpses.' },
+				'quarry': { name: 'Quarry stone', icon: [0, 8], desc: 'Produce [cut stone] and other minerals.', use: { 'worker': 3, 'stone tools': 3 } },
+				'advanced quarry': { name: 'Advanced quarry stone', icon: [8, 12, 0, 8], desc: 'Produce [cut stone] and other minerals at a superior rate with metal tools.', use: { 'worker': 3, 'metal tools': 3 } },
 			},
 			effects: [
-				{
-					type: 'function', func: function (me) {
-						var wiggleRoom = 50;
-						var toMake = Math.min(me.amount - me.idle, Math.max(0, (G.getRes('corpse').amount + wiggleRoom) - 10 * (G.getRes('burial spot').amount - 10 * G.getRes('burial spot').used)));
-						if (toMake > 0 && G.canBuyUnitByName('grave', toMake)) {
-							G.buyUnitByName('grave', toMake, true);
-						}
-					}, mode: 'undertaker'
-				},
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'quarry', amount: 5, max: 10, every: 3, mode: 'quarry' },
+				{ type: 'gather', context: 'quarry', what: { 'cut stone': 1 }, max: 5, notMode: 'off' },
+				{ type: 'gather', context: 'mine', amount: 0.005, max: 0.05, notMode: 'off' },
+				{ type: 'gather', context: 'quarry', amount: 10, max: 30, every: 3, mode: 'advanced quarry' },
+				{ type: 'gather', what: { 'experience': 3 }, amount: 0.03 },
+				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.01, '[X] [people].', 'quarry collapsed, wounding its workers', 'quarries collapsed, wounding their workers'), chance: 1 / 50 },
 			],
-			limitPer: { 'land': 100 },
-			req: { 'city planning': true },
+			gizmos: true,
+			req: { 'quarrying': true },
+			category: 'production',
+		});
+		new G.Unit({
+			name: 'mine',
+			desc: '@extracts ores, [coal] and [stone] out of the ground@may occasionally collapse<>The workers in [mine]s burrow deep into the earth to provide all kinds of minerals.',
+			icon: [22, 2],
+			cost: { 'archaic building materials': 100 },
+			use: { 'land': 1, 'building slot': 1, 'infrastructure': 10 },
+			//require:{'worker':3,'stone tools':3},
+			modes: {
+				'off': G.MODE_OFF,
+				'any': { name: 'Any', icon: [8, 8], desc: 'Mine without focusing on specific ores.', use: { 'worker': 5, 'stone tools': 5 } },
+				'coal': { name: 'Coal', icon: [12, 8], desc: 'Mine for [coal] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'salt': { name: 'Salt', icon: [11, 7], desc: 'Mine for [salt].', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'copper': { name: 'Copper', icon: [9, 8], desc: 'Mine for [copper ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'tin': { name: 'Tin', icon: [13, 8], desc: 'Mine for [tin ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'iron': { name: 'Iron', icon: [10, 8], desc: 'Mine for [iron ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'gold': { name: 'Gold', icon: [11, 8], desc: 'Mine for [gold ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+			},
+			effects: [
+				{ type: 'gather', context: 'mine', amount: 10, max: 30, mode: 'any' },
+				{ type: 'gather', context: 'mine', what: { 'stone': 10 }, max: 30, notMode: 'off' },
+				{ type: 'gather', context: 'mine', what: { 'coal': 50 }, max: 30, mode: 'coal' },
+				{ type: 'gather', context: 'mine', what: { 'salt': 50 }, max: 30, mode: 'salt' },
+				{ type: 'gather', context: 'mine', what: { 'copper ore': 50 }, max: 30, mode: 'copper' },
+				{ type: 'gather', context: 'mine', what: { 'tin ore': 50 }, max: 30, mode: 'tin' },
+				{ type: 'gather', context: 'mine', what: { 'iron ore': 50 }, max: 30, mode: 'iron' },
+				{ type: 'gather', context: 'mine', what: { 'gold ore': 50 }, max: 30, mode: 'gold' },
+				{ type: 'gather', what: { 'experience': 3 }, amount: 0.03 },
+				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.01, '[X] [people].', 'mine collapsed, wounding its miners', 'mines collapsed, wounding their miners'), chance: 1 / 50 },
+			],
+			gizmos: true,
+			req: { 'mining': true },
+			category: 'production',
+		});
+		new G.Unit({
+			name: 'grave',
+			desc: '@provides 10 [burial spot], in which the [corpse,dead] are automatically interred one by one@graves with buried corpses decay over time, freeing up land for more graves<>A simple grave dug into the earth, where the dead may find rest.//Burying your dead helps prevent [health,disease] and makes your people slightly [happiness,happier].',
+			icon: [13, 2],
+			cost: {},
+			use: { 'land': 1 },
+			//require:{'worker':1,'knapped tools':1},
+			effects: [
+				{ type: 'provide', what: { 'burial spot': 10 } },
+				{ type: 'waste', chance: 1 / 100 },
+			],
+			req: { 'burial': true },
 			category: 'civil',
 		});
+		new G.Unit({
+			name: 'storage pit',
+			desc: '@provides 400 [food storage] and 400 [material storage]<>A simple hole in the ground, lined with stones.//Prevents some amount of food from perishing and some goods from being stolen, but may crumble away over time.',
+			icon: [12, 2],
+			cost: { 'archaic building materials': 50 },
+			use: { 'land': 1, 'infrastructure': 10 },
+			//require:{'worker':2,'knapped tools':2},
+			effects: [
+				{ type: 'provide', what: { 'added food storage': 400 } },
+				{ type: 'provide', what: { 'added material storage': 400 } },
+				{ type: 'waste', chance: 0.8 / 1000 }
+			],
+			req: { 'stockpiling': true },
+			category: 'storage',
+		});
+		//settlementBuildings
+		new G.Unit({
+			name: 'primitive settlement',
+			desc: '@provides 20 [housing]@provides 5 [building slot]s<>A settlement made out of mud, stick and stone.',
+			icon: [2, 14, 'H1sheet'],
+			wideIcon: [3, 14, 'H1sheet'],
+			cost: { 'archaic building materials': 300, 'knapped tools': 10 },
+			use: { 'land': 10 },
+			effects: [
+				{ type: 'provide', what: { 'housing': 20 } },
+				{ type: 'provide', what: { 'building slot': 5 } },
+				{ type: 'waste', chance: 0.001 / 1000 }
+			],
+			req: { 'sedentism': true },
+			limitPer: { 'population': 10 },
+			category: 'settlement',
+		});
+		new G.Unit({
+			name: 'village',
+			desc: '@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
+			icon: [5, 14, 'H1sheet'],
+			wideIcon: [6, 14, 'H1sheet'],
+			cost: { 'basic building materials': 1e3, 'stone tools': 50, 'authority': 1 },
+			use: { 'land': 50, 'infrastructure': 20 },
+			effects: [
+				{ type: 'provide', what: { 'housing': 100 } },
+				{ type: 'provide', what: { 'building slot': 20 } },
+				{ type: 'waste', chance: 0.0005 / 1000 },
+			],
+			req: { 'building': true },
+			limitPer: { 'population': 50 },
+			category: 'settlement',
+		});
+		new G.Unit({
+			name: 'city',
+			desc: '@Develop a village.@provides 2000 [housing].@provides 100 [building slot]s.<>A tile full of human stuctures.',
+			icon: [8, 14, 'H1sheet'],
+			wideIcon: [9, 14, 'H1sheet'],
+			cost: { 'basic building materials': 1e4, 'metal tools': 100, 'authority': 5 },
+			use: { 'land': 200, 'infrastructure': 100 },
+			effects: [
 
-		new G.Unit({
-			name: 'wanderer',
-			desc: '@explores occupied tiles for [land]@cannot discover new tiles@may sometimes get lost<>[wanderer]s walk about in search of new places to settle, reporting what they saw when they come back.<>They also acts as out-going personel between human organizations.',
-			icon: [2, 2],
-			cost: { 'food': 10 },
-			upkeep: { 'food': 1 },
-			use: { 'worker': 1 },
-			gizmos: true,
-			modes: {
-				'careful exploration': { name: 'Careful exploration', desc: '[wanderer]s would mark their path and have the patience, making them explore slower and harder to get lost' },
-				'aggressive exploration': { name: 'Aggresive exploration', desc: '[wanderer]s would explore at normal rate, the chance of getting lost is normal' },
-				'recuit wild human': { name: 'Recuit wild human', desc: '[wanderer]s will try to intergrate any wild man they can communicate into our tribe, they use up [culture] and [food]s in this process.', req: { 'chieftains': true, 'tribe migration': true } },
-			},
-			effects: [
-				{ type: 'explore', explored: 0.075, unexplored: 0, mode: 'careful exploration' },
-				{ type: 'explore', explored: 0.125, unexplored: 0, mode: 'aggressive exploration' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'adult': 1 }, chance: 1 / 100, req: { 'chieftains': true }, mode: 'recuit wild human' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'elder': 1 }, chance: 1 / 150, req: { 'chieftains': true }, mode: 'recuit wild human' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'child': 1 }, chance: 1 / 80, req: { 'chieftains': true }, mode: 'recuit wild human' },
-				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 200, mode: 'careful exploration' },
-				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 50, mode: 'aggressive exploration' },
-				{ type: 'mult', value: 1.1, req: { 'mountain origin': true } },
+				{ type: 'provide', what: { 'housing': 2000 } },
+				{ type: 'provide', what: { 'housing': 1000 }, req: { 'city planning': true } },
+				{ type: 'provide', what: { 'building slot': 100 } },
+				{ type: 'provide', what: { 'building slot': 20 }, req: { 'city planning': true } },
+				{ type: 'waste', chance: 0.0005 / 1000 },
 			],
-			req: { 'speech': true },
-			category: 'exploration',
+			req: { 'cities': true },
+			category: 'settlement',
 		});
-		new G.Unit({
-			name: 'scout',
-			desc: '@discovers new tiles for [land]@cannot explore occupied tiles@may sometimes get lost<>[scout]s explore the world in search of new territories.',
-			icon: [24, 3],
-			cost: { 'food': 100 },
-			use: { 'worker': 1 },
-			staff: { 'stone tools': 1 },
-			effects: [
-				{ type: 'explore', explored: 0, unexplored: 0.01 },
-				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'scout got lost', 'scouts got lost'), chance: 1 / 300 }
-			],
-			req: { 'scouting': true },
-			category: 'exploration',
-		});
+		
 
 		//wonders
 
@@ -2663,11 +2662,11 @@ G.AddData({
 		});
 		new G.Unit({
 			name: 'auto brain',
-			desc: '@generates 50 of [insight], [culture], [faith], [science] and [influence]<>Educates your people so you don\'t have to.//Powered by strange energies.',
+			desc: '@generates 50 of [experience], [insight], [culture], [faith], [science] and [influence]<>Educates your people so you don\'t have to.//Powered by strange energies.',
 			icon: [5, 2],
 			cost: {},
 			effects: [
-				{ type: 'gather', what: { 'insight': 50, 'culture': 50, 'faith': 50, 'science': 50, 'influence': 50 } }
+				{ type: 'gather', what: { 'experience': 50, 'insight': 50, 'culture': 50, 'faith': 50, 'science': 50, 'influence': 50 } }
 			],
 			category: 'debug',
 		});
@@ -2754,7 +2753,7 @@ G.AddData({
 				return '<div class="info"><div class="par">' + (this.choices.length == 0 ? 'Generate new research opportunities.<br>The cost scales with your Wisdom resource.' : 'Reroll into new research opportunities if none of the available choices suit you.<br>Cost increases with each reroll, but will decrease again over time.') + '</div><div>Cost : ' + G.getCostString(this.getCosts(), true) + '.</div></div>';
 			}
 		});
-		/// T0
+		//Origins
 		new G.Tech({
 			name: 'forest origin',
 			desc: 'Your people came from tribes of the forests, which granted them better eyesights in gathering.<>@[gatherer] efficiency increased by 10%.',
@@ -2813,6 +2812,7 @@ G.AddData({
 			],
 			category: 'disc'
 		});
+		//T0
 		new G.Tech({
 			name: 'tribalism',
 			desc: '@unlocks [gatherer]@unlocks [chieftain]@provides 5 [authority]<>Taking its roots in wild animal packs, [tribalism] is the organization of individuals into simple social structures with little hierarchy.',
@@ -2849,7 +2849,7 @@ G.AddData({
 			],
 			category: 'indu'
 		});
-		///T1
+		//T1
 		new G.Tech({
 			name: 'language',
 			desc: '@[chieftain] generates more insights @provides 5 [inspiration]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
@@ -2905,7 +2905,7 @@ G.AddData({
 			req: { 'fire-making': true },
 			category: 'disc'
 		});
-		///T2
+		//T2
 		new G.Tech({
 			name: 'oral tradition',
 			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
@@ -4164,7 +4164,7 @@ G.AddData({
 			desc: '[berry bush,Berry bushes] can be foraged for [fruit]s, [stick]s and sometimes [herb]s.',
 			icon: [4, 10],
 			res: {
-				'foodgather': { 'fruit': 1.5, 'herb': 0.1 },
+				'foodgather': { 'fruit': 3, 'herb': 0.1 },
 				'materialgather': { 'stick': 0.5 },
 				'herbgather': { 'medical herb': 0.25 },
 			},
@@ -4176,7 +4176,7 @@ G.AddData({
 			desc: '[forest mushrooms] grow in the penumbra of the underbrush, and often yield all sorts of interesting [herb]s.',
 			icon: [5, 10],
 			res: {
-				'foodgather': { 'herb': 0.5, 'vegetable': 1 },
+				'foodgather': { 'herb': 0.5, 'vegetable': 2 },
 				'herbgather': { 'medical herb': 0.5, 'spice': 0.2 },
 			},
 			affectedBy: ['scarce forageables'],
@@ -4187,7 +4187,7 @@ G.AddData({
 			desc: 'Hardy cactii that grow in the desert. While tricky to harvest, [succulents] can provide [herb]s and [fruit]s.',
 			icon: [6, 10],
 			res: {
-				'foodgather': { 'fruit': 0.5, 'herb': 3 },
+				'foodgather': { 'fruit': 1, 'herb': 3 },
 				'herbgather': { 'medical herb': 0.5 },
 			},
 			affectedBy: ['scarce forageables'],
@@ -4198,7 +4198,7 @@ G.AddData({
 			desc: '[jungle fruits] come in all shapes, colors and sizes, and will yield [fruit]s and [herb]s to those who forage them.',
 			icon: [7, 10],
 			res: {
-				'foodgather': { 'fruit': 2, 'herb': 0.5, 'vegetable': 0.5 },
+				'foodgather': { 'fruit': 5, 'herb': 0.5, 'vegetable': 0.5 },
 				'herbgather': { 'medical herb': 0.5, 'spice': 0.5 },
 			},
 			affectedBy: ['scarce forageables'],
