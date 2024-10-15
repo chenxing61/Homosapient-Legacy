@@ -685,7 +685,7 @@ G.AddData({
 		});
 		new G.Res({
 			name: 'infrastructure',
-			desc: '[infrastructure] is the blood vessel of civlizations. Which population and goods flow through. Productive structures take up it. If you dont have enough of it. [productivity] will decrease.If you have enough spare [infrastructure], [productivity] will increase.',
+			desc: '[infrastructure] is the blood vessel of civilzations. Which population and goods flow through. Productive structures take up it. If you dont have enough of it. [productivity] will decrease.If you have enough spare [infrastructure], [productivity] will increase.',
 			icon: [13, 3, 'H1sheet'],
 			displayUsed: true,
 			getDisplayAmount: function () {
@@ -1448,6 +1448,10 @@ G.AddData({
 			icon: [16, 5, 'H1sheet'],
 			partOf: 'misc materials',
 			category: 'misc',
+			tick: function (me, tick) {
+				var toSpoil = me.amount * 0.00005;
+				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
+			},
 		});
 
 		new G.Res({
@@ -2380,10 +2384,10 @@ G.AddData({
 
 		new G.Unit({
 			name: 'library',
-			desc: '@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 2 knowledgeable men to classify and check if any morons did not place the book right',
+			desc: '@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 1 knowledgeable men to classify and check if any morons did not place the book right',
 			icon: [30, 2, 'H1sheet', 25, 2, 'H1sheet'],
 			cost: { 'basic building materials': 500, 'recording medium': 100 },
-			use: { 'building slot': 1, 'worker': 2, 'infrastructure': 5 },
+			use: { 'building slot': 1, 'worker': 1, 'infrastructure': 5 },
 			//require:{'worker':2,'knapped tools':2},
 			effects: [
 				{ type: 'provide', what: { 'record': 100 } },
@@ -3395,7 +3399,7 @@ G.AddData({
 
 		new G.Tech({
 			name: 'basic drawing',
-			desc: '@Provides 20 [inspiration]s<>Enable your civlization to draw simple shapes to express their idea and perspective.<>',
+			desc: '@Provides 20 [inspiration]s<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
 			icon: [29, 4, 'H1sheet'],
 			cost: { 'insight': 20 },
 			req: { 'symbolism': true },
@@ -3406,7 +3410,7 @@ G.AddData({
 
 		new G.Tech({
 			name: 'writing',
-			desc: '@Provide 10 [inspiration]s<>Enable your civlization build [library]<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by you.<>',
+			desc: '@Provide 10 [inspiration]s<>Enable your civilzation build [library]<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by you.<>',
 			icon: [30, 4, 'H1sheet'],
 			cost: { 'insight': 45, 'recording medium': 10 },
 			req: { 'symbolism': true },
