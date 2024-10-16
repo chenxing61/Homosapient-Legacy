@@ -2904,12 +2904,24 @@ G.AddData({
 			],
 			category: 'disc'
 		});
+		
 		new G.Tech({
 			name: 'cooking',
 			desc: '@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
 			icon: [17, 1],
 			cost: { 'experience': 10, 'fireplace': 1, 'food': 1 },
 			req: { 'fire-making': true },
+			category: 'disc'
+		});
+		new G.Tech({
+			name: 'digging',
+			desc: '@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
+			icon: [11, 1],
+			cost: { 'insight': 5, 'experience': 25 },
+			req: { 'use of tool': true },
+			effects: [
+				{ type: 'show context', what: ['dig'] },
+			],
 			category: 'disc'
 		});
 		//T2
@@ -2928,7 +2940,7 @@ G.AddData({
 			name: 'oral tradition',
 			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 			icon: [5, 1],
-			cost: { 'insight': 8, 'experience': 20 },
+			cost: { 'insight': 4, 'experience': 20 },
 			req: { 'language': true },
 			effects: [
 				{ type: 'provide res', what: { 'inspiration': 5 } },
@@ -2947,22 +2959,12 @@ G.AddData({
 			chance: 3,
 			category: 'indu'
 		});
-		new G.Tech({
-			name: 'digging',
-			desc: '@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
-			icon: [11, 1],
-			cost: { 'insight': 5, 'experience': 25 },
-			req: { 'stone-knapping': true },
-			effects: [
-				{ type: 'show context', what: ['dig'] },
-			],
-			category: 'disc'
-		});
+		
 		new G.Tech({
 			name: 'woodcutting',
 			desc: '@unlocks [woodcutter]s<>',//TODO : desc
 			icon: [23, 5],
-			cost: { 'insight': 5, 'experience': 30 },
+			cost: { 'insight': 5, 'experience': 30, 'stick': 5 },
 			req: { 'stone-knapping': true },
 			effects: [
 				{ type: 'show context', what: ['chop'] },
@@ -2988,6 +2990,17 @@ G.AddData({
 			],
 			chance: 3,
 			category: 'indu'
+		});
+		new G.Tech({
+			name: 'sedentism',
+			desc: '@unlocks [primitive settlement]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
+			icon: [8, 1],
+			cost: { 'insight': 5, 'experience': 50 },
+			req: { 'digging': true, 'language': true },
+			effects: [
+			],
+			chance: 3,
+			category: 'tradi'
 		});
 		//T3
 		new G.Tech({
@@ -3034,17 +3047,7 @@ G.AddData({
 			],
 			category: 'disc'
 		});
-		new G.Tech({
-			name: 'sedentism',
-			desc: '@unlocks [primitive settlement]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
-			icon: [8, 1],
-			cost: { 'insight': 5, 'experience': 50 },
-			req: { 'digging': true, 'language': true },
-			effects: [
-			],
-			chance: 3,
-			category: 'tradi'
-		});
+		
 		new G.Tech({
 			name: 'canoes',
 			//TODO : fishing boats
