@@ -3609,7 +3609,7 @@ G.AddData({
 		new G.Trait({
 			name: 'great harvest',
 			desc: 'Good yield.',
-			icon: [13, 1, 'H1sheet'],
+			icon: [13, 31, 'H1sheet'],
 			cost: {},
 			chance: 50,
 			req: {},
@@ -3620,7 +3620,7 @@ G.AddData({
 		new G.Trait({
 			name: 'bountifulness',
 			desc: '@increased gather rate<>The nature shows its kindness.',
-			icon: [14, 1, 'H1sheet'],
+			icon: [14, 31, 'H1sheet'],
 			cost: {},
 			chance: 50,
 			req: {},
@@ -3630,12 +3630,21 @@ G.AddData({
 		new G.Trait({
 			name: 'tribe migration',
 			desc: '@enable [wanderer]s to recuit people.<>Some random tribe passed by your land...',
-			icon: [15, 1, 'H1sheet'],
+			icon: [15, 31, 'H1sheet'],
 			cost: {},
 			chance: 20,
 			req: {},
 			effects: [],
 			category: 'occur'
+		});
+		//progressTrait
+		new G.Trait({
+			name:'discovery of agriculture',
+			desc:'People discovered a pleasant surprise from their piles of rotten food',
+			icon:[28,4,'H1sheet'],
+			chance:10,
+			cost:{'spoiled food':2000},
+			req:{'hunting':true,'plant lore':true,'fishing':true},
 		});
 		/*=====================================================================================
 		POLICIES

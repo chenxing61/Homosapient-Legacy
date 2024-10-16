@@ -34,6 +34,7 @@
 //disasterTrait
 //desireTrait
 //goodTrait
+//progressTrait
 //debugPolicy
 //workPolicy
 //foodPolicy
