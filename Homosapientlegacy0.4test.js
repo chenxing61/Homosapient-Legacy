@@ -126,11 +126,13 @@ G.AddData({
 					G.props['new day lines'].push(msg);
 					G.Message({ text: msg });
 				}
+				//weather
 				if (G.has('humid weather')) G.gain('resource depletion', -5);
 				else (G.gain('resource depletion', -0.5));
 				if (G.has('dry weather'))
 					G.gain('resource depletion', 0.25);
-
+				//experience
+				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
 				//possibility to gain random traits everyday
 				for (var i in G.trait) {
 					var me = G.trait[i];
@@ -1907,7 +1909,7 @@ G.AddData({
 				'researcher': { name: 'researcher', icon: [7, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' }
 			},
 			effects: [
-				{ type: 'provide res', what: { 'record': 10 }, mode: 'preserver' },
+				{ type: 'provide', what: { 'record': 10 }, mode: 'preserver' },
 				{ type: 'convert', from: { 'experience': 10 }, into: { 'insight': 0.1 }, mode: 'researcher' },
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2885,12 +2887,13 @@ G.AddData({
 		//T1
 		new G.Tech({
 			name: 'language',
-			desc: '@[chieftain] generates more insights @provides 5 [inspiration]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
+			desc: '@[chieftain] generates more insights @provides 5 [inspiration]@Make people able to share their [experience]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
 			icon: [2, 1],
 			cost: { 'insight': 1, 'influence': 1 },
 			req: { 'speech': true },
 			effects: [
 				{ type: 'provide res', what: { 'inspiration': 5 } },
+				{ type: 'show res', what: ['experience'] },
 			],
 			chance: 50,
 			category: 'wisd'
@@ -2902,6 +2905,7 @@ G.AddData({
 			cost: { 'insight': 1, 'experience': 10, 'stone': 10 },
 			req: { 'use of tool': true },
 			effects: [
+				{ type: 'show res', what: ['tools'] },
 			],
 			chance: 20,
 			category: 'indu'
@@ -2935,7 +2939,7 @@ G.AddData({
 			name: 'cooking',
 			desc: '@[firekeeper]s can now cook [cooked meat] and [cooked seafood]<>Tossing fish and meat over a sizzling fire without reducing them to a heap of ash takes a bit of practice.',
 			icon: [17, 1],
-			cost: { 'experience': 10, 'fireplace': 1, 'food': 1 },
+			cost: { 'experience': 10, 'fire pit': 1, 'food': 1 },
 			req: { 'fire-making': true },
 			category: 'disc'
 		});
@@ -3150,7 +3154,7 @@ G.AddData({
 			name: 'boiling',
 			desc: '@[firekeeper]s can now use [pot] to boil [spoiled water] to turn it back into clean [water]@base [health] value increased by 5%<>Making a habit of drinking warm water is instrumental to human health, ',
 			icon: [17, 1],
-			cost: { 'experience': 10, 'fireplace': 1, 'food': 1 },
+			cost: { 'experience': 10, 'fire pit': 1, 'food': 1 },
 			req: { 'fire-making': true },
 			category: 'disc'
 		});
