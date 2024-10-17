@@ -390,7 +390,7 @@ G.AddData({
 					}
 
 					//clothing
-					var objects = { 'basic clothes': [0.1, 0.1], 'primitive clothes': [0, 0] };
+					var objects = { 'basic clothes': [0.1, 0.2], 'primitive clothes': [0, 0] };
 					var leftout = me.amount;
 					var prev = leftout;
 					var fulfilled = 0;
@@ -1323,10 +1323,28 @@ G.AddData({
 		});
 		//toolRes
 		new G.Res({
-			name: 'knapped tools',
-			desc: 'Rudimentary tools made by hitting [stone]s, usually flint, until their edges are sharp enough.' + numbersInfo,
-			icon: [0, 9],
+			name: 'tools',
+			desc: '[tools] is equipped by your [population,people] when they are doing their jobs, some tools are also required by buildings and technologies.//[tool type] policy decides what kind of tools your people uses, some are better than others.' + numbersInfo,
+			meta: true,
+			visible: true,
+			icon: [1, 9],
 			displayUsed: true,
+			category:'gear'
+		});
+		new G.Res({
+			name: 'knapped tools',
+			desc: 'Rudimentary tools made by hitting [stone]s, usually flint, until their edges are sharp enough.',
+			icon: [0, 9],
+			category: 'gear',
+			tick: function (me, tick) {
+				var toSpoil = me.amount * 0.01;
+				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
+			},
+		});
+		new G.Res({
+			name: 'stone tools',
+			desc: 'Simple tools made of [stone]s and [stick]s for a variety of purposes - hammering, cutting, piercing, crushing.',
+			icon: [1, 9],
 			category: 'gear',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.005;
@@ -1334,24 +1352,12 @@ G.AddData({
 			},
 		});
 		new G.Res({
-			name: 'stone tools',
-			desc: 'Simple tools made of [stone]s and [stick]s for a variety of purposes - hammering, cutting, piercing, crushing.' + numbersInfo,
-			icon: [1, 9],
-			displayUsed: true,
+			name: 'metal tools',
+			desc: 'Solid, durable tools made of metal and wood.',
+			icon: [2, 9],
 			category: 'gear',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.003;
-				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
-			},
-		});
-		new G.Res({
-			name: 'metal tools',
-			desc: 'Solid, durable tools made of metal and wood.' + numbersInfo,
-			icon: [2, 9],
-			displayUsed: true,
-			category: 'gear',
-			tick: function (me, tick) {
-				var toSpoil = me.amount * 0.001;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
@@ -1374,7 +1380,7 @@ G.AddData({
 			displayUsed: true,
 			category: 'gear',
 			tick: function (me, tick) {
-				var toSpoil = me.amount * 0.001;
+				var toSpoil = me.amount * 0.008;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
@@ -1386,13 +1392,14 @@ G.AddData({
 			icon: [15, 7],
 			category: 'gear',
 			tick: function (me, tick) {
-				var toSpoil = me.amount * 0.005;
+				var toSpoil
+				if(G.has('weaving')){toSpoil = me.amount * 0.003;} else {toSpoil = me.amount * 0.008;}
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
 		new G.Res({
 			name: 'basic clothes',
-			desc: 'Sewn together from [leather] or textile fiber.//Each [population,Person] wearing clothing is slightly happier and healthier.' + clothesInfo,
+			desc: 'Sewn together from leather and textile fiber.//Each [population,Person] wearing clothing is slightly happier and healthier.' + clothesInfo,
 			icon: [16, 7],
 			category: 'gear',
 			tick: function (me, tick) {
@@ -1769,7 +1776,7 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'carry material': { name: 'carry materials', icon: [13, 3, 'H1sheet'], desc: 'Provide 10 [infrastructure]' },
-				'builder': { name: 'builder', icon: [13, 3, 'H1sheet'], desc: 'Generate small amount of [labour power]' },
+				'builder': { name: 'builder', icon: [13, 3, 'H1sheet'], desc: 'Generate small amount of [labour power]' ,use: { 'tools': 1 },},
 				'carry water': { name: 'carry water', use: { 'pot': 1 }, icon: [7, 6], desc: 'Making use of pots and carry liquids back to settlements. Better than gathering by barehand.', req: { 'pottery': true } }
 			},
 			effects: [
@@ -1827,7 +1834,7 @@ G.AddData({
 			modes: {
 				'catch by hand': { name: 'Catch by hand', icon: [0, 6], desc: 'Catch fish with nothing but bare hands.//Slow and tedious.' },
 				'spear fishing': { name: 'Spear fishing', icon: [5, 9], desc: 'Catch fish with spears.', use: { 'stone weapons': 1 }, req: { 'spears': true } },
-				'line fishing': { name: 'Line fishing', icon: [5, 9], desc: 'Catch fish with fishing poles.', use: { 'stone tools': 1 }, req: { 'fishing hooks': true } },
+				'line fishing': { name: 'Line fishing', icon: [5, 9], desc: 'Catch fish with fishing poles.', use: { 'tools': 1 }, req: { 'fishing hooks': true } },
 				//TODO : nets
 			},
 			effects: [
@@ -1854,7 +1861,7 @@ G.AddData({
 			icon: [7, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			staff: { 'knapped tools': 1 },
+			staff: { 'tools': 1 },
 			
 			effects: [
 				{ type: 'gather', context: 'dig', amount: 1, max: 1 },
@@ -1874,10 +1881,10 @@ G.AddData({
 			icon: [8, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			staff: { 'knapped tools': 1 },
+			staff: { 'tools': 1 },
 			
 			effects: [
-				{ type: 'gather', wwhat: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
+				{ type: 'gather', what: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
 
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -1950,10 +1957,10 @@ G.AddData({
 			modes: {
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
 				'knap bone': { name: 'Knap bone', icon: [0, 9, 8, 7], desc: 'Turn [bone]s into [knapped tools].', req: { 'bone-working': true } },
-				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'knapped tools': 1 } },
-				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'knapped tools': 1 } },
-				'bows': { name: 'Craft bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [bow]s.', req: { 'bows': true }, use: { 'stone tools': 1 } },
-				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'knapped tools': 1 } },
+				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { ' tools': 1 } },
+				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { ' tools': 1 } },
+				'bows': { name: 'Craft bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
+				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { ' tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.' },
 			},
 			effects: [
@@ -1987,12 +1994,12 @@ G.AddData({
 			
 			gizmos: true,
 			modes: {
-				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { 'knapped tools': 1 } },
-				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { 'knapped tools': 1 } },
-				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [insight] and [log]s into [recording medium] slowly', use: { 'stone tools': 1 }, req: { 'basic drawing': true } },
-				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'stone tools': 1 } },
-				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'stone tools': 1 } },
-				'gem blocks': { name: 'Carve gem blocks', icon: [7, 9], desc: 'Slowly turn 10 [gems] into 1 [gem block].', req: { 'lapidary': true }, use: { 'stone tools': 1 } },
+				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { ' tools': 1 } },
+				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { ' tools': 1 } },
+				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [insight] and [log]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'basic drawing': true } },
+				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'tools': 1 } },
+				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'tools': 1 } },
+				'gem blocks': { name: 'Carve gem blocks', icon: [7, 9], desc: 'Slowly turn 10 [gems] into 1 [gem block].', req: { 'lapidary': true }, use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate, but not the repetitive ones, like smashing stones and carving them.' },
 			},
 			effects: [
@@ -2025,12 +2032,12 @@ G.AddData({
 			
 			gizmos: true,
 			modes: {
-				'sew grass clothing': { name: 'Sew plant-based clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 30 [herb]s each.', use: { 'stone tools': 1 } },
-				'sew hide clothing': { name: 'Sew hide clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 3 [hide]s each.', use: { 'stone tools': 1 } },
-				'weave fiber': { name: 'Weave fiber', icon: [16, 7], desc: 'Craft 1 [fiber] from 10 [herb]s each.', use: { 'stone tools': 1 }, req: { 'weaving': true } },
-				'weave clothing': { name: 'Weave basic clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 2 [fiber]s and 1[leather] each.<>Picture something like roman peasants with their tunics and leather sandals', use: { 'stone tools': 1 }, req: { 'weaving': true } },
-				'make leather': { name: 'Make leather', icon: [10, 7], desc: 'Produce [leather] from [hide]s, [water], [salt] and [log]s.', use: { 'stone tools': 1 }, req: { 'leather-working': true } },
-				'cheap make leather': { name: 'Make leather (cheap)', icon: [10, 7], desc: 'Slowly produce [leather] from [hide]s, [muddy water] and [herb]s.', use: { 'stone tools': 1 } },
+				'sew grass clothing': { name: 'Sew plant-based clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 30 [herb]s each.', use: { 'tools': 1 } },
+				'sew hide clothing': { name: 'Sew hide clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 3 [hide]s each.', use: { 'tools': 1 } },
+				'weave fiber': { name: 'Weave fiber', icon: [16, 7], desc: 'Craft 1 [fiber] from 10 [herb]s each.', use: { 'tools': 1 }, req: { 'weaving': true } },
+				'weave clothing': { name: 'Weave basic clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 2 [fiber]s and 1[leather] each.<>Picture something like roman peasants with their tunics and leather sandals', use: { 'tools': 1 }, req: { 'weaving': true,'leather-working':true} },
+				'make leather': { name: 'Make leather', icon: [10, 7], desc: 'Produce [leather] from [hide]s, [water], [salt] and [log]s.', use: { 'tools': 1 }, req: { 'leather-working': true } },
+				'cheap make leather': { name: 'Make leather (cheap)', icon: [10, 7], desc: 'Slowly produce [leather] from [hide]s, [muddy water] and [herb]s.', use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate.' },
 			},
 			effects: [
@@ -2048,7 +2055,7 @@ G.AddData({
 				//any
 				{ type: 'convert', from: { 'hide': 3 }, into: { 'primitive clothes': 1 }, every: 16, mode: 'any' },
 				{ type: 'convert', from: { 'herb': 30 }, into: { 'primitive clothes': 1 }, every: 40, mode: 'any' },
-				{ type: 'convert', from: { 'fiber':2,'leather': 1 }, into: { 'basic clothes': 1 }, every: 40, mode: 'any', req: { 'weaving': true } },
+				{ type: 'convert', from: { 'fiber':2,'leather': 1 }, into: { 'basic clothes': 1 }, every: 40, mode: 'any', req: { 'weaving': true,'leather-working':true}  },
 				{ type: 'convert', from: { 'hide': 1, 'water': 5, 'salt': 1, 'log': 0.1 }, into: { 'leather': 1 }, every: 30, mode: 'any', req: { 'leather-working': true } }
 			],
 			req: { 'sewing': true },
@@ -2065,10 +2072,12 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'drilling wood to start fire': { name: 'drilling wood to start fire', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 24 [stick]s each slowly.' },
-				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'knapped tools': 1 } },
-				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { 'knapped tools': 1 } },
+				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { ' tools': 1 } },
+				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { ' tools': 1 } },
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
+				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [spoiled water] into [water] in a pot at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { ' pot ': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
+				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.'},
 
 			},
 			effects: [
@@ -2077,6 +2086,7 @@ G.AddData({
 				{ type: 'convert', from: { 'stick': 5, 'herb': 2 }, into: { 'torch': 1 }, every: 8, mode: 'make torches' },
 				{ type: 'convert', from: { 'meat': 1, 'fire pit': 0.01 }, into: { 'cooked meat': 1 }, every: 2, repeat: 5, mode: 'cook' },
 				{ type: 'convert', from: { 'seafood': 1, 'fire pit': 0.01 }, into: { 'cooked seafood': 1 }, every: 2, repeat: 5, mode: 'cook' },
+				{ type: 'convert', from: { 'spoiled water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 2, repeat: 5, mode: 'boiling' },
 				{ type: 'convert', from: { 'meat': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured meat': 2 }, every: 1, repeat: 10, mode: 'cure' },
 				{ type: 'convert', from: { 'seafood': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured seafood': 2 }, every: 1, repeat: 10, mode: 'cure' },
 
@@ -2084,6 +2094,15 @@ G.AddData({
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'muddy water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+				//any
+				{ type: 'convert', from: { 'stick': 24 }, into: { 'fire pit': 1 }, every: 2, mode: 'any' },
+				{ type: 'convert', from: { 'stick': 12 }, into: { 'fire pit': 1 }, every: 2, mode: 'any' },
+				{ type: 'convert', from: { 'stick': 5, 'herb': 2 }, into: { 'torch': 1 }, every: 4, mode: 'any' },
+				{ type: 'convert', from: { 'meat': 1, 'fire pit': 0.01 }, into: { 'cooked meat': 1 }, every: 1, repeat: 5, mode: 'any' , req: { 'cooking': true }},
+				{ type: 'convert', from: { 'seafood': 1, 'fire pit': 0.01 }, into: { 'cooked seafood': 1 }, every: 1, repeat: 5, mode: 'any' , req: { 'cooking': true }},
+				{ type: 'convert', from: { 'spoiled water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 1, repeat: 5, mode: 'any', req: { 'boiling': true }},
+				{ type: 'convert', from: { 'meat': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured meat': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
+				{ type: 'convert', from: { 'seafood': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured seafood': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
 			],
 			req: { 'fire-making': true },
 			category: 'cooking',
@@ -2286,7 +2305,7 @@ G.AddData({
 			cost: { 'cut stone': 50 ,'labour power': 5 },
 			upkeep: { 'labour power': 0.01 },
 			effects: [
-				{ type: 'provide', what: { 'infrastructure': 10 } },
+				{ type: 'provide', what: { 'infrastructure': 20 } },
 				{ type: 'waste', chance: 0.001 / 1000 },
 			],
 			req: { 'masonry': true },
@@ -2314,9 +2333,10 @@ G.AddData({
 
 		new G.Unit({
 			name: 'well',
-			desc: '@produces fresh [water], up to 20 per day<>The [well] is a steady source of drinkable water.',
+			desc: '@produces fresh [water], up to 10 per day<>The [well] is a steady source of drinkable water.',
 			icon: [25, 3],
 			cost: { 'stone': 50, 'basic building materials': 20 },
+			upkeep:{'labour power': 0.1},
 			use: { 'building slot': 1, 'infrastructure': 4 },
 			effects: [
 				{ type: 'gather', what: { 'water': 10 } },
@@ -2335,13 +2355,13 @@ G.AddData({
 			//require:{'worker':2,'stone tools':2},
 			modes: {
 				'off': G.MODE_OFF,
-				'copper': { name: 'Copper smelting', icon: [9, 9], desc: 'Cast [soft metal ingot]s out of 9 [copper ore]s each.', use: { 'worker': 2, 'stone tools': 2 }, req: {} },
-				'tin': { name: 'Tin smelting', icon: [9, 9], desc: 'Cast [soft metal ingot]s out of 9 [tin ore]s each.', use: { 'worker': 2, 'stone tools': 2 }, req: {} },
-				'iron': { name: 'Iron smelting', icon: [10, 9], desc: 'Cast [hard metal ingot]s out of 6 [iron ore]s each.', use: { 'worker': 2, 'metal tools': 2 }, req: { 'iron-working': true } },
-				'gold': { name: 'Gold smelting', icon: [11, 9], desc: 'Cast [precious metal ingot]s out of 9 [gold ore]s each.', use: { 'worker': 2, 'metal tools': 2 }, req: { 'gold-working': true } },
-				'bronze': { name: 'Bronze alloying', icon: [10, 9], desc: 'Cast [hard metal ingot]s out of 9 [copper ore]s and 2 [tin ore]s each.', use: { 'worker': 2, 'metal tools': 2 }, req: { 'bronze-working': true } },
-				'steel': { name: 'Steel alloying', icon: [12, 9], desc: 'Cast [strong metal ingot]s out of 19 [iron ore]s and 1 [coal] each.', use: { 'worker': 2, 'metal tools': 2 }, req: { 'steel-making': true } },
-				'any': { name: 'Any', desc: 'Smelt without focusing on specific ores.', use: { 'worker': 2, 'stone tools': 2 } },
+				'copper': { name: 'Copper smelting', icon: [9, 9], desc: 'Cast [soft metal ingot]s out of 9 [copper ore]s each.', use: { 'worker': 2, 'tools': 2 }, req: {} },
+				'tin': { name: 'Tin smelting', icon: [9, 9], desc: 'Cast [soft metal ingot]s out of 9 [tin ore]s each.', use: { 'worker': 2, 'tools': 2 }, req: {} },
+				'iron': { name: 'Iron smelting', icon: [10, 9], desc: 'Cast [hard metal ingot]s out of 6 [iron ore]s each.', use: { 'worker': 2, 'tools': 2 }, req: { 'iron-working': true } },
+				'gold': { name: 'Gold smelting', icon: [11, 9], desc: 'Cast [precious metal ingot]s out of 9 [gold ore]s each.', use: { 'worker': 2, 'tools': 2 }, req: { 'gold-working': true } },
+				'bronze': { name: 'Bronze alloying', icon: [10, 9], desc: 'Cast [hard metal ingot]s out of 9 [copper ore]s and 2 [tin ore]s each.', use: { 'worker': 2, 'tools': 2 }, req: { 'bronze-working': true } },
+				'steel': { name: 'Steel alloying', icon: [12, 9], desc: 'Cast [strong metal ingot]s out of 19 [iron ore]s and 1 [coal] each.', use: { 'worker': 2, 'tools': 2 }, req: { 'steel-making': true } },
+				'any': { name: 'Any', desc: 'Smelt without focusing on specific ores.', use: { 'worker': 2, 'tools': 2 } },
 			},
 			effects: [
 				{ type: 'convert', from: { 'copper ore': 9 }, into: { 'soft metal ingot': 1 }, repeat: 3, mode: 'copper' },
@@ -2376,7 +2396,7 @@ G.AddData({
 				'metal tools': { name: 'Forge tools from soft metals', icon: [2, 9], desc: 'Forge [metal tools] out of 2 [soft metal ingot]s each.', use: { 'worker': 1, 'stone tools': 1 }, req: {} },
 				'hard metal tools': { name: 'Forge tools from hard metals', icon: [2, 9], desc: 'Forge 6 [metal tools] out of 1 [hard metal ingot].', use: { 'worker': 1, 'metal tools': 1 }, req: {} },
 				'gold blocks': { name: 'Forge gold blocks', icon: [14, 8], desc: 'Forge [gold block]s out of 10 [precious metal ingot]s each.', use: { 'worker': 1, 'stone tools': 1 }, req: { 'gold-working': true } },
-				'any': { name: 'Any', desc: 'Forging without focusing on specific products.', use: { 'worker': 2, 'stone tools': 2 } },
+				'any': { name: 'Any', desc: 'Forging without focusing on specific products.', use: { 'worker': 2, 'tools': 2 } },
 			},
 			effects: [
 				{ type: 'convert', from: { 'soft metal ingot': 12 }, into: { 'metal tools': 1 }, repeat: 2, mode: 'metal tools' },
@@ -2512,8 +2532,8 @@ G.AddData({
 			//require:{'worker':3,'stone tools':3},
 			modes: {
 				'off': G.MODE_OFF,
-				'quarry': { name: 'Quarry stone', icon: [0, 8], desc: 'Produce [cut stone] and other minerals.', use: { 'worker': 3, 'stone tools': 3 } },
-				'advanced quarry': { name: 'Advanced quarry stone', icon: [8, 12, 0, 8], desc: 'Produce [cut stone] and other minerals at a superior rate with metal tools.', use: { 'worker': 3, 'metal tools': 3 } },
+				'quarry': { name: 'Quarry stone', icon: [0, 8], desc: 'Produce [cut stone] and other minerals.', use: { 'worker': 3, 'tools': 3 } },
+				'advanced quarry': { name: 'Advanced quarry stone', icon: [8, 12, 0, 8], desc: 'Produce [cut stone] and other minerals at a superior rate with metal tools.', use: { 'worker': 3, 'tools': 3 } },
 			},
 			effects: [
 				{ type: 'gather', context: 'quarry', amount: 5, max: 10, every: 3, mode: 'quarry' },
@@ -2536,13 +2556,13 @@ G.AddData({
 			//require:{'worker':3,'stone tools':3},
 			modes: {
 				'off': G.MODE_OFF,
-				'any': { name: 'Any', icon: [8, 8], desc: 'Mine without focusing on specific ores.', use: { 'worker': 5, 'stone tools': 5 } },
-				'coal': { name: 'Coal', icon: [12, 8], desc: 'Mine for [coal] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'salt': { name: 'Salt', icon: [11, 7], desc: 'Mine for [salt].', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'copper': { name: 'Copper', icon: [9, 8], desc: 'Mine for [copper ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'tin': { name: 'Tin', icon: [13, 8], desc: 'Mine for [tin ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'iron': { name: 'Iron', icon: [10, 8], desc: 'Mine for [iron ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
-				'gold': { name: 'Gold', icon: [11, 8], desc: 'Mine for [gold ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'metal tools': 5 } },
+				'any': { name: 'Any', icon: [8, 8], desc: 'Mine without focusing on specific ores.', use: { 'worker': 5, 'tools': 5 } },
+				'coal': { name: 'Coal', icon: [12, 8], desc: 'Mine for [coal] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
+				'salt': { name: 'Salt', icon: [11, 7], desc: 'Mine for [salt].', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
+				'copper': { name: 'Copper', icon: [9, 8], desc: 'Mine for [copper ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
+				'tin': { name: 'Tin', icon: [13, 8], desc: 'Mine for [tin ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
+				'iron': { name: 'Iron', icon: [10, 8], desc: 'Mine for [iron ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
+				'gold': { name: 'Gold', icon: [11, 8], desc: 'Mine for [gold ore] with x5 efficiency.', req: { 'prospecting': true }, use: { 'worker': 5, 'tools': 5 } },
 			},
 			effects: [
 				{ type: 'gather', context: 'mine', amount: 10, max: 30, mode: 'any' },
@@ -2595,7 +2615,7 @@ G.AddData({
 			desc: '@provides 20 [housing]@provides 5 [building slot]s<>A settlement made out of mud, stick and stone.',
 			icon: [2, 14, 'H1sheet'],
 			wideIcon: [3, 14, 'H1sheet'],
-			cost: { 'archaic building materials': 300, 'knapped tools': 10 ,'labour power': 10},
+			cost: { 'archaic building materials': 300, 'tools': 10 ,'labour power': 10},
 			use: { 'land': 10 },
 			effects: [
 				{ type: 'provide', what: { 'housing': 20 } },
@@ -2611,7 +2631,7 @@ G.AddData({
 			desc: '@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
 			icon: [5, 14, 'H1sheet'],
 			wideIcon: [6, 14, 'H1sheet'],
-			cost: { 'basic building materials': 1e3, 'stone tools': 25,'labour power': 25 ,'authority': 1},
+			cost: { 'basic building materials': 1e3, 'tools': 25,'labour power': 25 ,'authority': 1},
 			use: { 'land': 50, 'infrastructure': 8 },
 			effects: [
 				{ type: 'provide', what: { 'housing': 100 } },
@@ -2627,7 +2647,7 @@ G.AddData({
 			desc: '@Develop a village.@provides 2000 [housing].@provides 100 [building slot]s.<>A tile full of human stuctures.',
 			icon: [8, 14, 'H1sheet'],
 			wideIcon: [9, 14, 'H1sheet'],
-			cost: { 'basic building materials': 1e4, 'metal tools': 50,'labour power': 50,'authority': 5 },
+			cost: { 'basic building materials': 1e4, 'tools': 50,'labour power': 50,'authority': 5 },
 			use: { 'land': 200, 'infrastructure': 40 },
 			effects: [
 
@@ -3127,6 +3147,14 @@ G.AddData({
 		});
 		//T4
 		new G.Tech({
+			name: 'boiling',
+			desc: '@[firekeeper]s can now use [pot] to boil [spoiled water] to turn it back into clean [water]@base [health] value increased by 5%<>Making a habit of drinking warm water is instrumental to human health, ',
+			icon: [17, 1],
+			cost: { 'experience': 10, 'fireplace': 1, 'food': 1 },
+			req: { 'fire-making': true },
+			category: 'disc'
+		});
+		new G.Tech({
 			name: 'scouting',
 			desc: '@unlocks [scout]s, which can discover new territory<>The [scout] is an intrepid traveler equipped to deal with the unknown.',
 			icon: [24, 7],
@@ -3172,7 +3200,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'building',
-			desc: '@unlocks [village]s@unlocks [stockpile]s<>Elaborate per',
+			desc: '@unlocks [village]s@unlocks [stockpile]s<>Simple structures like hovels and huts are easily built and maintained.',
 			icon: [9, 1],
 			cost: { 'insight': 25, 'experience': 100 },
 			req: { 'sedentism': true, 'tool-making': true, 'stockpiling': true, 'burial': true },
@@ -3201,7 +3229,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'weaving',
-			desc: '@[clothier]s can now sew [basic clothes]<>Buttons,sleeves and fancy patterns.Clothes became relatively more complex and useful.',
+			desc: '@the durability of [primitive clothing]s increased @[clothier]s can now sew [basic clothes]<>Buttons,sleeves and fancy patterns.Clothes became relatively more complex and useful.',
 			icon: [30, 1],
 			cost: { 'insight': 30, 'experience': 50 },
 			req: { 'sewing': true },
@@ -3209,7 +3237,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'leather-working',
-			desc: '@[clothier]s can now cure [hide]s into [leather] and use leather in cloth-making (with [weaving])<>Leathers are relatively more trust worthy and durable than other materials. You can make belts, shoes and even textile armor! But do you even have a need for that?',
+			desc: '@[clothier]s can now cure [hide]s into [leather], which is a essential ingredient to making [basic clothes]<>Leathers are relatively more trust worthy and durable than other materials. You can make belts, shoes and even textile armor! But do you even have a need for that?',
 			icon: [31, 1],
 			cost: { 'experience': 75 },
 			req: { 'sewing': true },
@@ -3710,6 +3738,7 @@ G.AddData({
 			category: 'debug',
 		});
 		//workPolicy
+		var hatestring = '<><div class="par fancyText bitBiggerText" style="color:red">No one wishes to enforce this mode.</div>'
 		new G.Policy({
 			name: 'side job of the population',
 			desc: '[worker]s can have a side job while working on their profession if the situation calles for it.',
@@ -3718,7 +3747,7 @@ G.AddData({
 			startMode: 'gatherer',
 			modes: {
 				'none': { name: 'none', desc: 'Your [worker]s will focus on their profession.' },
-				'gatherer': { name: 'gatherer', desc: 'Make every [worker] also be a low efficiency gatherer but halfs their original productivity' },
+				'gatherer': { name: 'gatherer', desc: 'Make every [worker] also be a low efficiency gatherer but decreases their original productivity' },
 			},
 			effects: {},
 			req: { 'tribalism': true },
@@ -3743,6 +3772,38 @@ G.AddData({
 			req: { 'tribalism': true },
 			category: 'work',
 		});
+		new G.Policy({
+			name: 'tool type',
+			desc: 'switch the type of tools that your people uses. Increasing or decreasing their effieciency depending on the material, classes that uses special tools wont be affected.',
+			icon: [7, 12, 8, 2],
+			cost: {'influence': 1},
+			modes: {
+				'none': { name: 'None', desc: 'Using tools are forbidden'+hatestring },
+				'knapped tools': { name: 'Knapped tools', desc: 'Sharp stones and blunt stones, its better than nothing' },
+				'stone tools': { name: 'Stone tools', desc: 'Stone tools with handles. The earliest peak of ergonomic.' },
+				'metal tools': { name: 'Metal tools', desc: 'If you dont use alloy, it is quite weak.<br> But still, it can be whatever you want it to be!' },
+			},
+			effects: [
+				{ mode:'none',type: 'make part of', what: ['knapped tools'], parent: '' },
+				{ mode:'none',type: 'make part of', what: ['stone tools'], parent: '' },
+				{ mode:'none',type: 'make part of', what: ['metal tools'], parent: '' },
+
+				{ mode:'knapped tools',type: 'make part of', what: ['knapped tools'], parent: 'tools' },
+				{ mode:'knapped tools',type: 'make part of', what: ['stone tools'], parent: '' },
+				{ mode:'knapped tools',type: 'make part of', what: ['metal tools'], parent: '' },
+
+				{ mode:'stone tools',type: 'make part of', what: ['knapped tools'], parent: '' },
+				{ mode:'stone tools',type: 'make part of', what: ['stone tools'], parent: 'tools' },
+				{ mode:'stone tools',type: 'make part of', what: ['metal tools'], parent: '' },
+
+				{ mode:'metal tools',type: 'make part of', what: ['knapped tools'], parent: '' },
+				{ mode:'metal tools',type: 'make part of', what: ['stone tools'], parent: '' },
+				{ mode:'metal tools',type: 'make part of', what: ['metal tools'], parent: 'tools' },
+			],
+			startMode: 'knapped tool',
+			req: { 'stone-knapping': true },
+			category: 'work',
+		});
 		//foodPolicy
 		new G.Policy({
 			name: 'food rations',
@@ -3751,7 +3812,7 @@ G.AddData({
 			cost: { 'influence': 2 },
 			startMode: 'sufficient',
 			modes: {
-				'none': { name: 'None', desc: 'Eating food is forbidden.<br>Your people will start to starve.' },
+				'none': { name: 'None', desc: 'Eating food is forbidden.<br>Your people will start to starve.'+hatestring},
 				'meager': { name: 'Meager', desc: 'Your people receive half a portion per day.' },
 				'sufficient': { name: 'Sufficient', desc: 'Your people receive a full portion per day.' },
 				'plentiful': { name: 'Plentiful', desc: 'Your people receive a portion and a half per day.' },
@@ -3766,7 +3827,7 @@ G.AddData({
 			cost: { 'influence': 2 },
 			startMode: 'sufficient',
 			modes: {
-				'none': { name: 'None', desc: 'Drinking water is forbidden.<br>Your people will start to die from dehydration.' },
+				'none': { name: 'None', desc: 'Drinking water is forbidden.<br>Your people will start to die from dehydration.' +hatestring},
 				'meager': { name: 'Meager', desc: 'Your people receive half a portion per day.' },
 				'sufficient': { name: 'Sufficient', desc: 'Your people receive a full portion per day.' },
 				'plentiful': { name: 'Plentiful', desc: 'Your people receive a portion and a half per day.' },
@@ -3866,7 +3927,7 @@ G.AddData({
 			startMode: 'normal',
 			req: { 'tribalism': true },
 			modes: {
-				'forbidden': { name: 'Forbidden', desc: 'Your people are not allowed to make children.//Your population will not grow.' },
+				'forbidden': { name: 'Forbidden', desc: 'Your people are not allowed to make children.//Your population will not grow.' +hatestring},
 				'limited': { name: 'Limited', desc: 'Your people are only allowed to have one child.//Your population will grow slowly.' },
 				'normal': { name: 'Normal', desc: 'You have no specific rules regarding children.//Your population will grow normally.' },
 			},
