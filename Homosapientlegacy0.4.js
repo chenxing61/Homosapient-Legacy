@@ -3444,6 +3444,16 @@ G.AddData({
 			],
 			category: 'indu'
 		});
+		//traitTechsT0
+		new G.Tech({
+			name:'early farming',
+			desc:'@enable you to build primitive planter<>Hey since we know that edible plants may grow from rotten food, how about we double down on it?',
+			icon:[26,8,'H1sheet'],
+			cost:{'insight':10,'experience':50},
+			req:{'discovery of agriculture':true},
+			effects:[
+			],
+		});
 		new G.Tech({
 			name: 'mausoleum complete',
 			desc: '@Are you in the afterlife, or are you merely being put back to all those years ago just with a different name?<>',
@@ -3648,14 +3658,15 @@ G.AddData({
 			effects: [],
 			category: 'occur'
 		});
+		var progressTraitHint = '<>This is a trait that unlocks a tech! Research the tech before your trait expires.'
 		//progressTrait
 		new G.Trait({
 			name:'discovery of agriculture',
-			desc:'People discovered a pleasant surprise from their piles of rotten food',
+			desc:' People discovered a pleasant surprise from their piles of rotten food'+ progressTraitHint,
 			icon:[28,4,'H1sheet'],
 			chance:10,
 			cost:{'spoiled food':2000},
-			req:{'hunting':true,'plant lore':true,'fishing':true},
+			req:{'hunting':true,'plant lore':true,'fishing':true,'early farming':false},
 		});
 		/*=====================================================================================
 		POLICIES
