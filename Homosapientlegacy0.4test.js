@@ -1906,7 +1906,7 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'preserver': { name: 'preserver', icon: [16, 5, 'H1sheet'], desc: 'Provide 10 [record]<>He remebers.' },
-				'researcher': { name: 'researcher', icon: [7, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' }
+				'researcher': { name: 'researcher', icon: [8, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' }
 			},
 			effects: [
 				{ type: 'provide', what: { 'record': 10 }, mode: 'preserver' },
