@@ -1423,6 +1423,13 @@ G.AddData({
 			category: 'build',
 		});
 		new G.Res({
+			name: 'fiber',
+			desc: '[herb]s like flaxs and cottons are processed into [fiber]s to make clothings, flags and more.',
+			icon: [10, 7],
+			partOf: 'misc materials',
+			category: 'build',
+		});
+		new G.Res({
 			name: 'statuette',
 			desc: 'A small idol that was rudimentarily carved from [stone] or [bone].//May be used up over time, creating [culture].',
 			icon: [8, 9],
@@ -2018,10 +2025,10 @@ G.AddData({
 			
 			gizmos: true,
 			modes: {
-				'sew grass clothing': { name: 'Sew grass clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 30 [herb]s each.', use: { 'stone tools': 1 } },
+				'sew grass clothing': { name: 'Sew plant-based clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 30 [herb]s each.', use: { 'stone tools': 1 } },
 				'sew hide clothing': { name: 'Sew hide clothing', icon: [15, 7], desc: 'Craft [primitive clothes] from 3 [hide]s each.', use: { 'stone tools': 1 } },
-				'weave fiber clothing': { name: 'Weave fiber clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 50 [herb]s each.', use: { 'stone tools': 1 }, req: { 'weaving': true } },//TODO : implement fibers
-				'weave leather clothing': { name: 'Weave leather clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 2 [leather] each.', use: { 'stone tools': 1 }, req: { 'weaving': true, 'leather-working': true } },
+				'weave fiber': { name: 'Weave fiber', icon: [16, 7], desc: 'Craft 1 [fiber] from 10 [herb]s each.', use: { 'stone tools': 1 }, req: { 'weaving': true } },
+				'weave clothing': { name: 'Weave basic clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 2 [fiber]s and 1[leather] each.<>Picture something like roman peasants with their tunics and leather sandals', use: { 'stone tools': 1 }, req: { 'weaving': true } },
 				'make leather': { name: 'Make leather', icon: [10, 7], desc: 'Produce [leather] from [hide]s, [water], [salt] and [log]s.', use: { 'stone tools': 1 }, req: { 'leather-working': true } },
 				'cheap make leather': { name: 'Make leather (cheap)', icon: [10, 7], desc: 'Slowly produce [leather] from [hide]s, [muddy water] and [herb]s.', use: { 'stone tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate.' },
@@ -2029,8 +2036,8 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'hide': 3 }, into: { 'primitive clothes': 1 }, every: 8, mode: 'sew hide clothing' },
 				{ type: 'convert', from: { 'herb': 30 }, into: { 'primitive clothes': 1 }, every: 20, mode: 'sew grass clothing' },
-				{ type: 'convert', from: { 'leather': 2 }, into: { 'basic clothes': 1 }, every: 8, mode: 'weave leather clothing' },
-				{ type: 'convert', from: { 'herb': 50 }, into: { 'basic clothes': 1 }, every: 20, mode: 'weave fiber clothing' },
+				{ type: 'convert', from: { 'herb': 25 }, into: { 'fiber': 1 }, every: 20, mode: 'weave fiber' },
+				{ type: 'convert', from: { 'fiber':2,'leather': 1}, into: { 'basic clothes': 1 }, every: 20, mode: 'weave clothing' },
 				{ type: 'convert', from: { 'hide': 1, 'water': 5, 'salt': 1, 'log': 0.1 }, into: { 'leather': 1 }, every: 15, mode: 'make leather' },
 				{ type: 'convert', from: { 'hide': 1, 'muddy water': 5, 'herb': 10 }, into: { 'leather': 1 }, every: 30, mode: 'cheap make leather' },
 
@@ -2041,8 +2048,7 @@ G.AddData({
 				//any
 				{ type: 'convert', from: { 'hide': 3 }, into: { 'primitive clothes': 1 }, every: 16, mode: 'any' },
 				{ type: 'convert', from: { 'herb': 30 }, into: { 'primitive clothes': 1 }, every: 40, mode: 'any' },
-				{ type: 'convert', from: { 'leather': 2 }, into: { 'basic clothes': 1 }, every: 16, mode: 'any', req: { 'weaving': true } },
-				{ type: 'convert', from: { 'herb': 50 }, into: { 'basic clothes': 1 }, every: 40, mode: 'any', req: { 'weaving': true } },
+				{ type: 'convert', from: { 'fiber':2,'leather': 1 }, into: { 'basic clothes': 1 }, every: 40, mode: 'any', req: { 'weaving': true } },
 				{ type: 'convert', from: { 'hide': 1, 'water': 5, 'salt': 1, 'log': 0.1 }, into: { 'leather': 1 }, every: 30, mode: 'any', req: { 'leather-working': true } }
 			],
 			req: { 'sewing': true },
