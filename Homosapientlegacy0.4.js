@@ -1147,7 +1147,7 @@ G.AddData({
 
 		new G.Res({
 			name: 'basic building materials',
-			desc: 'Processed materials such as [cut stone,Stone blocks], [brick]s and [lumber], used to build basic structures.',
+			desc: 'Processed materials such as [cut stone,Stone blocks], [brick]s and [lumber], used to build permanent structures.',
 			icon: [2, 8],
 			meta: true,
 			tick: loseMaterialsTick,
@@ -3101,7 +3101,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'sewing',
-			desc: '@unlocks [clothier]s, who work with fabric and can sew [primitive clothes]<>',//TODO : desc
+			desc: '@unlocks [clothier]s, who work with fabric and can sew [primitive clothes]<>Hides and other fabrics can be used to cover bodies, both the living and the dead. While it helps living more for the living craves warmth.',
 			icon: [29, 1],
 			cost: { 'insight': 15, 'experience': 50 },
 			req: { 'bone-working': true },
@@ -3133,10 +3133,10 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'healing',
-			desc: '@unlocks [healer]s<>',
+			desc: '@unlocks [healer]s<>By investigating the pattern that people get sick. By investigating the pattern that consuming certain plants can lessen certain symptoms.The most primitive herbal phamarcists rised up, they even pray to sprits when they dont know what to do.',
 			icon: [25, 7],
 			cost: { 'insight': 20, 'experience': 50 },
-			req: { 'plant lore': true, 'stone-knapping': true },
+			req: { 'plant lore': true},
 			effects: [
 			],
 			chance: 2,
@@ -3166,7 +3166,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'building',
-			desc: '@unlocks [village]s@unlocks [stockpile]s<>',
+			desc: '@unlocks [village]s@unlocks [stockpile]s<>Elaborate per',
 			icon: [9, 1],
 			cost: { 'insight': 25, 'experience': 100 },
 			req: { 'sedentism': true, 'tool-making': true, 'stockpiling': true, 'burial': true },
@@ -3195,7 +3195,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'weaving',
-			desc: '@[clothier]s can now sew [basic clothes]<>Buttons,sleeves and fancy patterns.Clothes became relatively more complex.',
+			desc: '@[clothier]s can now sew [basic clothes]<>Buttons,sleeves and fancy patterns.Clothes became relatively more complex and useful.',
 			icon: [30, 1],
 			cost: { 'insight': 30, 'experience': 50 },
 			req: { 'sewing': true },
