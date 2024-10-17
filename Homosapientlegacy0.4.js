@@ -3297,6 +3297,17 @@ G.AddData({
 			category: 'order'
 		});
 		new G.Tech({
+			name: 'landmarks and signs',
+			desc: '@increase the amount of territories you can control<>Distances have to be put into perspective, your people might not have measurements, but they are now closer to that concepts manifestation',
+			icon: [24, 7],
+			cost: { 'insight': 10,'influence':10, 'experience': 50 },
+			req: { 'scouting': true, 'chieftains': true,'basic drawing':true},
+			effects: [
+			],
+			chance: 2,
+			category: 'order'
+		});
+		new G.Tech({
 			name: 'smelting',
 			desc: '@unlocks [furnace]s, which turn ore into metal ingots@unlocks [blacksmith workshop]s, which forge metal ingots into metal goods<>',//TODO : desc
 			icon: [26, 5],
