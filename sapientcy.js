@@ -20,7 +20,7 @@ G.parse=function(what)
 	return str;
 }
 	}})
-	G.fullApplyUnitEffects=function(me,type,amountParam)
+G.fullApplyUnitEffects=function(me,type,amountParam)
 	{
 		//run through every effect in a unit and apply them
 		//"type" lets us run specific effects only : 0 means all effects that happen every tick, 1 means all effects that happen on unit purchase (or sale, or death, if the amount is negative), 2 means all effects that affect the effective unit amount, 3 means all effects that happen when unit is made unidle (or idle, if the amount is negative)
@@ -138,7 +138,7 @@ G.parse=function(what)
 								else if (effect.type=='explore')
 								{
 									var limit=500;
-									limit+=(G.has("advanced mapping") ? Infinity : (G.has("basic mapping") ? 6500 : 0)+(G.has("map details") ? 14500 : 0)+(G.has("scouting") ? 1000 : 0) +(G.has("focused scouting") ? 20000 : 0));
+									limit+=((G.has("landmarks and signs") ? 3000 : 0)+(G.has("scouting") ? 1000 : 0));
 									if(G.getRes("land").amount<limit && G.isMap==0){
 											if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
 											if (effect.unexplored) G.exploreNewTiles+=Math.random()*effect.unexplored*myAmount;
@@ -274,4 +274,4 @@ G.parse=function(what)
 			}
 		}
 		return out;
-	}
+}

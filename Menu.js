@@ -30,6 +30,7 @@
 //T6
 //T7
 //T8
+//traitTechsT0
 //weatherTrait
 //disasterTrait
 //desireTrait

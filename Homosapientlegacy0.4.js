@@ -3177,7 +3177,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'writing',
-			desc: '@Provide 10 [inspiration]s<>Enable your civilzation build [library]<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by you.<>',
+			desc: '@Provide 10 [inspiration]s<>Enable your civilzation build [library]<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by you.',
 			icon: [30, 4, 'H1sheet'],
 			cost: { 'insight': 50, 'recording medium': 10 },
 			req: { 'symbolism': true },
@@ -3195,7 +3195,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'weaving',
-			desc: '@[clothier]s can now sew [basic clothes]<>',
+			desc: '@[clothier]s can now sew [basic clothes]<>Buttons,sleeves and fancy patterns.Clothes became relatively more complex.',
 			icon: [30, 1],
 			cost: { 'insight': 30, 'experience': 50 },
 			req: { 'sewing': true },
@@ -3203,7 +3203,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'leather-working',
-			desc: '@[clothier]s can now cure [hide]s into [leather] and use leather in cloth-making (with [weaving])<>',
+			desc: '@[clothier]s can now cure [hide]s into [leather] and use leather in cloth-making (with [weaving])<>Leathers are relatively more trust worthy and durable than other materials. You can make belts, shoes and even textile armor! But do you even have a need for that?',
 			icon: [31, 1],
 			cost: { 'experience': 75 },
 			req: { 'sewing': true },
@@ -3243,7 +3243,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'mining',
-			desc: '@unlocks [mine]s<>Strike the earth!',
+			desc: '@unlocks [mine]s<>Strike the earth!<>they said and they try to find something by digging a dangerous hole with hazards everywhere.',
 			icon: [24, 5],
 			cost: { 'insight': 20, 'experience': 250 },
 			req: { 'digging': true, 'building': true },
@@ -3254,7 +3254,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'quarrying',
-			desc: '@unlocks [quarry,Quarries]<>',
+			desc: '@unlocks [quarry,Quarries]<>Strike the earth grind edition. But ever since your people discovered that pouring water down the freshly made holes on the boulders. It is becoming easier and easier.',
 			icon: [25, 6],
 			cost: { 'insight': 35, 'experience': 250 },
 			req: { 'digging': true, 'building': true },
@@ -3265,7 +3265,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'masonry',
-			desc: '@unlocks [kiln]s, which produce a variety of goods such as [brick]s@[carver]s can now turn [stone]s into [cut stone] slowly<>',
+			desc: '@unlocks [kiln]s, which produce a variety of goods such as [brick]s@[carver]s can now turn [stone]s into [cut stone] slowly<>Masonry is all the ways you can make stone and slimliar stuff useful and build better relative to only using logs and twigs.',
 			icon: [29, 6],
 			cost: { 'insight': 25, 'experience': 250 },
 			req: { 'building': true, 'pottery': true },
@@ -3276,7 +3276,7 @@ G.AddData({
 		//T6
 		new G.Tech({
 			name: 'construction',
-			desc: '@unlocks [treasury]s@unlocks [warehouse]s (with [stockpiling])<>',
+			desc: '@unlocks [treasury]s@unlocks [warehouse]s (with [stockpiling])<>Building scarfoldings, building piles of materials and build the place for workers to stay, in order to build a big thing.',
 			icon: [30, 7],
 			cost: { 'insight': 50, 'experience': 100 },
 			req: { 'building': true, 'masonry': true, 'carpentry': true, 'quarrying': true, 'basic drawing': true },
@@ -3287,7 +3287,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'clans',
-			desc: '@unlocks [clan leader]s, which generate [influence]@provides 10 [authority]<>',//TODO : desc
+			desc: '@unlocks [clan leader]s, which generate [influence]@provides 10 [authority]<>You have decided to add another layer of administration. Hopefully you wont need even more layers such that this whole thing turns into a bureaucracy nightmare, right?',
 			icon: [23, 6],
 			cost: { 'insight': 15, 'experience': 25 },
 			req: { 'chieftains': true, 'code of law': true },
@@ -3309,7 +3309,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'smelting',
-			desc: '@unlocks [furnace]s, which turn ore into metal ingots@unlocks [blacksmith workshop]s, which forge metal ingots into metal goods<>',//TODO : desc
+			desc: '@unlocks [furnace]s, which turn ore into metal ingots@unlocks [blacksmith workshop]s, which forge metal ingots into metal goods<>a fancy way to cook your stones and shape them into the stuff you want, metal didnt won by its durability at first, it was the malleability',
 			icon: [26, 5],
 			cost: { 'insight': 30, 'experience': 75 },
 			req: { 'fire-making': true, 'construction': true },
@@ -3319,7 +3319,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'prospecting',
-			desc: '@[mine]s can now be set to mine for specific ores',
+			desc: '@[mine]s can now be set to mine for specific ores<>through traces of mineral nugget, we are able to find veins of the corrspounding minerals.',
 			icon: [25, 5],
 			cost: { 'insight': 50, 'experience': 500 },
 			req: { 'mining': true },
@@ -4011,8 +4011,8 @@ G.AddData({
 				{ type: ['fir tree'], amount: 0.2 },
 				{ type: 'berry bush', chance: 0.5, amount: 0.2 },
 				{ type: 'grass', chance: 0.4, amount: 0.2 },
-				{ type: 'forest critters', chance: 0.05 },
-				{ type: 'large mammal predators', chance: 0.1, min: 0.1, max: 0.5 },
+				{ type: 'forest critters', chance: 0.3, min: 0.2, max: 0.6 },
+				{ type: 'large mammal predators', chance: 0.25, min: 0.1, max: 0.5 },
 				{ type: 'avians', chance: 0.2, amount: 0.2 },
 				{ type: 'wild bugs', amount: 0.05 },
 				{ type: 'iceburg', amount: 0.3 },
