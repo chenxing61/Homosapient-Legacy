@@ -11,7 +11,7 @@ G.AddData({
 			Similarly, technologies do not necessarily follow the order in which they were invented in real life, if it makes sense for them to do so.
 			Mods should feel free to follow along these guidelines or to implement real-world civilizations, species, and genders into the game if they wish to.
 				-Playable species may be added as a game concept at some point in the future.
-			Note : Warning, Homosapient Legacy author thinks huamn history is awesome.
+			Note : Warning, Homosapient Legacy author thinks huamn history is awesome. and since orteil didnt make this supposedly fantasy stuff, thats up for magix to fulfil. Above principles are only partially followed!
 		*/
 
 		/*=====================================================================================
@@ -133,6 +133,7 @@ G.AddData({
 					G.gain('resource depletion', 0.25);
 				//experience
 				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
+				if (G.year<=100 && G.achievByName['mausoleum'].won >= 1&&G.getDict('mausoleum').steps == 100){G.achievByName('fast mausolem').won += 1}
 				//possibility to gain random traits everyday
 				for (var i in G.trait) {
 					var me = G.trait[i];
@@ -1696,7 +1697,7 @@ G.AddData({
 		});
 		new G.Res({
 			name: 'infrastructure',
-			desc: '[infrastructure] is the blood vessel of civilzations. Which population and goods flow through. Productive structures take up it.<>@If you dont have enough of it. [productivity] will decrease.@If you have enough spare [infrastructure], [productivity] will increase.',
+			desc: '[infrastructure] is the blood vessel of civilzations. Which population and goods flow through. Productive structures take up it.<>@If you dont have enough of it. [productivity] will decrease.@If you have enough spare [infrastructure], [productivity] will increase.@The number on the left is how much [infrastructure] are used. The number on the right is your total amount of provided infrastructure. Only the number on the right repersents limit for [labour power]',
 			icon: [13, 3, 'H1sheet'],
 			displayUsed: true,
 			getDisplayAmount: function () {
@@ -1708,6 +1709,11 @@ G.AddData({
 			desc: '[labour power] repersents the capability of your civlization to build or maintain structures. //' + limitDesc('[infrastructure]'),
 			icon: [13, 3, 'H1sheet'],
 			limit: 'infrastructure',
+			getDisplayAmount: function () {
+				return B(this.amount) + '<wbr>/' + B(G.getRes('infrastructure').displayedAmount);
+			},
+			researchGetDisplayAmount,
+			whenGathered: researchWhenGathered,
 		});
 		/*=====================================================================================
 		UNITS
@@ -1813,7 +1819,8 @@ G.AddData({
 			effects: [
 				{ type: 'gather', what: { 'water': 10 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
 				{ type: 'provide', what: { 'infrastructure': 25 }, mode: 'carry material' },
-				{ type: 'gather', what: { 'labour power': 5 },amount: 0.5, mode: 'builder' },
+				{ type: 'gather', what: { 'labour power': 5 },amount: 5, mode: 'builder' },
+
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -2096,10 +2103,9 @@ G.AddData({
 			name: 'firekeeper',
 			desc: '@creates [fire pit]s from fuel@gains more fuel types as technology progresses@handles other fire-related tasks<>The [firekeeper] is tasked with starting and maintaining fires to keep the tribe warm.',
 			icon: [16, 2],
-			cost: {},
+			cost: {'stick':5},
 			use: { 'worker': 1 },
 			staff: {},
-			
 			gizmos: true,
 			modes: {
 				'drilling wood to start fire': { name: 'drilling wood to start fire', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 24 [stick]s each slowly.' },
@@ -2321,7 +2327,7 @@ G.AddData({
 			desc: '@Provide 5 [infrastructure]<>A convenient way for stuff to move faster...',
 			icon: [27, 3, 'H1sheet'],
 			cost: {'labour power': 5},
-			upkeep: { 'labour power': 0.005 },
+			upkeep: { 'labour power': 1 },
 			effects: [
 				{ type: 'provide', what: { 'infrastructure': 5} },
 				{ type: 'waste', chance: 0.005 / 1000 },
@@ -2334,7 +2340,7 @@ G.AddData({
 			desc: '@Provide 20 [infrastructure]<>A convenient way for stuff to move faster...',
 			icon: [27, 3, 'H1sheet'],
 			cost: { 'cut stone': 50 ,'labour power': 5 },
-			upkeep: { 'labour power': 0.01 },
+			upkeep: { 'cut stone': 1,'labour power': 1 },
 			effects: [
 				{ type: 'provide', what: { 'infrastructure': 20 } },
 				{ type: 'waste', chance: 0.001 / 1000 },
@@ -2367,7 +2373,7 @@ G.AddData({
 			desc: '@produces fresh [water], up to 10 per day<>The [well] is a steady source of drinkable water.',
 			icon: [25, 3],
 			cost: { 'stone': 50, 'basic building materials': 20 },
-			upkeep:{'labour power': 0.1},
+			upkeep:{'labour power': 2},
 			use: { 'building slot': 1, 'infrastructure': 4 },
 			effects: [
 				{ type: 'gather', what: { 'water': 10 } },
@@ -2659,13 +2665,13 @@ G.AddData({
 		});
 		new G.Unit({
 			name: 'village',
-			desc: '@provides 100 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
+			desc: '@provides 200 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
 			icon: [5, 14, 'H1sheet'],
 			wideIcon: [6, 14, 'H1sheet'],
 			cost: { 'basic building materials': 1e3, 'tools': 25,'labour power': 25 ,'authority': 1},
 			use: { 'land': 50, 'infrastructure': 8 },
 			effects: [
-				{ type: 'provide', what: { 'housing': 100 } },
+				{ type: 'provide', what: { 'housing': 200 } },
 				{ type: 'provide', what: { 'building slot': 20 } },
 				{ type: 'waste', chance: 0.0005 / 1000 },
 			],
@@ -2679,7 +2685,7 @@ G.AddData({
 			icon: [8, 14, 'H1sheet'],
 			wideIcon: [9, 14, 'H1sheet'],
 			cost: { 'basic building materials': 1e4, 'tools': 50,'labour power': 50,'authority': 5 },
-			use: { 'land': 200, 'infrastructure': 40 },
+			use: { 'land': 200, 'infrastructure': 39 },
 			effects: [
 
 				{ type: 'provide', what: { 'housing': 2000 } },
@@ -3645,7 +3651,7 @@ G.AddData({
 		new G.Trait({
 			name: 'cold winter',
 			desc: '@This years winter is extra cold...',
-			icon: [11, 1, 'H1sheet'],
+			icon: [11, 31, 'H1sheet'],
 			cost: {},
 			chance: 50,
 			req: {},
@@ -4551,7 +4557,15 @@ G.AddData({
 				{ type: 'addFastTicksOnResearch', amount: 150 },
 			],
 		});
-
+		new G.Achiev({
+			tier: 0,
+			name: 'fast mausoleum',
+			desc: 'You tried it again eagerly!.',
+			fromUnit: 'mausoleum',
+			effects: [
+				{ type: 'addFastTicksOnResearch', amount: 150 },
+			],
+		});
 		/*=====================================================================================
 		MAP GENERATOR
 		=======================================================================================*/
