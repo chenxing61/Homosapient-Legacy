@@ -1333,11 +1333,7 @@ G.AddData({
 			category:'gear',
 			tick: function (me, tick) {
 				var toolsAmount;
-				me.amount = toolsAmount
-				if (G.checkPolicy('tools type') == 'none'){
-					toolsAmount = 0
-				}
-				else if (G.checkPolicy('tools type') == 'knapped tools'){
+				if (G.checkPolicy('tools type') == 'knapped tools'){
 					toolsAmount = G.getRes('knapped tools').amount
 				} 
 				else if (G.checkPolicy('tools type') == 'stone tools'){
@@ -1345,7 +1341,8 @@ G.AddData({
 				}
 				else if (G.checkPolicy('tools type') == 'metal tools'){
 					toolsAmount = G.getRes('metal tools').amount
-				}
+				} else {toolsAmount = 0}
+				me.amount = toolsAmount
 			},
 			//effects: [
 			//	{ mode:'none',type: 'make part of', what: ['knapped tools'], parent: '' },
@@ -1369,7 +1366,7 @@ G.AddData({
 			name: 'knapped tools',
 			desc: 'Rudimentary tools made by hitting [stone]s, usually flint, until their edges are sharp enough.',
 			icon: [0, 9],
-			category: 'gear',
+			category: 'misc',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.01;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
@@ -1379,7 +1376,7 @@ G.AddData({
 			name: 'stone tools',
 			desc: 'Simple tools made of [stone]s and [stick]s for a variety of purposes - hammering, cutting, piercing, crushing.',
 			icon: [1, 9],
-			category: 'gear',
+			category: 'misc',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.005;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
@@ -1389,7 +1386,7 @@ G.AddData({
 			name: 'metal tools',
 			desc: 'Solid, durable tools made of metal and wood.',
 			icon: [2, 9],
-			category: 'gear',
+			category: 'misc',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.003;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
@@ -1991,10 +1988,10 @@ G.AddData({
 			modes: {
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
 				'knap bone': { name: 'Knap bone', icon: [0, 9, 8, 7], desc: 'Turn [bone]s into [knapped tools].', req: { 'bone-working': true } },
-				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { ' tools': 1 } },
-				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { ' tools': 1 } },
+				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
+				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
 				'bows': { name: 'Craft bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
-				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { ' tools': 1 } },
+				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.' },
 			},
 			effects: [
@@ -2028,8 +2025,8 @@ G.AddData({
 			
 			gizmos: true,
 			modes: {
-				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { ' tools': 1 } },
-				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { ' tools': 1 } },
+				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { 'tools': 1 } },
+				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { 'tools': 1 } },
 				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [insight] and [log]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'basic drawing': true } },
 				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'tools': 1 } },
 				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'tools': 1 } },
@@ -2106,8 +2103,8 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'drilling wood to start fire': { name: 'drilling wood to start fire', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 24 [stick]s each slowly.' },
-				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { ' tools': 1 } },
-				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { ' tools': 1 } },
+				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'tools': 1 } },
+				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { 'tools': 1 } },
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
 				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a pot at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { ' pot ': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
@@ -2149,7 +2146,7 @@ G.AddData({
 			icon: [20, 2],
 			cost: {},
 			use: { 'worker': 1 },
-			staff: { 'stone tools': 1 },
+			staff: { 'tools': 1 },
 			
 			gizmos: true,
 			modes: {
@@ -2193,7 +2190,7 @@ G.AddData({
 			icon: [23, 3],
 			cost: {},
 			use: { 'worker': 1 },
-			staff: { 'stone tools': 1 },
+			staff: { 'tools': 1 },
 			
 			effects: [
 				{ type: 'convert', from: { 'sick': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 5, every: 5 },
@@ -2310,7 +2307,7 @@ G.AddData({
 			icon: [24, 3],
 			cost: { 'food': 100 },
 			use: { 'worker': 1 },
-			staff: { 'stone tools': 1 },
+			staff: { 'tools': 1 },
 			effects: [
 				{ type: 'explore', explored: 0, unexplored: 0.01 },
 				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'scout got lost', 'scouts got lost'), chance: 1 / 300 }
