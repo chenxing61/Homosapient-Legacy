@@ -1327,7 +1327,6 @@ G.AddData({
 		new G.Res({
 			name: 'tools',
 			desc: '[tools] is equipped by your [population,people] when they are doing their jobs, some tools are also required by buildings and technologies.//[tools type] policy decides what kind of tools your people uses, some are better than others.' + numbersInfo,
-			meta: true,
 			visible: true,
 			icon: [1, 9],
 			displayUsed: true,
