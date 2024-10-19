@@ -3841,7 +3841,7 @@ G.AddData({
 			modes: {
 				'none': { name: 'None', desc: 'Using tools are forbidden'+hatestring },
 				'knapped tools': { name: 'Knapped tools', desc: 'Sharp stones and blunt stones, its better than nothing' },
-				'stone tools': { name: 'Stone tools', desc: 'Stone tools with handles. The earliest peak of ergonomic.' },
+				'stone tools': { name: 'Stone tools', desc: 'Stone tools with handles. The earliest peak of ergonomic.' ,req: { 'tool-making': true }},
 				'metal tools': { name: 'Metal tools', desc: 'If you dont use alloy, it is quite weak.<br> But still, it can be whatever you want it to be!',req: { 'smelting': true }},
 			},
 			//effects: [
