@@ -3758,7 +3758,7 @@ G.AddData({
 			name:'discovery of agriculture',
 			desc:' People discovered a pleasant surprise from their piles of rotten food'+ progressTraitHint,
 			icon:[28,4,'H1sheet'],
-			chance:10,
+			chance:5,
 			cost:{'spoiled food':2000},
 			req:{'hunting':true,'plant lore':true,'fishing':true,'early farming':false},
 			category: 'occur'
