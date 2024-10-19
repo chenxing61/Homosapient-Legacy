@@ -29,14 +29,14 @@ G.AddData({
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('cured meat')) + '"></div><div class="freelabel">x250</div>', '250 cured meat') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('water')) + '"></div><div class="freelabel">x250</div>', '250 Water') +
 				'</div>' +
-				'<div class="par fancyText bitBiggerText" style="color:blue"><b>Interested in the mod?<a href="https://discord.com/invite/7XcgfTp7V8" target="_blank">Join the discord!</a></b></div>' +
+				'<div class="par fancyText bitBiggerText" style="color:yellow"><b>Interested in the mod?<br><a href="https://discord.com/invite/7XcgfTp7V8" target="_blank">Join the discord!</a></b></div>' +
 				'<div class="par fancyText bitBiggerText">Your tribe finds a place to settle in the wilderness.<br>Resources are scarce, and everyone starts foraging.</div>' +
 				'<div class="par fancyText bitBiggerText">It seems like they need you to assign them to find water.</div>' +
 				'<div class="par fancyText bitBiggerText">You emerge as the tribe\'s leader. They call you :</div>';
 			return str;
 		};
 		G.funcs['new game'] = function () {
-			var str = 'Your name is ' + G.getName('ruler') + '' + (G.getName('ruler').toLowerCase() == 'orteil' ? ' <i>(but that\'s not you, is it?)</i>' : '') + ', ruler of ' + G.getName('civ') + '. Your tribe is primitive, but full of hope.<br>The first year of your legacy has begun. May it stand the test of time.';
+			var str = 'Your name is ' + G.getName('ruler') + '' + (G.getName('ruler').toLowerCase() == 'orteil' ? ' <i>(but that\'s not you, is it?)</i>' : '') + (G.getName('ruler').toLowerCase() == 'chara' ? ' <i>(true name)</i>' : '') + ', ruler of ' + G.getName('civ') + '. Your tribe is primitive, but full of hope.<br>The first year of your legacy has begun. May it stand the test of time.';
 
 			G.Message({ type: 'important tall', text: str, icon: [0, 3] })
 			{
