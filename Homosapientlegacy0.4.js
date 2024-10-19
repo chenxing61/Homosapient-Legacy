@@ -134,11 +134,9 @@ G.AddData({
 				//experience
 				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
 				//achievement
-				var achievedFastMausoleum = 0;
-				if (G.year<=100 && G.getDict('mausoleum').steps == 100 && achievedFastMausoleum == 0)
+				if (G.year<=50 && G.has('monument-building') && G.has('mausoleum')&& G.achievByName['fast mausoleum'].won < 1)
 				{
 					G.achievByName['fast mausoleum'].won = 1
-					achievedFastMausoleum += 1
 					G.middleText("- Completed The Highway to the Afterlife achievement -")
 				}
 				//possibility to gain random traits everyday
@@ -1607,7 +1605,7 @@ G.AddData({
 		};
 		new G.Res({
 			name: 'experience',
-			desc: '[experience] represents your people\'s discovery in the world.//' + limitDesc('[record]') + '//Many technologies require experience to be researched.',
+			desc: '[experience] represents your people\'s discovery in the world, unlike [insight]s and other resources, it is passively gained based on your population size.//' + limitDesc('[record]') + '//Many technologies require experience to be researched.',
 			icon: [6, 4],
 			category: 'main',
 			limit: 'record',
@@ -1943,10 +1941,10 @@ G.AddData({
 			name:'primitive planter',
 			desc:'@Grow crops from the pile of spoiled food at slow rate.<>Earliest farms.',
 			icon: [28, 2, 'H1sheet'],
-			cost:{'anarchic building materials':100,'spoiled food':50},
+			cost:{'archaic building materials':100,'spoiled food':50},
 			use:{'land':1},
 			effects:[
-				{type:'convert',from:{'spoiled food':10},into:{'vegetable':0.1,'fruit':0.1},every:10},
+				{type:'convert',from:{'spoiled food':10},into:{'vegetable':0.1,'fruit':0.1}},
 				{type:'waste',chance:0.001/1000},
 			],
 			req:{'early farming':true},
@@ -2014,7 +2012,6 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
-				'knap bone': { name: 'Knap bone', icon: [0, 9, 8, 7], desc: 'Turn [bone]s into [knapped tools].', req: { 'bone-working': true } },
 				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
 				'bows': { name: 'Craft bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
@@ -2023,7 +2020,7 @@ G.AddData({
 			},
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'knapped tools': 1 }, every: 5, mode: 'knap' },
-				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 5, mode: 'knap bone' },
+				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 7, mode: 'knap', req: { 'bone-working': true } },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone tools': 1 }, every: 3, mode: 'stone tools' },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone weapons': 1 }, every: 3, mode: 'stone weapons' },
 				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'bows' },
@@ -2034,6 +2031,7 @@ G.AddData({
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 				//any
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'knapped tools': 1 }, every: 15, mode: 'any' },
+				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 15, mode: 'any', req: { 'bone-working': true }  },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone tools': 1 }, every: 15, mode: 'any', req: { 'tool-making': true } },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone weapons': 1 }, every: 15, mode: 'any', req: { 'spears': true } },
 				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 15, mode: 'any', req: { 'bows': true } },
@@ -3557,7 +3555,7 @@ G.AddData({
 			cost: { 'insight': 999 },
 			req: { 'tribalism': false },
 			chance: 0,
-			effects: [
+			effects: [{ type: 'gather', what: { 'experience': 1 }},
 			],
 			category: 'lega'
 		});
@@ -4584,8 +4582,8 @@ G.AddData({
 		new G.Achiev({
 			tier: 0,
 			name: 'fast mausoleum',
-			displayname:'The Highway to the Afterlife',
-			desc: 'As if it worked<>Build it in a actual life time!',
+			displayName:'The Highway to the Afterlife',
+			desc: 'As if it worked<>Something something 50 years unlock!',
 			effects: [
 				{ type: 'addFastTicksOnResearch', amount: 150 },
 			],
