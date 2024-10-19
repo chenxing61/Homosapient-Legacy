@@ -40,11 +40,11 @@ G.AddData({
 
 			G.Message({ type: 'important tall', text: str, icon: [0, 3] })
 			{
-				if (G.achievByName['mausoleum'].won > 0) {
+				if (G.achievByName['normal mausoleum'].won > 0) {
 					{ G.gainTech(G.techByName['mausoleum complete']) };
 					G.middleText('Is this afterlife? <br>You seems to have little idea of where you are.<br>Until your tribe members walks up on you.', 'slow')
 				}
-				if (G.achievByName['mausoleum'].won > 1) { G.gainTech(G.techByName['mausoleum complete']), G.middleText('You know where you are.<br>And this is not after life.<br>You started to question it.', 'slow') }
+				if (G.achievByName['normal mausoleum'].won > 1) { G.gainTech(G.techByName['mausoleum complete']), G.middleText('You know where you are.<br>And this is not after life.<br>You started to question it.', 'slow') }
 			}
 
 			function getRandomInt(max) {
@@ -133,16 +133,22 @@ G.AddData({
 					G.gain('resource depletion', 0.25);
 				//experience
 				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
-				if (G.year<=100 && G.achievByName['mausoleum'].won >= 1&&G.getDict('mausoleum').steps == 100){G.achievByName('fast mausolem').won += 1}
+				//achievement
+				var achievedFastMausoleum = 0;
+				if (G.year<=100 && G.getDict('mausoleum').steps == 100 && achievedFastMausoleum == 0)
+				{
+					G.achievByName['fast mausoleum'].won = 1
+					achievedFastMausoleum += 1
+					G.middleText("- Completed The Highway to the Afterlife achievement -")
+				}
 				//possibility to gain random traits everyday
 				for (var i in G.trait) {
 					var me = G.trait[i];
 					if (G.has(me.name)) {
-						var lt = me.lifetime
 						if (me.lifetime >= 1 && me.lifetime != Infinity) {
 							me.lifetime -= 1
 							if (me.lifetime === 0 && me.lifetime != Infinity) {
-								G.Message({ type: 'important tall', text: 'The trait has lost its effect </b>.' + me.displayName + '</b>.', icon: me.icon });
+								G.Message({ type: 'important tall', text: 'Time passes and some trait has lost its effect </b>.', icon: me.icon });
 								G.deleteTrait(me);
 								me.lifetime += 150
 							}
@@ -1932,6 +1938,20 @@ G.AddData({
 			req: { 'woodcutting': true },
 			category: 'production',
 		});
+		//agricultureUnit
+		new G.Unit({
+			name:'primitive planter',
+			desc:'@Grow crops from the pile of spoiled food at slow rate.<>Earliest farms.',
+			icon: [28, 2, 'H1sheet'],
+			cost:{'anarchic building materials':100,'spoiled food':50},
+			use:{'land':1},
+			effects:[
+				{type:'convert',from:{'spoiled food':10},into:{'vegetable':0.1,'fruit':0.1},every:10},
+				{type:'waste',chance:0.001/1000},
+			],
+			req:{'early farming':true},
+			category:'production',
+		});
 		//mindUnit
 		new G.Unit({
 			name: 'scholar',
@@ -2112,7 +2132,7 @@ G.AddData({
 				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'tools': 1 } },
 				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { 'tools': 1 } },
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
-				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a pot at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { ' pot ': 1 }},
+				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a pot at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { 'pot ': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
 				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.'},
 
@@ -2904,7 +2924,7 @@ G.AddData({
 			icon: [1, 1],
 			startWith: true,
 			effects: [
-				{ type: 'provide res', what: { 'wisdom': 5 } },
+				{ type: 'provide res', what: { 'wisdom': 10 } },
 				{ type: 'provide res', what: { 'record': 25 } },
 				{ type: 'show res', what: ['insight'] },
 			],
@@ -2916,7 +2936,7 @@ G.AddData({
 			icon: [31, 2, 'H1sheet'],
 			startWith: true,
 			effects: [
-				{ type: 'provide res', what: { 'wisdom': 5 } },
+				{ type: 'provide res', what: { 'wisdom': 10 } },
 			],
 			category: 'indu'
 		});
@@ -2928,8 +2948,9 @@ G.AddData({
 			cost: { 'insight': 1, 'influence': 1 },
 			req: { 'speech': true },
 			effects: [
-				{ type: 'provide res', what: { 'inspiration': 5 } },
+				{ type: 'provide res', what: { 'inspiration': 20, 'wisdom': 5 } },
 				{ type: 'show res', what: ['experience'] },
+				{ type: 'show res', what: ['culture'] },
 			],
 			chance: 50,
 			category: 'wisd'
@@ -3009,7 +3030,7 @@ G.AddData({
 			cost: { 'insight': 4, 'experience': 20 },
 			req: { 'language': true },
 			effects: [
-				{ type: 'provide res', what: { 'inspiration': 5 } },
+				{ type: 'provide res', what: { 'inspiration': 25 } },
 			],
 			chance: 50,
 			category: 'wisd'
@@ -3087,7 +3108,7 @@ G.AddData({
 			cost: { 'insight': 8, 'experience': 20 },
 			req: { 'oral tradition': true },
 			effects: [
-				{ type: 'provide res', what: { 'authority': 10 } },
+				{ type: 'provide res', what: { 'authority': 5 } },
 			],
 			category: 'order'
 		});
@@ -3223,6 +3244,7 @@ G.AddData({
 			cost: { 'culture': 25, 'insight': 25 },
 			req: { 'oral tradition': true },
 			effects: [
+				{ type: 'provide res', what: {'wisdom': 25 } },
 			],
 			category: 'wisd'
 		});
@@ -3255,7 +3277,7 @@ G.AddData({
 			icon: [30, 4, 'H1sheet'],
 			cost: { 'insight': 50, 'recording medium': 10 },
 			req: { 'symbolism': true },
-			effects: [{ type: 'provide res', what: { 'inspiration': 15 } }
+			effects: [{ type: 'provide res', what: { 'inspiration': 25 } }
 			],
 			category: 'wisd'
 		});
@@ -3290,7 +3312,7 @@ G.AddData({
 			icon: [29, 4, 'H1sheet'],
 			cost: { 'insight': 20 },
 			req: { 'symbolism': true },
-			effects: [{ type: 'provide res', what: { 'inspiration': 20 } }
+			effects: [{ type: 'provide res', what: { 'inspiration': 25 } }
 			],
 			category: 'wisd'
 		});
@@ -3301,7 +3323,7 @@ G.AddData({
 			cost: { 'insight': 20, 'experience': 20 },
 			req: { 'symbolism': true, 'sedentism': true },
 			effects: [
-				{ type: 'provide res', what: { 'authority': 15 } },
+				{ type: 'provide res', what: { 'authority': 10 } },
 			],
 			category: 'order'
 		});
@@ -3366,7 +3388,7 @@ G.AddData({
 			cost: { 'insight': 15, 'experience': 25 },
 			req: { 'chieftains': true, 'code of law': true },
 			effects: [
-				{ type: 'provide res', what: { 'authority': 10 } },
+				{ type: 'provide res', what: { 'authority': 15 } },
 			],
 			category: 'order'
 		});
@@ -3521,8 +3543,8 @@ G.AddData({
 		//traitTechsT0
 		new G.Tech({
 			name:'early farming',
-			desc:'@enable you to build primitive planter<>Hey since we know that edible plants may grow from rotten food, how about we double down on it?',
-			icon:[26,8,'H1sheet'],
+			desc:'@enable you to build [primitive planter]<>Hey since we know that edible plants may grow from rotten food, how about we double down on it?',
+			icon:[28,4,'H1sheet'],
 			cost:{'insight':10,'experience':50},
 			req:{'discovery of agriculture':true},
 			effects:[
@@ -3741,6 +3763,7 @@ G.AddData({
 			chance:10,
 			cost:{'spoiled food':2000},
 			req:{'hunting':true,'plant lore':true,'fishing':true,'early farming':false},
+			category: 'occur'
 		});
 		/*=====================================================================================
 		POLICIES
@@ -3784,7 +3807,7 @@ G.AddData({
 			desc: '[worker]s can have a side job while working on their profession if the situation calles for it.',
 			icon: [5, 12, 3, 6],
 			cost: { 'influence': 5 },
-			startMode: 'gatherer',
+			startMode: 'none',
 			modes: {
 				'none': { name: 'none', desc: 'Your [worker]s will focus on their profession.' },
 				'gatherer': { name: 'gatherer', desc: 'Make every [worker] also be a low efficiency gatherer but decreases their original productivity' },
@@ -4549,7 +4572,8 @@ G.AddData({
 		//achievements
 		new G.Achiev({
 			tier: 0,
-			name: 'mausoleum',
+			name: 'normal mausoleum',
+			displayName:'Did you just end it all?',	
 			desc: 'You have been laid to rest in the Mausoleum, an ancient stone monument the purpose of which takes root in archaic religious thought.',
 			fromUnit: 'mausoleum',
 			effects: [
@@ -4560,8 +4584,8 @@ G.AddData({
 		new G.Achiev({
 			tier: 0,
 			name: 'fast mausoleum',
-			desc: 'You tried it again eagerly!.',
-			fromUnit: 'mausoleum',
+			displayname:'The Highway to the Afterlife',
+			desc: 'As if it worked<>Build it in a actual life time!',
 			effects: [
 				{ type: 'addFastTicksOnResearch', amount: 150 },
 			],
