@@ -413,7 +413,11 @@ G.AddData({
 					G.gain('health', -leftout * 0.15, 'no clothing');
 
 					//fire
-					var objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] };
+					var objects;
+					if(G.has('cold winter'))(objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] }) 
+					else (objects = { 'fire pit': [5, 0.1, 0.1], 'torch': [3, 0.1, 0.1] )
+					
+					
 					var leftout = me.amount;
 					var prev = leftout;
 					var fulfilled = 0;
@@ -1811,6 +1815,7 @@ G.AddData({
 				{ type: 'gather', context: 'herbgather', amount: 2, max: 2, mode: 'gather rare herb', req: { 'plant lore': true }, use: { 'basket': 1 } },
 				{ type: 'mult', value: 1.1, req: { 'forest origin': true } },
 				{ type: 'mult', value: 1.25, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'mult', value: 0.25, req: { 'overgather': true } },
 
 
 			],
@@ -1830,7 +1835,8 @@ G.AddData({
 				'carry water': { name: 'carry water', use: { 'pot': 1 }, icon: [7, 6], desc: 'Making use of pots and carry liquids back to settlements. Better than gathering by barehand.', req: { 'pottery': true } }
 			},
 			effects: [
-				{ type: 'gather', what: { 'water': 20 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
+				{ type: 'gather', what: { 'water': 8 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
+				{ type: 'mult', value: 1.5, mode: 'gather water only', req: { 'humid weather': true } },
 				{ type: 'gather', what: { 'labour power': 5 },amount: 5, mode: 'builder' },
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -1860,6 +1866,7 @@ G.AddData({
 				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.075 }, mode: 'spear hunting' },
 				{ type: 'gather', context: 'hunt', amount: 4, max: 5, mode: 'bow hunting' },
 				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.1 }, mode: 'bow hunting' },//TODO : consuming arrows?
+				{ type: 'mult', value: 0.25, req: { 'overhunting': true } },
 
 				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.03, '[X] [people] wounded while hunting.', 'hunter was', 'hunters were'), chance: 1 / 30 },
 				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
@@ -1895,6 +1902,8 @@ G.AddData({
 				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.1 }, mode: 'line fishing' },
 
 				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
+				{ type: 'mult', value: 0.25, req: { 'overfishing': true } },
+
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -1952,6 +1961,7 @@ G.AddData({
 			use:{'land':1},
 			effects:[
 				{type:'convert',from:{'spoiled food':10},into:{'vegetable':0.1,'fruit':0.1}},
+				{ type: 'mult', value: 1.2, req: { 'humid weather':true } },
 				{type:'waste',chance:0.001/1000},
 			],
 			req:{'early farming':true},
@@ -2149,6 +2159,11 @@ G.AddData({
 				{ type: 'convert', from: { 'dirty water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 2, repeat: 5, mode: 'boiling' },
 				{ type: 'convert', from: { 'meat': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured meat': 2 }, every: 1, repeat: 10, mode: 'cure' },
 				{ type: 'convert', from: { 'seafood': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured seafood': 2 }, every: 1, repeat: 10, mode: 'cure' },
+				{ type: 'mult', value: 1.2, mode: 'drilling wood to start fire', req: { 'dry weather': true } },
+				{ type: 'mult', value: 1.2, mode: 'flint and stone', req: { 'dry weather': true } },
+				{ type: 'mult', value: 1.2, mode: 'make torches', req: { 'dry weather': true } },
+				{ type: 'mult', value: 1.2, mode: 'cook', req: { 'dry weather': true } },
+				{ type: 'mult', value: 1.2, mode: 'cure', req: { 'dry weather': true } },
 
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2163,6 +2178,7 @@ G.AddData({
 				{ type: 'convert', from: { 'dirty water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 1, repeat: 2, mode: 'any', req: { 'boiling': true }},
 				{ type: 'convert', from: { 'meat': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured meat': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
 				{ type: 'convert', from: { 'seafood': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured seafood': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
+				{ type: 'mult', value: 1.2, mode: 'any', req: { 'dry weather': true } },
 			],
 			req: { 'fire-making': true },
 			category: 'cooking',
@@ -2462,29 +2478,10 @@ G.AddData({
 				{ type: 'convert', from: { 'soft metal ingot': 12 }, into: { 'metal tools': 1 }, repeat: 2, mode: 'metal tools' },
 				{ type: 'convert', from: { 'hard metal ingot': 3 }, into: { 'metal tools': 1 }, repeat: 2, mode: 'hard metal tools' },
 				{ type: 'convert', from: { 'precious metal ingot': 9 }, into: { 'gold block': 1 }, mode: 'gold blocks' },
-
-				{ type: 'waste', chance: 0.001 / 1000 },
-				//TODO : better metal tools, weapons etc
 			],
 			gizmos: true,
 			req: { 'smelting': true },
 			category: 'crafting',
-		});
-
-		new G.Unit({
-			name: 'library',
-			desc: '@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 1 knowledgeable men to classify and check if any morons did not place the book right',
-			icon: [30, 2, 'H1sheet', 25, 2, 'H1sheet'],
-			cost: { 'basic building materials': 500, 'recording medium': 100 },
-			use: { 'building slot': 1, 'worker': 1, 'infrastructure': 4},
-			//require:{'worker':2,'knapped tools':2},
-			effects: [
-				{ type: 'provide', what: { 'record': 100 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
-			],
-			limitPer: { 'population': 100 },
-			req: { 'writing': true },
-			category: 'storage',
 		});
 		new G.Unit({
 			name: 'carpenter workshop',
@@ -2501,14 +2498,30 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'log': 1 }, into: { 'lumber': 3 }, repeat: 2, mode: 'lumber' },
 				{ type: 'convert', from: { 'log': 1 }, into: { 'stick': 21 }, repeat: 2, mode: 'lumber' },
-
-				{ type: 'waste', chance: 0.001 / 1000 },
-
 			],
 			gizmos: true,
 			req: { 'carpentry': true },
 			category: 'crafting',
 		});
+		new G.Unit({
+			name: 'library',
+			desc: '@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 1 knowledgeable men to classify and check if any morons did not place the book right',
+			icon: [30, 2, 'H1sheet', 25, 2, 'H1sheet'],
+			cost: { 'basic building materials': 500, 'recording medium': 100 },
+			use: { 'building slot': 1, 'worker': 1, 'infrastructure': 4},
+			//require:{'worker':2,'knapped tools':2},
+			effects: [
+				{ type: 'provide', what: { 'record': 100 } },
+				{ type: 'waste', chance: 10 / 1000 },
+				{ type: 'waste', chance: 40 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 40 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 40 / 1000, req: { 'flood': true }}
+			],
+			limitPer: { 'population': 100 },
+			req: { 'writing': true },
+			category: 'storage',
+		});
+
 		new G.Unit({
 			name: 'stockpile',
 			desc: '@provides 1000 [material storage]<>A simple building where resources are stored.//Slows material decay and deters theft somewhat, but may itself decay over time.',
@@ -2518,7 +2531,10 @@ G.AddData({
 			//require:{'worker':2,'stone tools':2},
 			effects: [
 				{ type: 'provide', what: { 'added material storage': 1000 } },
-				{ type: 'waste', chance: 0.1 / 1000 }
+				{ type: 'waste', chance: 10 / 1000 },
+				{ type: 'waste', chance: 25 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'flood': true }}
 			],
 			req: { 'stockpiling': true, 'building': true },
 			category: 'storage',
@@ -2533,7 +2549,10 @@ G.AddData({
 			//require:{'worker':3,'stone tools':3},
 			effects: [
 				{ type: 'provide', what: { 'added material storage': 4000 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
+				{ type: 'waste', chance: 10 / 1000 },
+				{ type: 'waste', chance: 25 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'flood': true }}
 			],
 			req: { 'stockpiling': true, 'construction': true },
 			category: 'storage',
@@ -2548,7 +2567,10 @@ G.AddData({
 			upkeep:{'influence': 0.005},
 			effects: [
 				{ type: 'provide', what: { 'added treasury storage': 1000 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
+				{ type: 'waste', chance: 5 / 1000 },
+				{ type: 'waste', chance: 15 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 15 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 15 / 1000, req: { 'flood': true }}
 			],
 			req: { 'stockpiling': true, 'construction': true },
 			category: 'storage',
@@ -2562,7 +2584,10 @@ G.AddData({
 			//require:{'worker':2,'stone tools':2},
 			effects: [
 				{ type: 'provide', what: { 'added food storage': 1000 } },
-				{ type: 'waste', chance: 0.01 / 1000 }
+				{ type: 'waste', chance: 10 / 1000 },
+				{ type: 'waste', chance: 50 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'flood': true }}
 			],
 			req: { 'stockpiling': true, 'pottery': true },
 			category: 'storage',
@@ -2577,7 +2602,10 @@ G.AddData({
 			//require:{'worker':2,'stone tools':2},
 			effects: [
 				{ type: 'provide', what: { 'added food storage': 4000 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
+				{ type: 'waste', chance: 10 / 1000 },
+				{ type: 'waste', chance: 25 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'flood': true }}
 			],
 			req: { 'stockpiling': true, 'carpentry': true },
 			category: 'storage',
@@ -2649,7 +2677,7 @@ G.AddData({
 			//require:{'worker':1,'knapped tools':1},
 			effects: [
 				{ type: 'provide', what: { 'burial spot': 10 } },
-				{ type: 'waste', chance: 1 / 100 },
+				{ type: 'waste', chance: 1 / 1000 },
 			],
 			req: { 'burial': true },
 			category: 'civil',
@@ -2664,7 +2692,7 @@ G.AddData({
 			effects: [
 				{ type: 'provide', what: { 'added food storage': 400 } },
 				{ type: 'provide', what: { 'added material storage': 400 } },
-				{ type: 'waste', chance: 0.8 / 1000 }
+				{ type: 'waste', chance: 20 / 1000 }
 			],
 			req: { 'stockpiling': true },
 			category: 'storage',
@@ -2680,7 +2708,11 @@ G.AddData({
 			effects: [
 				{ type: 'provide', what: { 'housing': 20 } },
 				{ type: 'provide', what: { 'building slot': 5 } },
-				{ type: 'waste', chance: 0.001 / 1000 }
+				{ type: 'waste', chance: 4 / 1000 },
+				{ type: 'waste', chance: 46 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'flood': true }}
+				
 			],
 			req: { 'sedentism': true },
 			limitPer: { 'population': 10 },
@@ -2696,7 +2728,10 @@ G.AddData({
 			effects: [
 				{ type: 'provide', what: { 'housing': 200 } },
 				{ type: 'provide', what: { 'building slot': 20 } },
-				{ type: 'waste', chance: 0.0005 / 1000 },
+				{ type: 'waste', chance: 3 / 1000 },
+				{ type: 'waste', chance: 47 / 1000, req: { 'house fire': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 50 / 1000, req: { 'flood': true }}
 			],
 			req: { 'building': true },
 			limitPer: { 'population': 50 },
@@ -2715,7 +2750,11 @@ G.AddData({
 				{ type: 'provide', what: { 'housing': 1000 }, req: { 'city planning': true } },
 				{ type: 'provide', what: { 'building slot': 100 } },
 				{ type: 'provide', what: { 'building slot': 20 }, req: { 'city planning': true } },
-				{ type: 'waste', chance: 0.0005 / 1000 },
+				{ type: 'waste', chance: 1 / 1000 },
+				{ type: 'waste', chance: 24 / 1000, req: { 'house fire': true },req: { 'city planning': false }},
+				{ type: 'waste', chance: 14 / 1000, req: { 'house fire': true },req: { 'city planning': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 25 / 1000, req: { 'flood': true }}
 			],
 			req: { 'cities': true },
 			category: 'settlement',
@@ -2923,7 +2962,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'speech',
-			desc: '@unlocks [wanderer]@provides 5 [wisdom]<>[speech], in its most primitive form, is a series of groans and grunts that makes it possible to communicate things, events, and concepts.',
+			desc: '@unlocks [wanderer]@provides 10 [wisdom]@provides 25 [record]<>[speech], in its most primitive form, is a series of groans and grunts that makes it possible to communicate things, events, and concepts.',
 			icon: [1, 1],
 			startWith: true,
 			effects: [
@@ -3028,7 +3067,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'oral tradition',
-			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 25 [wisdom]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
+			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 50 [record]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 			icon: [5, 1],
 			cost: { 'insight': 4, 'experience': 20 },
 			req: { 'language': true },
@@ -3607,9 +3646,11 @@ G.AddData({
 			category: 'occur'
 		});
 		//disasterTrait
+		var greedyStr = '<>This trait lowers the corresponding resource production by 75%.' 
+		var disasterStr = '<>This trait highly raises the chance of a building or a settlement getting randomly destroyed.' 
 		new G.Trait({
 			name: 'overhunting',
-			desc: '@The number of hunt is decreasing significantly on our land.@Nature does not approve greediness.',
+			desc: '@The number of hunt is decreasing significantly on our land.@Nature does not approve greediness.' + greedyStr,
 			icon: [2, 31, 'H1sheet'],
 			cost: { 'resource depletion': 150 },
 			chance: 1,
@@ -3619,7 +3660,7 @@ G.AddData({
 		});
 		new G.Trait({
 			name: 'overfishing',
-			desc: '@The number of marine creature is decreasing significantly on our land.@Nature does not approve greediness.',
+			desc: '@The number of marine creature is decreasing significantly on our land.@Nature does not approve greediness.'+ greedyStr,
 			icon: [3, 31, 'H1sheet'],
 			cost: { 'resource depletion': 150 },
 			chance: 1,
@@ -3629,7 +3670,7 @@ G.AddData({
 		});
 		new G.Trait({
 			name: 'overgather',
-			desc: '@The number of forgeables are decreasing significantly on our land.@Nature does not approve greediness.',
+			desc: '@The number of forgeables are decreasing significantly on our land.@Nature does not approve greediness.'+ greedyStr,
 			icon: [4, 31, 'H1sheet'],
 			cost: { 'resource depletion': 150 },
 			chance: 1,
@@ -3639,17 +3680,17 @@ G.AddData({
 		});
 		new G.Trait({
 			name: 'earthquake',
-			desc: '@The ground starts to shake violently... Damaging the buildings',
+			desc: '@The ground starts to shake violently...' + disasterStr,
 			icon: [9, 31, 'H1sheet'],
 			cost: {},
-			chance: 200,
+			chance: 300,
 			req: {},
 			effects: [],
 			category: 'occur'
 		});
 		new G.Trait({
 			name: 'house fire',
-			desc: '@Some of the buildings accidentally catches fire.',
+			desc: '@Some of the buildings accidentally catches fire.' + disasterStr,
 			icon: [16, 1, 'H1sheet'],
 			cost: {},
 			chance: 10,
@@ -3662,17 +3703,17 @@ G.AddData({
 			desc: '@The dry weather is exacerbating...',
 			icon: [12, 31, 'H1sheet'],
 			cost: {},
-			chance: 100,
+			chance: 150,
 			req: { 'dry weather': true },
 			effects: [],
 			category: 'occur'
 		});
 		new G.Trait({
 			name: 'flood',
-			desc: '@The wet weather is good at first, but it also exacerbates...',
+			desc: '@The wet weather is good at first, but it also exacerbates...' + disasterStr,
 			icon: [10, 31, 'H1sheet'],
 			cost: {},
-			chance: 100,
+			chance: 150,
 			req: { 'humid weather': true },
 			effects: [],
 			category: 'occur'
@@ -3695,7 +3736,7 @@ G.AddData({
 			cost: {},
 			chance: 5,
 			req: { 'lessened desire': false, 'desire to consume': false, 'bliss': false },
-			effects: [{ type: 'provide res', what: { 'wisdom': 5 } }],
+			effects: [{ type: 'provide res', what: { 'wisdom': 10 } ],
 			category: 'trend'
 		});
 		new G.Trait({
@@ -3753,7 +3794,7 @@ G.AddData({
 		});
 		new G.Trait({
 			name: 'tribe migration',
-			desc: '@enable [wanderer]s to recuit people.<>Some random tribe passed by your land...',
+			desc: '@enable [wanderer]s to recuit people if you have researched [chieftains].<>Some random tribe passed by your land... ',
 			icon: [15, 31, 'H1sheet'],
 			cost: {},
 			chance: 20,
@@ -4537,11 +4578,11 @@ G.AddData({
 		});
 		new G.Goods({
 			name: 'river',
-			desc: '[river], a prime location for clear [water].',
+			desc: '[river], a prime location for clear [water] and [seafood]',
 			icon: [16, 10, 'H1sheet'],
 			res: {
 				'watergather': { 'water': 12 },
-				'fish': { 'seafood': 2 },
+				'fish': { 'seafood': 4 },
 			},
 			mult: 5,
 		});
@@ -4551,7 +4592,7 @@ G.AddData({
 			icon: [17, 10, 'H1sheet'],
 			res: {
 				'watergather': { 'water': 8 },
-				'fish': { 'seafood': 3 },
+				'fish': { 'seafood': 5 },
 			},
 			mult: 5,
 		});
