@@ -133,6 +133,8 @@ G.AddData({
 					G.gain('resource depletion', 0.25);
 				//experience
 				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
+					
+					
 				//achievement
 				if (G.year<=50 && G.has('monument-building') && G.has('mausoleum')&& G.achievByName['fast mausoleum'].won < 1)
 				{
@@ -700,7 +702,7 @@ G.AddData({
 
 		new G.Res({
 			name: 'productivity',
-			desc: '[productivity] describes the extra/lessend effeciciency your [worker]s are working at, which is what stats like [happiness] and [health], the amount of [infrastructure]s affects.',
+			desc: '[productivity] describes the extra/lessened effeciciency your [worker]s are working at, which is what stats like [happiness] and [health], the amount of [infrastructure]s affects.',
 			visible: true,
 			icon: [14, 3, 'H1sheet'],
 			fractional: true,
@@ -1495,7 +1497,6 @@ G.AddData({
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
-
 		new G.Res({
 			name: 'ice',
 			desc: 'Can be used to preserve [food] longer.//Will melt into [water] over time.',
@@ -1600,9 +1601,7 @@ G.AddData({
 				me.amount = Math.min(me.amount, limit);
 			}
 		};
-		var recording = function () {
-			G.getDict['record'].amount = G.getDict['record'].amount + G.getDict('recording medium').amount
-		};
+		
 		new G.Res({
 			name: 'experience',
 			desc: '[experience] represents your people\'s discovery in the world, unlike [insight]s and other resources, it is passively gained based on your population size.//' + limitDesc('[record]') + '//Many technologies require experience to be researched.',
@@ -1617,7 +1616,18 @@ G.AddData({
 			hidden: true,
 			icon: [16, 5, 'H1sheet'],
 			category: 'main',
-			recording
+			tick: function (me, tick) {
+				var amount = 0;
+				amount += G.getRes('permanent record').amount;
+				amount += G.getRes('recording medium').amount;
+				me.amount = amount;
+			},
+		});
+		new G.Res({
+			name: 'permanent record',
+			hidden: true,
+			icon: [16, 5, 'H1sheet'],
+			category: 'main',
 		});
 		new G.Res({
 			name: 'insight',
@@ -1787,7 +1797,7 @@ G.AddData({
 			modes: {
 				'gather food only': { name: 'gather food only', icon: [4, 7], desc: 'Doing their best to self sustain by gathering food from the wild.' },
 				'gather water only': { name: 'gather water only', icon: [7, 6], desc: 'Doing their best to self sustain by gathering water from streams.' },
-				'gather archaic materials': { name: 'gather archaic materials', icon: [2, 7], desc: 'Ingore food and water,only gather materials' },
+				'gather archaic materials': { name: 'gather archaic materials', icon: [2, 7], desc: 'Ignore food and water,only gather materials' },
 				'gather rare herb': { name: 'gather rare herbs', icon: [4, 6], desc: 'Dedicate themselves to find strange herbs with strange properties, such as healing, using [basket]s as tool.', req: { 'plant lore': true } },
 			},
 			effects: [
@@ -1816,15 +1826,12 @@ G.AddData({
 			use: { 'worker': 1 },
 			gizmos: true,
 			modes: {
-				'carry material': { name: 'carry materials', icon: [13, 3, 'H1sheet'], desc: 'Provide 10 [infrastructure]' },
 				'builder': { name: 'builder', icon: [13, 3, 'H1sheet'], desc: 'Generate small amount of [labour power]' ,use: { 'tools': 1 },},
 				'carry water': { name: 'carry water', use: { 'pot': 1 }, icon: [7, 6], desc: 'Making use of pots and carry liquids back to settlements. Better than gathering by barehand.', req: { 'pottery': true } }
 			},
 			effects: [
-				{ type: 'gather', what: { 'water': 10 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
-				{ type: 'provide', what: { 'infrastructure': 25 }, mode: 'carry material' },
+				{ type: 'gather', what: { 'water': 20 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
 				{ type: 'gather', what: { 'labour power': 5 },amount: 5, mode: 'builder' },
-
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -1926,8 +1933,8 @@ G.AddData({
 			staff: { 'tools': 1 },
 			
 			effects: [
-				{ type: 'gather', what: { 'resource depletion': 0.05 }, context: 'chop', amount: 1, max: 1 },
-
+				{ type: 'gather', what: { 'resource depletion': 0.05 }, amount: 1, max: 1 },
+				{ type: 'gather', context: 'chop', amount: 1, max: 1 },
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -1953,18 +1960,16 @@ G.AddData({
 		//mindUnit
 		new G.Unit({
 			name: 'scholar',
-			desc: '@generates [insight] every now and then, which you can use to research early technologies<>A [scholar] spends their time observing, thinking, and wondering why things are the way they are.',
+			desc: '@convert [experience] to [insight] every now and then, which you can use to research early technologies<>A [scholar] spends their time observing, thinking, and wondering why things are the way they are.',
 			icon: [1, 2],
 			cost: {},
 			use: { 'worker': 1 },
 			gizmos: true,
 			modes: {
-				'preserver': { name: 'preserver', icon: [16, 5, 'H1sheet'], desc: 'Provide 10 [record]<>He remebers.' },
 				'researcher': { name: 'researcher', icon: [8, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' }
 			},
 			effects: [
-				{ type: 'provide', what: { 'record': 10 }, mode: 'preserver' },
-				{ type: 'convert', from: { 'experience': 10 }, into: { 'insight': 0.1 }, mode: 'researcher' },
+				{ type: 'convert', from: { 'experience': 5 }, into: { 'insight': 0.5 }, mode: 'researcher' },
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -1978,20 +1983,20 @@ G.AddData({
 
 		new G.Unit({
 			name: 'storyteller',
-			desc: '@generates [culture] every now and then<>[storyteller]s gather the tribe around at nightfall to tell the tales of their ancestors.',
+			desc: '@convert [experience] to [culture] every now and then<>[storyteller]s gather the tribe around at nightfall to tell the tales.',
 			icon: [14, 2],
 			cost: {},
 			use: { 'worker': 1 },
 			
 			gizmos: true,
 			modes: {
-				'tell stories': { name: 'tell stories', icon: [10, 4], desc: 'Make up stories to convert experience to cultrue.' },
+				'tell stories': { name: 'tell stories', icon: [10, 4], desc: 'Make up stories to convert experience to culture.' },
 				'statuette story telling': { name: 'statuette story telling', icon: [8, 9], desc: 'Use statuette to tell stories in a more intuitive way', req: { 'carving': true } },
 			},
 			effects: [
-				{ type: 'convert', from: { 'experience': 10 }, into: { 'culture': 0.2 }, mode: 'tell stories' },
-				{ type: 'convert', from: { 'experience': 5 }, into: { 'culture': 0.2 }, mode: 'tell stories', req: { 'symbolism': true } },
-				{ type: 'convert', from: { 'statuette': 1, 'experience': 10 }, into: { 'culture': 0.4 }, mode: 'statuette story telling' },
+				{ type: 'convert', from: { 'experience': 5 }, into: { 'culture': 0.5 }, mode: 'tell stories' },
+				{ type: 'convert', from: { 'experience': 3 }, into: { 'culture': 0.5 }, mode: 'tell stories', req: { 'symbolism': true } },
+				{ type: 'convert', from: { 'statuette': 1, 'experience': 5 }, into: { 'culture': 0.8 }, mode: 'statuette story telling' },
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
 				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2130,7 +2135,7 @@ G.AddData({
 				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'tools': 1 } },
 				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { 'tools': 1 } },
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
-				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a pot at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { 'pot ': 1 }},
+				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a [pot] at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { 'pot': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
 				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.'},
 
@@ -2155,7 +2160,7 @@ G.AddData({
 				{ type: 'convert', from: { 'stick': 5, 'herb': 2 }, into: { 'torch': 1 }, every: 4, mode: 'any' },
 				{ type: 'convert', from: { 'meat': 1, 'fire pit': 0.01 }, into: { 'cooked meat': 1 }, every: 1, repeat: 5, mode: 'any' , req: { 'cooking': true }},
 				{ type: 'convert', from: { 'seafood': 1, 'fire pit': 0.01 }, into: { 'cooked seafood': 1 }, every: 1, repeat: 5, mode: 'any' , req: { 'cooking': true }},
-				{ type: 'convert', from: { 'dirty water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 1, repeat: 5, mode: 'any', req: { 'boiling': true }},
+				{ type: 'convert', from: { 'dirty water': 25, 'fire pit': 0.01 }, into: { 'water': 20 }, every: 1, repeat: 2, mode: 'any', req: { 'boiling': true }},
 				{ type: 'convert', from: { 'meat': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured meat': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
 				{ type: 'convert', from: { 'seafood': 1, 'salt': 1, 'fire pit': 0.01 }, into: { 'cured seafood': 2 }, every: 1, repeat: 5, mode: 'any', req: { 'curing': true } },
 			],
@@ -2315,9 +2320,9 @@ G.AddData({
 			effects: [
 				{ type: 'explore', explored: 0.075, unexplored: 0, mode: 'careful exploration' },
 				{ type: 'explore', explored: 0.125, unexplored: 0, mode: 'aggressive exploration' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'adult': 1 }, chance: 1 / 100, req: { 'chieftains': true }, mode: 'recuit wild human' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'elder': 1 }, chance: 1 / 150, req: { 'chieftains': true }, mode: 'recuit wild human' },
-				{ type: 'convert', from: { 'culture': 3, 'food': 5 }, into: { 'child': 1 }, chance: 1 / 80, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 10 }, into: { 'adult': 1 }, chance: 1 / 100, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 10 }, into: { 'elder': 1 }, chance: 1 / 150, req: { 'chieftains': true }, mode: 'recuit wild human' },
+				{ type: 'convert', from: { 'culture': 3, 'food': 10 }, into: { 'child': 1 }, chance: 1 / 80, req: { 'chieftains': true }, mode: 'recuit wild human' },
 				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 200, mode: 'careful exploration' },
 				{ type: 'function', func: unitGetsConverted({}, 0.01, 0.05, '[X] [people].', 'wanderer got lost', 'wanderers got lost'), chance: 1 / 50, mode: 'aggressive exploration' },
 				{ type: 'mult', value: 1.1, req: { 'mountain origin': true } },
@@ -2923,7 +2928,7 @@ G.AddData({
 			startWith: true,
 			effects: [
 				{ type: 'provide res', what: { 'wisdom': 10 } },
-				{ type: 'provide res', what: { 'record': 25 } },
+				{ type: 'provide res', what: { 'permanent record': 25 } },
 				{ type: 'show res', what: ['insight'] },
 			],
 			category: 'wisd'
@@ -3029,6 +3034,7 @@ G.AddData({
 			req: { 'language': true },
 			effects: [
 				{ type: 'provide res', what: { 'inspiration': 25 } },
+				{ type: 'provide res', what: { 'permanent record': 50 } },
 			],
 			chance: 50,
 			category: 'wisd'
@@ -3071,7 +3077,7 @@ G.AddData({
 			icon: [26, 6],
 			cost: { 'insight': 5, 'experience': 20 },
 			req: { 'stone-knapping': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'permanent record': 25 } },
 			],
 			chance: 3,
 			category: 'indu'
@@ -3083,6 +3089,8 @@ G.AddData({
 			cost: { 'insight': 5, 'experience': 50 },
 			req: { 'digging': true, 'language': true },
 			effects: [
+			{ type: 'show res', what: ['infrastructure'] },
+			{ type: 'provide res', what: { 'infrastructure': 50 } },
 			],
 			chance: 3,
 			category: 'tradi'
@@ -3154,6 +3162,7 @@ G.AddData({
 			effects: [
 				{ type: 'show res', what: ['food storage'] },
 				{ type: 'show res', what: ['material storage'] },
+				{ type: 'provide res', what: { 'infrastructure': 10 } },
 			],
 			chance: 2,
 			category: 'indu'
@@ -3164,7 +3173,7 @@ G.AddData({
 			icon: [22, 7],
 			cost: { 'insight': 30, 'experience': 100 },
 			req: { 'digging': true, 'tool-making': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'infrastructure': 10 } },
 			],
 			category: 'disc'
 		});
@@ -3210,7 +3219,7 @@ G.AddData({
 			desc: '@[firekeeper]s can now use [pot] to boil [dirty water] to turn it back into clean [water]@base [health] value increased by 5%<>Making a habit of drinking warm water is instrumental to human health, ',
 			icon: [17, 1],
 			cost: { 'experience': 10, 'fire pit': 1, 'food': 1 },
-			req: { 'fire-making': true },
+			req: { 'fire-making': true,'pottery':true },
 			category: 'disc'
 		});
 		new G.Tech({
@@ -3264,7 +3273,7 @@ G.AddData({
 			icon: [9, 1],
 			cost: { 'insight': 25, 'experience': 100 },
 			req: { 'sedentism': true, 'tool-making': true, 'stockpiling': true, 'burial': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'infrastructure': 15 } },
 			],
 			chance: 3,
 			category: 'indu'
@@ -3374,7 +3383,7 @@ G.AddData({
 			icon: [30, 7],
 			cost: { 'insight': 50, 'experience': 100 },
 			req: { 'building': true, 'masonry': true, 'carpentry': true, 'quarrying': true, 'basic drawing': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'infrastructure': 15 } },
 			],
 			chance: 3,
 			category: 'indu'
@@ -3475,7 +3484,7 @@ G.AddData({
 			icon: [29, 7],
 			cost: { 'insight': 50, 'experience': 100 },
 			req: { 'construction': true, 'code of law': true, 'well-digging': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'infrastructure': 15 } },
 			],
 			category: 'indu'
 		});
@@ -3511,7 +3520,7 @@ G.AddData({
 			icon: [22, 8],
 			cost: { 'insight': 75, 'experience': 50 },
 			req: { 'construction': true, 'cities': true, 'writing': true },
-			effects: [
+			effects: [{ type: 'provide res', what: { 'infrastructure': 10 } },
 			],
 			category: 'indu'
 		});
@@ -3555,7 +3564,7 @@ G.AddData({
 			cost: { 'insight': 999 },
 			req: { 'tribalism': false },
 			chance: 0,
-			effects: [{ type: 'gather', what: { 'experience': 1 }},
+			effects: [{ type: 'gather', what: { 'experience': 0.1 },every:1},
 			],
 			category: 'lega'
 		});
@@ -3946,7 +3955,7 @@ G.AddData({
 		//buffPolicy
 		new G.Policy({
 			name: 'mating gathering',
-			desc: 'Improves birth rate by 20%. Consumes 1 [faith] every 20 days; will stop if you run out.<>A common practise in many cultrue is to gather up all of their teenagers to have a big festival, and put them together. This is one of those.',
+			desc: 'Improves birth rate by 20%. Consumes 1 [faith] every 20 days; will stop if you run out.<>A common practise in many culture is to gather up all of their teenagers to have a big festival, and put them together. This is one of those.',
 			icon: [8, 12, 2, 3],
 			cost: { 'faith': 1, 'influence': 1 },
 			startMode: 'off',
@@ -4419,7 +4428,7 @@ G.AddData({
 
 		new G.Goods({
 			name: 'avians',
-			desc: '[avians] are also critters, they flys high from any danger, tho there are also some decent walkers among them, tho hunting them down can yield nice amount of [meat] and [bone]s. Consist of Birds of all kinds,pheasant of all kinds, ostriches and many others.//their nests can be a source for gathering [egg].',
+			desc: '[avians] are also critters, they fly high from any danger, tho there are also some decent walkers among them, tho hunting them down can yield nice amount of [meat] and [bone]s. Consist of Birds of all kinds,pheasant of all kinds, ostriches and many others.//their nests can be a source for gathering [egg].',
 			icon: [17, 11, 'H1sheet'],
 			res: {
 				'foodgather': { 'egg': 0.5 },
@@ -4572,11 +4581,10 @@ G.AddData({
 			tier: 0,
 			name: 'normal mausoleum',
 			displayName:'Did you just end it all?',	
-			desc: 'You have been laid to rest in the Mausoleum, an ancient stone monument the purpose of which takes root in archaic religious thought.',
+			desc: 'You have been laid to rest in the Mausoleum, an ancient stone monument the purpose of which takes root in archaic religious thought.<>Gains tech[mausoleum complete] from the start, which provides a large amount of [experience].',
 			fromUnit: 'mausoleum',
 			effects: [
 				{ type: 'addFastTicksOnStart', amount: 300 * 3 },
-				{ type: 'addFastTicksOnResearch', amount: 150 },
 			],
 		});
 		new G.Achiev({
