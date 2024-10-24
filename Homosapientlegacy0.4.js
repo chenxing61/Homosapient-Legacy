@@ -141,7 +141,7 @@ G.AddData({
 				)
 				else if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.getRes('literacy').amount<=1000)
 				(
-				G.getRes('experience').amount += ((G.getRes('literacy').amount/1000)*G.getRes('population').amount)
+				G.getRes('experience').amount += ((G.getRes('literacy').amount/2000)*G.getRes('population').amount)
 				)
 				else if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.getRes('literacy').amount>1000)
 				(
@@ -2022,8 +2022,8 @@ G.AddData({
 				'teacher': { name: 'teacher', icon: [8, 4], desc: 'Teach people.',req:{'writing':true} }
 			},
 			effects: [
-				{ type: 'convert', from: { 'experience': 5 }, into: { 'insight': 0.5 }, mode: 'researcher' },
-				{ type: 'gather', what:{'literacy':1},amount:0.5,every:7},
+				{ type: 'convert', from: { 'experience': 5 }, into: { 'insight': 1 }, every:1, mode: 'researcher' },
+				{ type: 'gather', what:{'literacy':1},amount:0.25,every:7},
 
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2049,10 +2049,10 @@ G.AddData({
 				'statuette story telling': { name: 'statuette story telling', icon: [8, 9], desc: 'Use statuette to tell stories in a more intuitive way', req: { 'carving': true } },
 			},
 			effects: [
-				{ type: 'convert', from: { 'experience': 5 }, into: { 'culture': 0.5 }, mode: 'tell stories' },
-				{ type: 'convert', from: { 'experience': 3 }, into: { 'culture': 0.5 }, mode: 'tell stories', req: { 'symbolism': true } },
-				{ type: 'convert', from: { 'statuette': 1, 'experience': 5 }, into: { 'culture': 0.8 }, mode: 'statuette story telling' },
+				{ type: 'convert', from: { 'experience': 5 }, into: { 'culture': 1 },every:1, mode: 'tell stories' },
+				{ type: 'convert', from: { 'statuette': 1, 'experience': 5 }, into: { 'culture': 1.3 },every:1, mode: 'statuette story telling' },
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
+				{ type: 'mult', value: 1.5, req: { 'symbolism': true } },
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -2121,7 +2121,7 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'stone statuettes' },
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'bone statuettes' },
-				{ type: 'convert', from: { 'insight': 20, 'log': 5 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
+				{ type: 'convert', from: { 'insight': 1, 'log': 5 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
 				{ type: 'convert', from: { 'stone': 10 }, into: { 'cut stone': 1 }, every: 15, mode: 'cut stone' },
 				{ type: 'convert', from: { 'cut stone': 1 }, into: { 'stone': 9 }, every: 5, mode: 'smash cut stone' },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 15, mode: 'gem blocks' },
