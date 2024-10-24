@@ -132,9 +132,27 @@ G.AddData({
 				if (G.has('dry weather'))
 					G.gain('resource depletion', 0.25);
 				//experience
-				if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount)(G.getRes('experience').amount += G.getRes('population').amount*0.005)
-					
-					
+				
+				if(G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.has('writing') == false)
+				(
+				G.getRes('experience').amount += (0.01*G.getRes('population').amount),
+				//secretly know how to write
+				G.getRes('literacy').amount = 10
+				)
+				else if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.getRes('literacy').amount<=1000)
+				(
+				G.getRes('experience').amount += ((G.getRes('literacy').amount/1000)*G.getRes('population').amount)
+				)
+				else if (G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.getRes('literacy').amount>1000)
+				(
+				G.getRes('experience').amount += (G.getRes('population').amount)
+				)
+				//literacy drop
+				if (G.getRes('population').amount>0 && G.getRes('literacy').amount>10 && G.has('writing') == true)
+					(
+					//babies are stupid haha
+					G.getRes('literacy').amount -= (G.getRes('born this year').amount*0.05)
+					)
 				//achievement
 				if (G.year<=50 && G.has('monument-building') && G.has('mausoleum')&& G.achievByName['fast mausoleum'].won < 1)
 				{
@@ -148,7 +166,7 @@ G.AddData({
 						if (me.lifetime >= 1 && me.lifetime != Infinity) {
 							me.lifetime -= 1
 							if (me.lifetime === 0 && me.lifetime != Infinity) {
-								G.Message({ type: 'important tall', text: 'Time passes and some trait has lost its effect </b>.', icon: me.icon });
+								G.Message({ type: 'important tall', text: 'Time passes and some event has lost its effect </b>.', icon: me.icon });
 								G.deleteTrait(me);
 								me.lifetime += 150
 							}
@@ -163,7 +181,7 @@ G.AddData({
 							if (G.checkReq(me.req) && G.testCost(me.cost, 1)) {
 								G.doCost(me.cost, 1);
 								G.gainTrait(me);
-								G.Message({ type: 'important tall', text: 'Your people have adopted the trait <b>' + me.displayName + '</b>.', icon: me.icon });
+								G.Message({ type: 'important tall', text: 'A event is happening! <b>' + me.displayName + '</b>.', icon: me.icon });
 							}
 
 						}
@@ -218,6 +236,12 @@ G.AddData({
 			}
 			return mult;
 		}
+		G.funcs['experience production count'] = function () {
+			if (G.on) {
+				var prod = (G.getDict('population').amount * 0.01)
+				return prod
+			}
+		};
 		/*=====================================================================================
 		RESOURCES
 		=======================================================================================*/
@@ -226,7 +250,7 @@ G.AddData({
 			'main': {
 				name: 'Essentials',
 				base: [],
-				side: ['population', 'worker', 'happiness', 'health', 'productivity', 'land', 'coin'],
+				side: ['population', 'worker', 'happiness', 'health', 'productivity', 'literacy','land'],
 			},
 			'stats': {
 				name: 'Statistics',
@@ -414,8 +438,8 @@ G.AddData({
 
 					//fire
 					var objects;
-					if(G.has('cold winter'))(objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] }) 
-					else (objects = { 'fire pit': [5, 0.1, 0.1], 'torch': [3, 0.1, 0.1] )
+					if(G.has('cold winter'))(objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] });
+					else (objects = { 'fire pit': [5, 0.1, 0.1], 'torch': [3, 0.1, 0.1]} )
 					
 					
 					var leftout = me.amount;
@@ -706,13 +730,13 @@ G.AddData({
 
 		new G.Res({
 			name: 'productivity',
-			desc: '[productivity] describes the extra/lessened effeciciency your [worker]s are working at, which is what stats like [happiness] and [health], the amount of [infrastructure]s affects.',
+			desc: '[productivity] describes the extra/lessened effeciciency your [worker]s are working at, which is what stats like [happiness] and the amount of [infrastructure]s affects.',
 			visible: true,
 			icon: [14, 3, 'H1sheet'],
 			fractional: true,
 			getDisplayAmount: function () {
 				var productionMult = G.doFunc('production multiplier', 1) - 1;
-				return (productionMult).toFixed(2) + '%'
+				return (productionMult*100).toFixed(2) + '%'
 			},
 			getIcon: function (me) {
 				var productionMult = G.doFunc('production multiplier', 1) - 1;
@@ -1605,10 +1629,21 @@ G.AddData({
 				me.amount = Math.min(me.amount, limit);
 			}
 		};
-		
+		new G.Res({
+			name: 'literacy',
+			desc: '[literacy] represents the average ability to read or write of your [population].//It determines the [experience] gain rate of the [population] size.//It can be improved by teachers and schools.',
+			startWith: 10,
+			visible:false,
+			icon: [10, 3,'H1sheet'],
+			fractional: true,
+			getDisplayAmount: function () {
+				if (G.getRes('population').amount <= 0 || G.has('writing') == false) return '-';
+				return (this.displayedAmount / 1000).toFixed(2) + '%';
+			},
+		});
 		new G.Res({
 			name: 'experience',
-			desc: '[experience] represents your people\'s discovery in the world, unlike [insight]s and other resources, it is passively gained based on your population size.//' + limitDesc('[record]') + '//Many technologies require experience to be researched.',
+			desc: '[experience] represents your people\'s discovery in the world, unlike [insight]s and other resources, it is passively gained based on your [population] size and [literacy].//' + limitDesc('[record]') + '//Many technologies require experience to be researched.',
 			icon: [6, 4],
 			category: 'main',
 			limit: 'record',
@@ -1802,20 +1837,22 @@ G.AddData({
 				'gather food only': { name: 'gather food only', icon: [4, 7], desc: 'Doing their best to self sustain by gathering food from the wild.' },
 				'gather water only': { name: 'gather water only', icon: [7, 6], desc: 'Doing their best to self sustain by gathering water from streams.' },
 				'gather archaic materials': { name: 'gather archaic materials', icon: [2, 7], desc: 'Ignore food and water,only gather materials' },
-				'gather rare herb': { name: 'gather rare herbs', icon: [4, 6], desc: 'Dedicate themselves to find strange herbs with strange properties, such as healing, using [basket]s as tool.', req: { 'plant lore': true } },
+				'gather rare herb': { name: 'gather rare herbs', icon: [4, 6], desc: 'Dedicate themselves to find strange herbs with strange properties, such as healing, using [basket]s as tool.', req: { 'plant lore': true } , use: { 'basket': 1 }},
 			},
 			effects: [
-				{ type: 'gather', context: 'foodgather', amount: 2, max: 4, mode: 'gather food only' },
-				{ type: 'gather', context: 'foodgather', what: { 'resource depletion': 0.05 }, mode: 'gather food only' },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 3, max: 6, mode: 'gather water only' },
+				{ type: 'gather', context: 'foodGather', amount: 2, max: 4, mode: 'gather food only' },
+				{ type: 'gather', context: 'foodGather', what: { 'resource depletion': 0.05 }, mode: 'gather food only' },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 3, max: 6, mode: 'gather water only' },
 
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 3, max: 6, mode: 'gather water only', req: { 'humid weather': true } },
-				{ type: 'gather', context: 'materialgather', what: { 'stick': 1, 'stone': 1, 'mud': 1 }, amount: 1, max: 2, mode: 'gather archaic materials', req: { 'use of tool': true } },
-				{ type: 'gather', context: 'foodgather', what: { 'vegetable': 0.5, 'fruit': 0.5, 'herb': -0.5 }, amount: 1, max: 1, mode: 'gather food only', req: { 'plant lore': true } },
-				{ type: 'gather', context: 'herbgather', amount: 2, max: 2, mode: 'gather rare herb', req: { 'plant lore': true }, use: { 'basket': 1 } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 3, max: 6, mode: 'gather water only', req: { 'humid weather': true } },
+				{ type: 'gather', context: 'materialGather', what: { 'stick': 1, 'stone': 1, 'mud': 1 }, amount: 1, max: 2, mode: 'gather archaic materials', req: { 'use of tool': true } },
+				{ type: 'gather', context: 'foodGather', what: { 'vegetable': 0.5, 'fruit': 0.5, 'herb': -0.5 }, amount: 1, max: 1, mode: 'gather food only', req: { 'plant lore': true } },
+				{ type: 'gather', context: 'herbGather', amount: 2, max: 2, mode: 'gather rare herb'},
 				{ type: 'mult', value: 1.1, req: { 'forest origin': true } },
 				{ type: 'mult', value: 1.25, req: { 'side job of the population': 'gatherer' } },
+
 				{ type: 'mult', value: 0.25, req: { 'overgather': true } },
+				{ type: 'mult', value: 1.5, req: { 'bountifulness': true } },
 
 
 			],
@@ -1835,11 +1872,11 @@ G.AddData({
 				'carry water': { name: 'carry water', use: { 'pot': 1 }, icon: [7, 6], desc: 'Making use of pots and carry liquids back to settlements. Better than gathering by barehand.', req: { 'pottery': true } }
 			},
 			effects: [
-				{ type: 'gather', what: { 'water': 8 }, context: 'watergather', amount: 10, max: 20, mode: 'carry water' },
+				{ type: 'gather', what: { 'water': 8 }, context: 'waterGather', amount: 10, max: 20, mode: 'carry water' },
 				{ type: 'mult', value: 1.5, mode: 'gather water only', req: { 'humid weather': true } },
 				{ type: 'gather', what: { 'labour power': 5 },amount: 5, mode: 'builder' },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -1866,15 +1903,19 @@ G.AddData({
 				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.075 }, mode: 'spear hunting' },
 				{ type: 'gather', context: 'hunt', amount: 4, max: 5, mode: 'bow hunting' },
 				{ type: 'gather', context: 'hunt', what: { 'resource depletion': 0.1 }, mode: 'bow hunting' },//TODO : consuming arrows?
-				{ type: 'mult', value: 0.25, req: { 'overhunting': true } },
+				
 
 				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.03, '[X] [people] wounded while hunting.', 'hunter was', 'hunters were'), chance: 1 / 30 },
-				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
-				{ type: 'mult', value: 1.15, req: { 'jungle origin': true } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+
+				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
+				{ type: 'mult', value: 1.15, req: { 'jungle origin': true } },
+				{ type: 'mult', value: 1.5, req: { 'bountifulness': true } },
+				{ type: 'mult', value: 0.25, req: { 'overhunting': true } },
 			],
 			req: { 'hunting': true },
 			category: 'production',
@@ -1901,13 +1942,13 @@ G.AddData({
 				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.075 }, mode: 'spear fishing' },
 				{ type: 'gather', context: 'fish', what: { 'resource depletion': 0.1 }, mode: 'line fishing' },
 
-				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
-				{ type: 'mult', value: 0.25, req: { 'overfishing': true } },
-
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
+
+				{ type: 'mult', value: 1.2, req: { 'systematic gathering': 'on' } },
+				{ type: 'mult', value: 0.25, req: { 'overfishing': true } },
 			],
 			req: { 'fishing': true },
 			category: 'production',
@@ -1925,8 +1966,8 @@ G.AddData({
 				{ type: 'gather', context: 'dig', amount: 1, max: 1 },
 				{ type: 'gather', context: 'dig', what: { 'clay': 5 }, max: 1, req: { 'pottery': true } },
 
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -1944,8 +1985,8 @@ G.AddData({
 			effects: [
 				{ type: 'gather', what: { 'resource depletion': 0.05 }, amount: 1, max: 1 },
 				{ type: 'gather', context: 'chop', amount: 1, max: 1 },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -1960,8 +2001,9 @@ G.AddData({
 			cost:{'archaic building materials':100,'spoiled food':50},
 			use:{'land':1},
 			effects:[
-				{type:'convert',from:{'spoiled food':10},into:{'vegetable':0.1,'fruit':0.1}},
+				{type:'convert',from:{'spoiled food':200},into:{'vegetable':10,'fruit':10},every:15},
 				{ type: 'mult', value: 1.2, req: { 'humid weather':true } },
+				{ type: 'mult', value: 1.5, req: { 'great harvest':true } },
 				{type:'waste',chance:0.001/1000},
 			],
 			req:{'early farming':true},
@@ -1976,13 +2018,16 @@ G.AddData({
 			use: { 'worker': 1 },
 			gizmos: true,
 			modes: {
-				'researcher': { name: 'researcher', icon: [8, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' }
+				'researcher': { name: 'researcher', icon: [8, 4], desc: 'Convert gathered experience to insights.<>Seeking patterns in the nature is tough work.' },
+				'teacher': { name: 'teacher', icon: [8, 4], desc: 'Teach people.',req:{'writing':true} }
 			},
 			effects: [
 				{ type: 'convert', from: { 'experience': 5 }, into: { 'insight': 0.5 }, mode: 'researcher' },
+				{ type: 'gather', what:{'literacy':1},amount:0.5,every:7},
+
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2008,8 +2053,8 @@ G.AddData({
 				{ type: 'convert', from: { 'experience': 3 }, into: { 'culture': 0.5 }, mode: 'tell stories', req: { 'symbolism': true } },
 				{ type: 'convert', from: { 'statuette': 1, 'experience': 5 }, into: { 'culture': 0.8 }, mode: 'statuette story telling' },
 				{ type: 'mult', value: 1.2, req: { 'wisdom rituals': 'on' } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2029,7 +2074,7 @@ G.AddData({
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
 				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
-				'bows': { name: 'Craft bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
+				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primititve bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
 				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.' },
 			},
@@ -2038,10 +2083,10 @@ G.AddData({
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 7, mode: 'knap', req: { 'bone-working': true } },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone tools': 1 }, every: 3, mode: 'stone tools' },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone weapons': 1 }, every: 3, mode: 'stone weapons' },
-				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'bows' },
+				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'primititve bows' },
 				{ type: 'convert', from: { 'stick': 8 }, into: { 'basket': 1 }, every: 1, mode: 'baskets' },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 				//any
@@ -2080,8 +2125,8 @@ G.AddData({
 				{ type: 'convert', from: { 'stone': 10 }, into: { 'cut stone': 1 }, every: 15, mode: 'cut stone' },
 				{ type: 'convert', from: { 'cut stone': 1 }, into: { 'stone': 9 }, every: 5, mode: 'smash cut stone' },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 15, mode: 'gem blocks' },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 				//any
@@ -2119,8 +2164,8 @@ G.AddData({
 				{ type: 'convert', from: { 'hide': 1, 'water': 5, 'salt': 1, 'log': 0.1 }, into: { 'leather': 1 }, every: 15, mode: 'make leather' },
 				{ type: 'convert', from: { 'hide': 1, 'dirty water': 5, 'herb': 10 }, into: { 'leather': 1 }, every: 30, mode: 'cheap make leather' },
 
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 				//any
@@ -2165,8 +2210,8 @@ G.AddData({
 				{ type: 'mult', value: 1.2, mode: 'cook', req: { 'dry weather': true } },
 				{ type: 'mult', value: 1.2, mode: 'cure', req: { 'dry weather': true } },
 
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 				//any
@@ -2203,8 +2248,8 @@ G.AddData({
 				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 1, mode: 'any' },
 				{ type: 'convert', from: { 'mud': 50, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 1, mode: 'preserve knowledge' },
 
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2221,8 +2266,8 @@ G.AddData({
 			effects: [
 				{ type: 'gather', what: { 'faith': 0.1, 'happiness': 0.1 } },
 				{ type: 'gather', what: { 'faith': 0.05 }, req: { 'symbolism': true } },
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2241,8 +2286,8 @@ G.AddData({
 				{ type: 'convert', from: { 'sick': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 5, every: 5 },
 				{ type: 'convert', from: { 'wounded': 1, 'medical herb': 2.5 }, into: { 'adult': 1 }, chance: 1 / 10, every: 5 },
 
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2310,8 +2355,8 @@ G.AddData({
 						}
 					}, mode: 'undertaker'
 				},
-				{ type: 'gather', context: 'foodgather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
-				{ type: 'gather', context: 'watergather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
+				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'mult', value: 0.5, req: { 'side job of the population': 'gatherer' } },
 			],
@@ -2954,9 +2999,9 @@ G.AddData({
 				{ type: 'provide res', what: { 'authority': 5 } },
 				{ type: 'show res', what: ['influence'] },
 				{ type: 'show res', what: ['labour power'] },
-				{ type: 'show context', what: ['foodgather'] },
-				{ type: 'show context', what: ['watergather'] },
-				{ type: 'show context', what: ['materialgather'] },
+				{ type: 'show context', what: ['foodGather'] },
+				{ type: 'show context', what: ['waterGather'] },
+				{ type: 'show context', what: ['materialGather'] },
 			],
 			category: 'order'
 		});
@@ -3046,7 +3091,7 @@ G.AddData({
 			name: 'digging',
 			desc: '@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
 			icon: [11, 1],
-			cost: { 'insight': 5, 'experience': 25 },
+			cost: { 'insight': 5, 'experience': 10 },
 			req: { 'use of tool': true },
 			effects: [
 				{ type: 'show context', what: ['dig'] },
@@ -3058,7 +3103,7 @@ G.AddData({
 			name: 'bone-working',
 			desc: '@[artisan]s can now make [knapped tools] out of [bone]@[bone]s can now be used as [archaic building materials]<>',
 			icon: [22, 5],
-			cost: { 'insight': 5, 'experience': 25 },
+			cost: { 'insight': 7, 'experience': 25 },
 			req: { 'stone-knapping': true },
 			effects: [
 				{ type: 'make part of', what: ['bone'], parent: 'archaic building materials' },
@@ -3069,7 +3114,7 @@ G.AddData({
 			name: 'oral tradition',
 			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 50 [record]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 			icon: [5, 1],
-			cost: { 'insight': 4, 'experience': 20 },
+			cost: { 'insight': 7, 'experience': 25 },
 			req: { 'language': true },
 			effects: [
 				{ type: 'provide res', what: { 'inspiration': 25 } },
@@ -3082,7 +3127,7 @@ G.AddData({
 			name: 'tool-making',
 			desc: '@[artisan]s can now create [stone tools]<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
 			icon: [4, 1],
-			cost: { 'insight': 1, 'experience': 20, 'stick': 5 },
+			cost: { 'insight': 4, 'experience': 25, 'stick': 5 },
 			req: { 'stone-knapping': true, 'carving': true },
 			effects: [
 			],
@@ -3094,7 +3139,7 @@ G.AddData({
 			name: 'woodcutting',
 			desc: '@unlocks [woodcutter]s<>',//TODO : desc
 			icon: [23, 5],
-			cost: { 'insight': 5, 'experience': 30, 'stick': 5 },
+			cost: { 'insight': 5, 'experience': 25, 'stick': 5 },
 			req: { 'stone-knapping': true },
 			effects: [
 				{ type: 'show context', what: ['chop'] },
@@ -3139,7 +3184,7 @@ G.AddData({
 			name: 'ritualism',
 			desc: '@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
 			icon: [12, 1],
-			cost: { 'insight': 8, 'experience': 20 },
+			cost: { 'culture': 8, 'experience': 35 },
 			req: { 'oral tradition': true },
 			effects: [
 				{ type: 'provide res', what: { 'spirituality': 10 } },
@@ -3150,7 +3195,7 @@ G.AddData({
 			name: 'chieftains',
 			desc: '@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
 			icon: [22, 6],
-			cost: { 'insight': 8, 'experience': 20 },
+			cost: { 'culture': 8, 'experience': 25 },
 			req: { 'oral tradition': true },
 			effects: [
 				{ type: 'provide res', what: { 'authority': 5 } },
@@ -3175,7 +3220,7 @@ G.AddData({
 			cost: { 'experience': 50 },
 			req: { 'oral tradition': true, 'basket-weaving': true },
 			effects: [
-				{ type: 'show context', what: ['herbgather'] },
+				{ type: 'show context', what: ['herbGather'] },
 			],
 			category: 'disc'
 		});
@@ -3196,7 +3241,7 @@ G.AddData({
 			name: 'stockpiling',
 			desc: '@unlocks [storage pit]s<>The foresight to store sustenance and materials ahead of time can make or break a budding civilization.',
 			icon: [10, 1],
-			cost: { 'insight': 25, 'experience': 50 },
+			cost: { 'insight': 10, 'experience': 25 },
 			req: { 'digging': true },
 			effects: [
 				{ type: 'show res', what: ['food storage'] },
@@ -3220,7 +3265,7 @@ G.AddData({
 			name: 'bows',
 			desc: '@[artisan]s can now craft [primitive bow]s@unlocks new modes for [hunter]s<>',//TODO : desc
 			icon: [27, 1],
-			cost: { 'insight': 25, 'experience': 75 },
+			cost: { 'insight': 30, 'experience': 75, 'stick': 50 },
 			req: { 'spears': true },
 			category: 'inno'
 		});
@@ -3228,7 +3273,7 @@ G.AddData({
 			name: 'fishing hooks',
 			desc: '@unlocks new modes for [fisher]s<>',//TODO : desc
 			icon: [28, 1],
-			cost: { 'experience': 50 },
+			cost: { 'experience': 40 },
 			req: { 'fishing': true, 'spears': true },
 			category: 'inno'
 		});
@@ -3236,7 +3281,7 @@ G.AddData({
 			name: 'sewing',
 			desc: '@unlocks [clothier]s, who work with fabric and can sew [primitive clothes]<>Hides and other fabrics can be used to cover bodies, both the living and the dead. While it helps living more for the living craves warmth.',
 			icon: [29, 1],
-			cost: { 'insight': 15, 'experience': 50 },
+			cost: { 'insight': 10, 'experience': 40 },
 			req: { 'bone-working': true },
 			effects: [
 			],
@@ -3246,7 +3291,7 @@ G.AddData({
 			name: 'pottery',
 			desc: '@unlocks [potter]s, which produce goods such as [pot]s out of [clay] and [mud]@unlocks [granary,Granaries] (with [stockpiling])@[digger]s find more [clay]<>',
 			icon: [28, 6],
-			cost: { 'insight': 5, 'experience': 250 },
+			cost: { 'insight': 25, 'experience': 75 },
 			req: { 'fire-making': true, 'digging': true, 'tool-making': true },
 			effects: [
 			],
@@ -3265,7 +3310,7 @@ G.AddData({
 			name: 'scouting',
 			desc: '@unlocks [scout]s, which can discover new territory<>The [scout] is an intrepid traveler equipped to deal with the unknown.',
 			icon: [24, 7],
-			cost: { 'insight': 5, 'experience': 20 },
+			cost: { 'insight': 10, 'experience': 45 },
 			req: { 'tool-making': true, 'chieftains': true },
 			effects: [
 			],
@@ -3276,7 +3321,7 @@ G.AddData({
 			name: 'healing',
 			desc: '@unlocks [healer]s<>By investigating the pattern that people get sick. By investigating the pattern that consuming certain plants can lessen certain symptoms.The most primitive herbal phamarcists rised up, they even pray to sprits when they dont know what to do.',
 			icon: [25, 7],
-			cost: { 'insight': 20, 'experience': 50 },
+			cost: { 'insight': 20, 'culture': 20, 'experience': 50 },
 			req: { 'plant lore': true},
 			effects: [
 			],
@@ -3285,9 +3330,9 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'symbolism',
-			desc: '@[scholar]s produce 50% more [insight]@[storyteller]s produce 50% more [culture]@[soothsayer]s produce 50% more [faith]<>The manifestation of one thing for the meaning of another - to make the cosmos relate to itself.',
+			desc: '@[scholar]s produce 50% more [insight]@[storyteller]s produce 50% more [culture]@[soothsayer]s produce 50% more [faith]@Provide 25 [wisdom]<>The manifestation of one thing for the meaning of another - to make the cosmos relate to itself.',
 			icon: [13, 1],
-			cost: { 'culture': 25, 'insight': 25 },
+			cost: { 'culture': 25, 'insight': 15 },
 			req: { 'oral tradition': true },
 			effects: [
 				{ type: 'provide res', what: {'wisdom': 25 } },
@@ -3299,7 +3344,7 @@ G.AddData({
 			name: 'burial',
 			desc: '@unlocks [grave]s@exposed [corpse]s make people even more unhappy<>It is the belief that there might be more to death than is first apparent that drives us to bury our deceased.',
 			icon: [14, 1],
-			cost: { 'culture': 25, 'insight': 25, 'experience': 100, },
+			cost: { 'culture': 20, 'insight': 10, 'experience': 50, },
 			req: { 'ritualism': true, 'digging': true },
 			effects: [
 			],
@@ -3317,16 +3362,7 @@ G.AddData({
 			chance: 3,
 			category: 'indu'
 		});
-		new G.Tech({
-			name: 'writing',
-			desc: '@Provide 10 [inspiration]s<>Enable your civilzation build [library]<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by you.',
-			icon: [30, 4, 'H1sheet'],
-			cost: { 'insight': 50, 'recording medium': 10 },
-			req: { 'symbolism': true },
-			effects: [{ type: 'provide res', what: { 'inspiration': 25 } }
-			],
-			category: 'wisd'
-		});
+		
 		new G.Tech({
 			name: 'curing',
 			desc: '@[firekeeper]s can now prepare [cured meat] and [cured seafood] with [salt], which last much longer<>Storing food with special preparations seems to ward off rot, and comes along with the advent of delicious jerky.',
@@ -3351,10 +3387,9 @@ G.AddData({
 			req: { 'sewing': true },
 			category: 'indu'
 		});
-		//T5
 		new G.Tech({
 			name: 'basic drawing',
-			desc: '@Provides 20 [inspiration]s<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
+			desc: '@Provides 25 [inspiration]s<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
 			icon: [29, 4, 'H1sheet'],
 			cost: { 'insight': 20 },
 			req: { 'symbolism': true },
@@ -3362,11 +3397,24 @@ G.AddData({
 			],
 			category: 'wisd'
 		});
+		//T5
+		new G.Tech({
+			name: 'writing',
+			desc: '@Provide 25 [inspiration]s<>Enable your civilzation build [library]@Unlock a new mode for [scholar]s<>To pass on knowledge and give idea in detail, some sort of small symbols was invented by this civilisation.',
+			icon: [30, 4, 'H1sheet'],
+			cost: { 'culture': 25, 'experience': 75, 'recording medium': 5 },
+			req: { 'basic drawing': true },
+			effects: [{ type: 'provide res', what: { 'inspiration': 25 } },
+				{ type: 'show res', what: ['literacy'] },
+
+			],
+			category: 'wisd'
+		});
 		new G.Tech({
 			name: 'code of law',
-			desc: '@provides 15 [authority]@political units generate more [influence]@[clan leader]s provide [authority]<>',//TODO : desc
+			desc: '@provides 10 [authority]@political units generate more [influence]@[clan leader]s provide [authority]<>',//TODO : desc
 			icon: [24, 6],
-			cost: { 'insight': 20, 'experience': 20 },
+			cost: { 'insight': 20, 'experience': 75 },
 			req: { 'symbolism': true, 'sedentism': true },
 			effects: [
 				{ type: 'provide res', what: { 'authority': 10 } },
@@ -3377,7 +3425,7 @@ G.AddData({
 			name: 'carpentry',
 			desc: '@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>',
 			icon: [30, 6],
-			cost: { 'insight': 35, 'experience': 250 },
+			cost: { 'insight': 35, 'experience': 100 },
 			req: { 'building': true, 'woodcutting': true },
 			effects: [
 			],
@@ -3398,7 +3446,7 @@ G.AddData({
 			name: 'quarrying',
 			desc: '@unlocks [quarry,Quarries]<>Strike the earth grind edition. But ever since your people discovered that pouring water down the freshly made holes on the boulders. It is becoming easier and easier.',
 			icon: [25, 6],
-			cost: { 'insight': 35, 'experience': 250 },
+			cost: { 'insight': 35, 'experience': 150 },
 			req: { 'digging': true, 'building': true },
 			effects: [
 				{ type: 'show context', what: ['quarry'] }
@@ -3409,7 +3457,7 @@ G.AddData({
 			name: 'masonry',
 			desc: '@unlocks [kiln]s, which produce a variety of goods such as [brick]s@[carver]s can now turn [stone]s into [cut stone] slowly<>Masonry is all the ways you can make stone and slimliar stuff useful and build better relative to only using logs and twigs.',
 			icon: [29, 6],
-			cost: { 'insight': 25, 'experience': 250 },
+			cost: { 'insight': 25, 'experience': 150 },
 			req: { 'building': true, 'pottery': true },
 			effects: [
 			],
@@ -3693,18 +3741,28 @@ G.AddData({
 			desc: '@Some of the buildings accidentally catches fire.' + disasterStr,
 			icon: [16, 1, 'H1sheet'],
 			cost: {},
-			chance: 10,
+			chance: 50,
 			req: { 'dry weather': true, 'sedentism': true },
 			effects: [],
 			category: 'occur'
 		});
 		new G.Trait({
-			name: 'drought',
-			desc: '@The dry weather is exacerbating...',
+			name: 'signs of drought',
+			desc: '@The dry weather is exacerbating...<>Incoming disaster...Prepare by storing foods and digging wells!',
 			icon: [12, 31, 'H1sheet'],
 			cost: {},
 			chance: 150,
 			req: { 'dry weather': true },
+			effects: [],
+			category: 'occur'
+		});
+		new G.Trait({
+			name: 'drought',
+			desc: '@It has arrived<>This event decreases the both gather rate of food and water of all kinds! Prepare by storing foods and digging wells!',
+			icon: [12, 31, 'H1sheet'],
+			cost: {},
+			chance: 50,
+			req: { 'signs of drought': true },
 			effects: [],
 			category: 'occur'
 		});
@@ -3720,7 +3778,7 @@ G.AddData({
 		});
 		new G.Trait({
 			name: 'cold winter',
-			desc: '@This years winter is extra cold...',
+			desc: '@This years winter is extra cold...<>This event decreases the efficiency of the [fire pit] and [torch] by half.',
 			icon: [11, 31, 'H1sheet'],
 			cost: {},
 			chance: 50,
@@ -3733,17 +3791,17 @@ G.AddData({
 			name: 'desire to overcome',
 			desc: '@People began to think about how they should get what they lacked...//@Adds 5 wisdom permanently even after the trait is gone',
 			icon: [5, 31, 'H1sheet'],
-			cost: {},
+			cost: {'culture':5},
 			chance: 5,
 			req: { 'lessened desire': false, 'desire to consume': false, 'bliss': false },
-			effects: [{ type: 'provide res', what: { 'wisdom': 10 } ],
+			effects: [{ type: 'provide res', what: { 'wisdom': 10 }} ],
 			category: 'trend'
 		});
 		new G.Trait({
 			name: 'desire to consume',
 			desc: '@Some people have a strong belief that their life is all about savoring...//@People will eat and drink more than normal.@The happiness from eating and drinking is doubled.',
 			icon: [6, 31, 'H1sheet'],
-			cost: {},
+			cost: {'culture':5},
 			chance: 10,
 			req: { 'desire to overcome': false, 'lessened desire': false, 'bliss': false },
 			effects: [],
@@ -3753,7 +3811,7 @@ G.AddData({
 			name: 'lessened desire',
 			desc: '@People began to rethink if they need what they are asking for at all.//@People will eat and drink less than normal.@The happiness from eating and drinking remains normal.',
 			icon: [7, 31, 'H1sheet'],
-			cost: {},
+			cost: {'culture':5},
 			chance: 10,
 			req: { 'desire to overcome': false, 'desire to consume': false, 'bliss': false },
 			effects: [],
@@ -3764,8 +3822,8 @@ G.AddData({
 			name: 'bliss',
 			desc: '@People are happy for... no particular reasons.//@Peoples overall happniness increases.@Exploration in [faith] related discovery increase the chance of this traits occurance (Not implemented yet)',
 			icon: [8, 31, 'H1sheet'],
-			cost: {},
-			chance: 20,
+			cost: {'culture':5},
+			chance: 42,
 			req: { 'desire to overcome': false, 'desire to consume': false, 'lessened desire': false },
 			effects: [],
 			category: 'trend'
@@ -4294,10 +4352,10 @@ G.AddData({
 		GOODS
 		=======================================================================================*/
 
-		G.contextNames['foodgather'] = 'Gathering Foods';
-		G.contextNames['materialgather'] = 'Gathering Materials';
-		G.contextNames['watergather'] = 'Gathering Water';
-		G.contextNames['herbgather'] = 'Gathering Rare Herbs';
+		G.contextNames['foodGather'] = 'Gathering Foods';
+		G.contextNames['materialGather'] = 'Gathering Materials';
+		G.contextNames['waterGather'] = 'Gathering Water';
+		G.contextNames['herbGather'] = 'Gathering Rare Herbs';
 		G.contextNames['fish'] = 'Fishing';
 		G.contextNames['hunt'] = 'Hunting';
 		G.contextNames['chop'] = 'Chopping';
@@ -4311,9 +4369,9 @@ G.AddData({
 			desc: '[grass] is a good source of [herb]s; you may also occasionally find some [fruit]s and [stick]s while foraging.',
 			icon: [10, 10],
 			res: {
-				'foodgather': { 'herb': 3, 'fruit': 0.25, 'vegetable': 0.5 },
-				'herbgather': { 'medical herb': 0.05, 'spice': 0.075 },
-				'materialgather': { 'stick': 0.5 },
+				'foodGather': { 'herb': 3, 'fruit': 0.25, 'vegetable': 0.5 },
+				'herbGather': { 'medical herb': 0.05, 'spice': 0.075 },
+				'materialGather': { 'stick': 0.5 },
 			},
 			mult: 10,
 		});
@@ -4323,7 +4381,7 @@ G.AddData({
 			icon: [0, 10],
 			res: {
 				'chop': { 'log': 3, 'stick': 6 },
-				'materialgather': { 'stick': 1 },
+				'materialGather': { 'stick': 1 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4334,7 +4392,7 @@ G.AddData({
 			icon: [1, 10],
 			res: {
 				'chop': { 'log': 2, 'stick': 4 },
-				'materialgather': { 'stick': 1 },
+				'materialGather': { 'stick': 1 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4345,8 +4403,8 @@ G.AddData({
 			icon: [2, 10],
 			res: {
 				'chop': { 'log': 2, 'stick': 4 },
-				'foodgather': { 'fruit': 0.3 },
-				'materialgather': { 'stick': 0.25 },
+				'foodGather': { 'fruit': 0.3 },
+				'materialGather': { 'stick': 0.25 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4357,7 +4415,7 @@ G.AddData({
 			icon: [8, 10],
 			res: {
 				'chop': { 'log': 2, 'stick': 4 },
-				'materialgather': { 'stick': 1 },
+				'materialGather': { 'stick': 1 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4368,8 +4426,8 @@ G.AddData({
 			icon: [3, 10],
 			res: {
 				'chop': { 'log': 2, 'stick': 6 },
-				'herbgather': { 'medical herb': 0.5 },
-				'materialgather': { 'stick': 1 },
+				'herbGather': { 'medical herb': 0.5 },
+				'materialGather': { 'stick': 1 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4380,7 +4438,7 @@ G.AddData({
 			icon: [9, 10],
 			res: {
 				'chop': { 'log': 1, 'stick': 2 },
-				'materialgather': { 'stick': 0.5 },
+				'materialGather': { 'stick': 0.5 },
 			},
 			affectedBy: ['deforestation'],
 			mult: 5,
@@ -4390,9 +4448,9 @@ G.AddData({
 			desc: '[berry bush,Berry bushes] can be foraged for [fruit]s, [stick]s and sometimes [herb]s.',
 			icon: [4, 10],
 			res: {
-				'foodgather': { 'fruit': 3, 'herb': 0.1 },
-				'materialgather': { 'stick': 0.5 },
-				'herbgather': { 'medical herb': 0.25 },
+				'foodGather': { 'fruit': 3, 'herb': 0.1 },
+				'materialGather': { 'stick': 0.5 },
+				'herbGather': { 'medical herb': 0.25 },
 			},
 			affectedBy: ['scarce forageables'],
 			mult: 10,
@@ -4402,8 +4460,8 @@ G.AddData({
 			desc: '[forest mushrooms] grow in the penumbra of the underbrush, and often yield all sorts of interesting [herb]s.',
 			icon: [5, 10],
 			res: {
-				'foodgather': { 'herb': 0.5, 'vegetable': 2 },
-				'herbgather': { 'medical herb': 0.5, 'spice': 0.2 },
+				'foodGather': { 'herb': 0.5, 'vegetable': 2 },
+				'herbGather': { 'medical herb': 0.5, 'spice': 0.2 },
 			},
 			affectedBy: ['scarce forageables'],
 			mult: 10,
@@ -4413,8 +4471,8 @@ G.AddData({
 			desc: 'Hardy cactii that grow in the desert. While tricky to harvest, [succulents] can provide [herb]s and [fruit]s.',
 			icon: [6, 10],
 			res: {
-				'foodgather': { 'fruit': 1, 'herb': 3 },
-				'herbgather': { 'medical herb': 0.5 },
+				'foodGather': { 'fruit': 1, 'herb': 3 },
+				'herbGather': { 'medical herb': 0.5 },
 			},
 			affectedBy: ['scarce forageables'],
 			mult: 10,
@@ -4424,8 +4482,8 @@ G.AddData({
 			desc: '[jungle fruits] come in all shapes, colors and sizes, and will yield [fruit]s and [herb]s to those who forage them.',
 			icon: [7, 10],
 			res: {
-				'foodgather': { 'fruit': 5, 'herb': 0.5, 'vegetable': 0.5 },
-				'herbgather': { 'medical herb': 0.5, 'spice': 0.5 },
+				'foodGather': { 'fruit': 5, 'herb': 0.5, 'vegetable': 0.5 },
+				'herbGather': { 'medical herb': 0.5, 'spice': 0.5 },
 			},
 			affectedBy: ['scarce forageables'],
 			mult: 10,
@@ -4436,7 +4494,7 @@ G.AddData({
 			desc: '[forest critters] are often carnivorous, quick and hard to catch, and yield a little [meat], [bone]s and [hide]s. Consist of Rabbits, Stoats and even Foxes and Koalas//Carcasses can sometimes be gathered for [spoiled food].',
 			icon: [14, 11, 'H1sheet'],
 			res: {
-				'foodgather': { 'spoiled food': 0.5 },
+				'foodGather': { 'spoiled food': 0.5 },
 				'hunt': { 'meat': 1, 'bone': 0.2, 'hide': 0.5 },
 			},
 			affectedBy: ['over hunting'],
@@ -4448,7 +4506,7 @@ G.AddData({
 			desc: '[large mammal predators] are Large mammals, they are hard to mess with and have a chance of preying on your people, however hunting them down can yield a lot of [meat], [bone]s and [hide]s. Consist of Bears of all kinds, Tigers and Lions and even Pack of wolves.//Carcasses can sometimes be gathered for [spoiled food].',
 			icon: [15, 11, 'H1sheet'],
 			res: {
-				'foodgather': { 'spoiled food': 0.5 },
+				'foodGather': { 'spoiled food': 0.5 },
 				'hunt': { 'meat': 3, 'bone': 1, 'hide': 1 },
 			},
 			affectedBy: ['over hunting'],
@@ -4460,7 +4518,7 @@ G.AddData({
 			desc: '[large mammal preys] are Large mammals, they are pretty good at running from and fighting off dangers and eating fibres passively, hunting accident occurs more frequently when hunting for these animals, tho hunting them down can yield a lot of [meat], [bone]s and [hide]s. Consist of Deers, Boars and Elephants and many others.//Carcasses can sometimes be gathered for [spoiled food].',
 			icon: [16, 11, 'H1sheet'],
 			res: {
-				'foodgather': { 'spoiled food': 0.5 },
+				'foodGather': { 'spoiled food': 0.5 },
 				'hunt': { 'meat': 3, 'bone': 1, 'hide': 1 },
 			},
 			affectedBy: ['over hunting'],
@@ -4472,7 +4530,7 @@ G.AddData({
 			desc: '[avians] are also critters, they fly high from any danger, tho there are also some decent walkers among them, tho hunting them down can yield nice amount of [meat] and [bone]s. Consist of Birds of all kinds,pheasant of all kinds, ostriches and many others.//their nests can be a source for gathering [egg].',
 			icon: [17, 11, 'H1sheet'],
 			res: {
-				'foodgather': { 'egg': 0.5 },
+				'foodGather': { 'egg': 0.5 },
 				'hunt': { 'meat': 2, 'bone': 0.1 },
 			},
 			affectedBy: ['over hunting'],
@@ -4484,7 +4542,7 @@ G.AddData({
 			desc: '[wild bugs,Bugs] are ubiquitious and easy to capture.',
 			icon: [8, 11],
 			res: {
-				'foodgather': { 'bugs': 2 },
+				'foodGather': { 'bugs': 2 },
 			},
 			//affectedBy:['over hunting'],
 			mult: 5,
@@ -4494,7 +4552,7 @@ G.AddData({
 			desc: 'Fish of every size and color.//A source of [seafood].',
 			icon: [11, 11],
 			res: {
-				'foodgather': { 'seafood': 0.2 },
+				'foodGather': { 'seafood': 0.2 },
 				'fish': { 'seafood': 2 },
 			},
 			affectedBy: ['over fishing'],
@@ -4505,7 +4563,7 @@ G.AddData({
 			desc: 'Clam and Crabs that is going to get your people a tough time to open.',
 			icon: [13, 11, 'H1sheet'],
 			res: {
-				'foodgather': { 'seafood': 0.5 },
+				'foodGather': { 'seafood': 0.5 },
 				'fish': { 'seafood': 1.2 },
 			},
 			affectedBy: ['over fishing'],
@@ -4517,7 +4575,7 @@ G.AddData({
 			desc: 'A [rocky substrate] is found underneath most terrain types.//Surface [stone]s may be gathered by hand.//Digging often produces [mud], more [stone]s and occasionally [copper ore,Ores] and [clay].//Mining provides the best results, outputting a variety of [stone]s, rare [gold ore,Ores], and precious [gems].',
 			icon: [11, 10],
 			res: {
-				'materialgather': { 'stone': 0.25, 'clay': 0.005, 'limestone': 0.005 },
+				'materialGather': { 'stone': 0.25, 'clay': 0.005, 'limestone': 0.005 },
 				'dig': { 'mud': 2, 'clay': 0.15, 'stone': 0.6, 'copper ore': 0.001, 'tin ore': 0.0005, 'limestone': 0.1, 'salt': 0.05 },
 				'mine': { 'stone': 0.5, 'copper ore': 0.1, 'tin ore': 0.1, 'iron ore': 0.05, 'gold ore': 0.005, 'coal': 0.1, 'salt': 0.1, 'gems': 0.005 },
 				'quarry': { 'cut stone': 1, 'limestone': 0.5, 'marble': 0.01 },
@@ -4531,7 +4589,7 @@ G.AddData({
 			desc: 'A [snow cover] is often available year-long in cold environments, and is a petty source of [water]; it may also conceal [ice], which must be dug out.',
 			icon: [13, 10],
 			res: {
-				'watergather': { 'water': 1, 'dirty water': 2 },
+				'waterGather': { 'water': 1, 'dirty water': 2 },
 				'dig': { 'ice': 0.5 },
 			},
 			mult: 5,
@@ -4552,7 +4610,7 @@ G.AddData({
 			desc: '[saltwater] cannot be collected for [water], but may produce [salt] deposits.',
 			icon: [14, 10],
 			res: {
-				'foodgather': { 'salt': 0.05 },
+				'foodGather': { 'salt': 0.05 },
 			},
 			noAmount: true,
 			mult: 5,
@@ -4562,7 +4620,7 @@ G.AddData({
 			desc: '[iceburg], found in the upper and down edge of the world, [ice] and [dirty water] can be found on it.',
 			icon: [18, 10, 'H1sheet'],
 			res: {
-				'watergather': { 'ice': 0.1, 'dirty water': 2 },
+				'waterGather': { 'ice': 0.1, 'dirty water': 2 },
 				'dig': { 'ice': 1 }
 			},
 			mult: 5,
@@ -4572,7 +4630,7 @@ G.AddData({
 			desc: '[stream], produced by rain and other sources, appears in anywhere that rains.',
 			icon: [16, 10, 'H1sheet'],
 			res: {
-				'watergather': { 'water': 4 }
+				'waterGather': { 'water': 4 }
 			},
 			mult: 5,
 		});
@@ -4581,7 +4639,7 @@ G.AddData({
 			desc: '[river], a prime location for clear [water] and [seafood]',
 			icon: [16, 10, 'H1sheet'],
 			res: {
-				'watergather': { 'water': 12 },
+				'waterGather': { 'water': 12 },
 				'fish': { 'seafood': 4 },
 			},
 			mult: 5,
@@ -4591,7 +4649,7 @@ G.AddData({
 			desc: '[lake], a lot of water in one place makes for a great location for living... [water] and [fish]es can be found.',
 			icon: [17, 10, 'H1sheet'],
 			res: {
-				'watergather': { 'water': 8 },
+				'waterGather': { 'water': 8 },
 				'fish': { 'seafood': 5 },
 			},
 			mult: 5,
@@ -4601,9 +4659,9 @@ G.AddData({
 			desc: '[swamp], a dirty place... [dirty water] and [bugs] can be found. But there are also rare herbs...',
 			icon: [19, 10, 'H1sheet'],
 			res: {
-				'watergather': { 'dirty water': 8, 'water': 2 },
-				'foodgather': { 'bugs': 1 },
-				'herbgather': { 'medical herb': 0.5, 'spice': 0.25 },
+				'waterGather': { 'dirty water': 8, 'water': 2 },
+				'foodGather': { 'bugs': 1 },
+				'herbGather': { 'medical herb': 0.5, 'spice': 0.25 },
 			},
 			mult: 5,
 		});
