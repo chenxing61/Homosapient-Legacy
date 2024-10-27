@@ -438,8 +438,8 @@ G.AddData({
 
 					//fire
 					var objects;
-					if(G.has('cold winter'))(objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] });
-					else (objects = { 'fire pit': [5, 0.1, 0.1], 'torch': [3, 0.1, 0.1]} )
+					if(G.has('cold winter'))(objects = { 'fire pit': [5, 0.1, 0.1], 'torch': [3, 0.1, 0.1]} );
+					else (objects = { 'fire pit': [10, 0.1, 0.1], 'torch': [5, 0.1, 0.1] })
 					
 					
 					var leftout = me.amount;
@@ -456,8 +456,8 @@ G.AddData({
 
 					//homelessness
 					var homeless = Math.max(0, (me.amount) - G.getRes('housing').amount);
-					if (G.has('sedentism') && me.amount > 25 && homeless > 0) {
-						if (tick % 10 == 0) G.Message({ type: 'bad', mergeId: 'homeless', textFunc: function (args) { return B(args.n) + ' ' + (args.n == 1 ? 'person is' : 'people are') + ' homeless.<br>Homelessness with more than 25 population leads to lower birth rates.'; }, args: { n: homeless }, replaceOnly: true, icon: [12, 4] });
+					if (G.has('sedentism') && me.amount > G.getRes('population')*0.1 && homeless > 0) {
+						if (tick % 10 == 0) G.Message({ type: 'bad', mergeId: 'homeless', textFunc: function (args) { return B(args.n) + ' ' + (args.n == 1 ? 'person is' : 'people are') + ' homeless.<br>Homelessness with more than 10% of the population leads to lower birth rates.'; }, args: { n: homeless }, replaceOnly: true, icon: [12, 4] });
 					}
 
 					//age
@@ -725,7 +725,7 @@ G.AddData({
 		new G.Res({
 			name: 'resource depletion',
 			desc: '[resource depletion] is the consquence of gathering or hunting too much. Result in negative traits.',
-			icon: [12, 3, 'H1sheet'],
+			icon: [17, 5, 'H1sheet'],
 		});
 
 		new G.Res({
@@ -2746,7 +2746,7 @@ G.AddData({
 		new G.Unit({
 			name: 'primitive settlement',
 			desc: '@provides 20 [housing]@provides 5 [building slot]s<>A settlement made out of mud, stick and stone.',
-			icon: [2, 14, 'H1sheet'],
+			icon: [3, 14, 'H1sheet'],
 			wideIcon: [3, 14, 'H1sheet'],
 			cost: { 'archaic building materials': 300, 'tools': 10 ,'labour power': 10},
 			use: { 'land': 10 },
@@ -2766,7 +2766,7 @@ G.AddData({
 		new G.Unit({
 			name: 'village',
 			desc: '@provides 200 [housing]@provides 20 [building slot]s<>Sparking of civilisations.',
-			icon: [5, 14, 'H1sheet'],
+			icon: [6, 14, 'H1sheet'],
 			wideIcon: [6, 14, 'H1sheet'],
 			cost: { 'basic building materials': 1e3, 'tools': 25,'labour power': 25 ,'authority': 1},
 			use: { 'land': 50, 'infrastructure': 8 },
@@ -2785,7 +2785,7 @@ G.AddData({
 		new G.Unit({
 			name: 'city',
 			desc: '@Develop a village.@provides 2000 [housing].@provides 100 [building slot]s.<>A tile full of human stuctures.',
-			icon: [8, 14, 'H1sheet'],
+			icon: [9, 14, 'H1sheet'],
 			wideIcon: [9, 14, 'H1sheet'],
 			cost: { 'basic building materials': 1e4, 'tools': 50,'labour power': 50,'authority': 5 },
 			use: { 'land': 200, 'infrastructure': 39 },
@@ -3785,6 +3785,15 @@ G.AddData({
 			req: {},
 			effects: [],
 			category: 'occur'
+		});
+		new G.Trait({
+			name: 'end of the disaster',
+			desc: '@This particular historical period is about to end after 300 days.@The traits earned during this period will wear off.<>Research the permanent trait while they are still avaliable!',
+			icon: [16, 3, 'H1sheet'],
+			chance: 5,
+			lifetime: 50,
+			req: {'end of a period':false,'flood':true,'earthquake':true,'drought':true,'cold winter':true},
+			category: 'peri'
 		});
 		//desireTrait
 		new G.Trait({
