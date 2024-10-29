@@ -2076,7 +2076,7 @@ G.AddData({
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
 				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primititve bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
 				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'tools': 1 } },
-				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.' },
+				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.', use: { 'tools': 1 } },
 			},
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'knapped tools': 1 }, every: 5, mode: 'knap' },
@@ -2116,7 +2116,7 @@ G.AddData({
 				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'tools': 1 } },
 				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'tools': 1 } },
 				'gem blocks': { name: 'Carve gem blocks', icon: [7, 9], desc: 'Slowly turn 10 [gems] into 1 [gem block].', req: { 'lapidary': true }, use: { 'tools': 1 } },
-				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate, but not the repetitive ones, like smashing stones and carving them.' },
+				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate, but not the repetitive ones, like smashing stones and carving them.', use: { 'tools': 1 } },
 			},
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'stone statuettes' },
@@ -2154,7 +2154,7 @@ G.AddData({
 				'weave clothing': { name: 'Weave basic clothing', icon: [16, 7], desc: 'Craft [basic clothes] from 2 [fiber]s and 1[leather] each.<>Picture something like roman peasants with their tunics and leather sandals', use: { 'tools': 1 }, req: { 'weaving': true,'leather-working':true} },
 				'make leather': { name: 'Make leather', icon: [10, 7], desc: 'Produce [leather] from [hide]s, [water], [salt] and [log]s.', use: { 'tools': 1 }, req: { 'leather-working': true } },
 				'cheap make leather': { name: 'Make leather (cheap)', icon: [10, 7], desc: 'Slowly produce [leather] from [hide]s, [dirty water] and [herb]s.', use: { 'tools': 1 } },
-				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate.' },
+				'any': { name: 'Any', desc: 'Make every carved product currently avaliable in a slow rate.', use: { 'tools': 1 } },
 			},
 			effects: [
 				{ type: 'convert', from: { 'hide': 3 }, into: { 'primitive clothes': 1 }, every: 8, mode: 'sew hide clothing' },
@@ -2192,7 +2192,7 @@ G.AddData({
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
 				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a [pot] at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { 'pot': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
-				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.'},
+				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.', use: { 'tools': 1 }},
 
 			},
 			effects: [
@@ -2246,7 +2246,7 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'clay': 3, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 1, mode: 'any' },
 				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 1, mode: 'any' },
-				{ type: 'convert', from: { 'mud': 50, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 1, mode: 'preserve knowledge' },
+				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 1, mode: 'preserve knowledge' },
 
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2423,7 +2423,7 @@ G.AddData({
 			name: 'stone road',
 			desc: '@Provide 20 [infrastructure]<>A convenient way for stuff to move faster...',
 			icon: [27, 3, 'H1sheet'],
-			cost: { 'cut stone': 50 ,'labour power': 5 },
+			cost: { 'cut stone': 100 ,'sand': 100 ,'labour power': 5 },
 			upkeep: { 'cut stone': 1,'labour power': 1 },
 			effects: [
 				{ type: 'provide', what: { 'infrastructure': 20 } },
@@ -2550,7 +2550,7 @@ G.AddData({
 		});
 		new G.Unit({
 			name: 'library',
-			desc: '@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 1 knowledgeable men to classify and check if any morons did not place the book right',
+			desc: '@provides 100 [records]<>A place for preserving infomations. Store up your recording medium nicely.//Use up 1 knowledgeable men to classify and check if any morons did not place the book right',
 			icon: [30, 2, 'H1sheet', 25, 2, 'H1sheet'],
 			cost: { 'basic building materials': 500, 'recording medium': 100 },
 			use: { 'building slot': 1, 'worker': 1, 'infrastructure': 4},
