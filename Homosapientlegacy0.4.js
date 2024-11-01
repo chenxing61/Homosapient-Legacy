@@ -2854,7 +2854,7 @@ G.AddData({
 		new G.Unit({
 			name: 'mausoleum',
 			desc: '@leads to the <b>Mausoleum Victory</b><>A mystical monument where the dead lie.//A temple housing a tomb deep under its rocky platform, the Mausoleum stands tall, its eternal shadow forever reminding your people of your greatness.',
-			wonder: 'mausoleum',
+			wonder: 'normal mausoleum',
 			icon: [1, 14],
 			wideIcon: [0, 14],
 			cost: { 'basic building materials': 1000 },
