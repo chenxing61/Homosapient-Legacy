@@ -144,9 +144,12 @@ G.AddData({
 				}
 				//weather
 				if (G.has('humid weather')) G.gain('resource depletion', -5);
-				else (G.gain('resource depletion', -0.5));
-				if (G.has('dry weather'))
-					G.gain('resource depletion', 0.25);
+				else if (G.has('dry weather'))(G.gain('resource depletion', -1))
+				else (G.gain('resource depletion', -2))
+				if(G.has('scouting'))(G.gain('resource depletion', -1));
+				if(G.has('landmarks and signs'))(G.gain('resource depletion', -1));
+				
+
 				//experience
 				
 				if(G.getRes('population').amount>0 && G.getRes('experience').amount <= G.getRes('record').amount && G.has('writing') == false)
@@ -174,6 +177,11 @@ G.AddData({
 					//babies are stupid haha
 					G.getRes('literacy').amount -= (G.getRes('born this year').amount*0.2)
 					)
+				if (G.getRes('population').amount>0 && G.getRes('literacy').amount<10 && G.has('writing') == true)
+						(
+						//no negative
+						G.getRes('literacy').amount = 10
+				)	
 				//achievement
 				if (G.year<=50 && G.has('monument-building') && G.has('mausoleum')&& G.achievByName['fast mausoleum'].won < 1)
 				{
@@ -849,6 +857,7 @@ G.AddData({
 					G.gain('health', -G.getRes('population').amount * (Math.random() * sickness), 'disease');//people randomly get sick
 					var recovery = 0.98;
 					me.amount *= recovery;//people recover over time
+					if(G.has('boiling'))(me.amount += 0.05)
 				}
 			},
 			getDisplayAmount: function () {
@@ -2592,7 +2601,7 @@ G.AddData({
 			use: { 'building slot': 1, 'worker': 1, 'infrastructure': 4},
 			//require:{'worker':2,'knapped tools':2},
 			effects: [
-				{ type: 'provide', what: { 'record': 100 } },
+				{ type: 'provide', what: { 'permanent record': 100 } },
 				{ type: 'provide', what: { 'wisdom': 10 } },
 				{ type: 'waste', chance: 1 / 10000 },
 				{ type: 'waste', chance: 20 / 10000, req: { 'house fire': true }},
@@ -3014,6 +3023,7 @@ G.AddData({
 			req: { 'tribalism': false },
 			category: 'tradi'
 		});
+		//T0
 		new G.Tech({
 			name: 'fire-making',
 			desc: '@unlocks [firekeeper]s<>Fire keeps you warm and makes animal attacks much less frequent, one of the most valueable knowledge that differs human from animals.',
@@ -3023,7 +3033,6 @@ G.AddData({
 			],
 			category: 'disc'
 		});
-		//T0
 		new G.Tech({
 			name: 'tribalism',
 			desc: '@unlocks [gatherer]@unlocks [chieftain]@provides 5 [authority]<>Taking its roots in wild animal packs, [tribalism] is the organization of individuals into simple social structures with little hierarchy.',
@@ -3041,7 +3050,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'speech',
-			desc: '@unlocks [wanderer]@provides 10 [wisdom]@provides 25 [record]<>[speech], in its most primitive form, is a series of groans and grunts that makes it possible to communicate things, events, and concepts.',
+			desc: '@unlocks [wanderer]@provides 10 [wisdom]@provides 25 [record]s<>[speech], in its most primitive form, is a series of groans and grunts that makes it possible to communicate things, events, and concepts.',
 			icon: [1, 1],
 			startWith: true,
 			effects: [
@@ -3053,7 +3062,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'use of tool',
-			desc: '@unlocks [gatherer]s mode to gather [archaic building materials], humanity realised tool usage, they pick up simple stone and sticks to break.',
+			desc: '@unlocks [gatherer]s mode to gather [archaic building materials]@provide 10[wisdom]<> humanity realised tool usage, they pick up simple stone and sticks to break.',
 			icon: [31, 2, 'H1sheet'],
 			startWith: true,
 			effects: [
@@ -3064,7 +3073,7 @@ G.AddData({
 		//T1
 		new G.Tech({
 			name: 'language',
-			desc: '@[chieftain] generates more insights @provides 5 [inspiration]@Make people able to share their [experience]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
+			desc: '@[chieftain] generates more insights @provides 20 [inspiration] and 5 [wisdom]@Make people able to share their [experience]<>[language] improves on [speech] by combining complex grammar with a rich vocabulary, allowing for better communication and the first signs of culture.',
 			icon: [2, 1],
 			cost: { 'insight': 1, 'influence': 1 },
 			req: { 'speech': true },
@@ -3125,7 +3134,7 @@ G.AddData({
 			name: 'digging',
 			desc: '@unlocks [digger]s@paves the way for simple buildings<>The earth is full of riches - to those who can find them.',
 			icon: [11, 1],
-			cost: { 'insight': 5, 'experience': 10 },
+			cost: { 'insight': 5, 'experience': 10, 'tools': 1 },
 			req: { 'use of tool': true },
 			effects: [
 				{ type: 'show context', what: ['dig'] },
@@ -3137,7 +3146,7 @@ G.AddData({
 			name: 'bone-working',
 			desc: '@[artisan]s can now make [knapped tools] out of [bone]@[bone]s can now be used as [archaic building materials]<>',
 			icon: [22, 5],
-			cost: { 'insight': 7, 'experience': 25 },
+			cost: { 'insight': 2, 'experience': 10, 'bone': 5 },
 			req: { 'stone-knapping': true },
 			effects: [
 				{ type: 'make part of', what: ['bone'], parent: 'archaic building materials' },
@@ -3146,7 +3155,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'oral tradition',
-			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 20 [inspiration]@provides 50 [record]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
+			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 25 [inspiration]@provides 50 [record]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 			icon: [5, 1],
 			cost: { 'insight': 7, 'experience': 25 },
 			req: { 'language': true },
@@ -3157,23 +3166,13 @@ G.AddData({
 			chance: 50,
 			category: 'wisd'
 		});
-		new G.Tech({
-			name: 'tool-making',
-			desc: '@[artisan]s can now create [stone tools]<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
-			icon: [4, 1],
-			cost: { 'insight': 4, 'experience': 25, 'stick': 5 },
-			req: { 'stone-knapping': true, 'carving': true },
-			effects: [
-			],
-			chance: 3,
-			category: 'indu'
-		});
+		
 		
 		new G.Tech({
 			name: 'woodcutting',
-			desc: '@unlocks [woodcutter]s<>',//TODO : desc
+			desc: '@unlocks [woodcutter]s<>Whole logs can now be harvested from the trees. Making for perfect fuels and building materials.',
 			icon: [23, 5],
-			cost: { 'insight': 5, 'experience': 25, 'stick': 5 },
+			cost: { 'insight': 1, 'experience': 25, 'tools': 1 },
 			req: { 'stone-knapping': true },
 			effects: [
 				{ type: 'show context', what: ['chop'] },
@@ -3185,15 +3184,15 @@ G.AddData({
 			displayName: 'Spears and maces',
 			desc: '@[artisan]s can now craft [stone weapons]@unlocks new modes for [hunter]s and [fisher]s<>Using tools as weapons opens a world of possibilities, from hunting to warfare.',
 			icon: [26, 1],
-			cost: { 'insight': 7, 'experience': 25 },
+			cost: { 'insight': 7, 'experience': 25,'stone': 5,'stick':10 },
 			req: { 'stone-knapping': true },
 			category: 'inno'
 		});
 		new G.Tech({
 			name: 'carving',
-			desc: '@unlocks [carver]s, which can produce a variety of goods out of stone, wood and bone@may lead to the knowledge of better tools<>',
+			desc: '@unlocks [carver]s, which can produce a variety of goods out of stone, wood and bone@provide 25[record]s@may lead to the knowledge of better tools<>',
 			icon: [26, 6],
-			cost: { 'insight': 5, 'experience': 20 },
+			cost: { 'insight': 5, 'experience': 20,'stone':5,'tools':1 },
 			req: { 'stone-knapping': true },
 			effects: [{ type: 'provide res', what: { 'permanent record': 25 } },
 			],
@@ -3202,7 +3201,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'sedentism',
-			desc: '@unlocks [primitive settlement]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
+			desc: '@unlocks [primitive settlement]s@provide 50 [infrastructure]s<>To stay in one place when food is scarce is a bold gamble, especially to those without knowledge of agriculture.',//TODO : this should unlock a policy that lets you switch between nomadism (housing and food storage have no effect) and sedentism (gathering and hunting are much less efficient)
 			icon: [8, 1],
 			cost: { 'insight': 5, 'experience': 50 },
 			req: { 'digging': true, 'language': true },
@@ -3215,8 +3214,19 @@ G.AddData({
 		});
 		//T3
 		new G.Tech({
+			name: 'tool-making',
+			desc: '@[artisan]s can now create [stone tools] which are more durable.<>With proper [tool-making], new procedures arise to craft a multitude of specialized tools out of cheap materials - such as hammers, knives, and axes.',
+			icon: [4, 1],
+			cost: { 'insight': 5, 'experience': 25, 'stick': 5 },
+			req: { 'stone-knapping': true, 'carving': true },
+			effects: [
+			],
+			chance: 3,
+			category: 'indu'
+		});
+		new G.Tech({
 			name: 'ritualism',
-			desc: '@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some ritual policies<>Simple practices, eroded and polished by time, turn into rites and traditions.',
+			desc: '@provides 10 [spirituality]@unlocks [soothsayer]s@unlocks some rituals to aid the development of your civilisation.<>Simple practices, eroded and polished by time, turn into rites and traditions.',
 			icon: [12, 1],
 			cost: { 'culture': 8, 'experience': 35 },
 			req: { 'oral tradition': true },
@@ -3227,7 +3237,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'chieftains',
-			desc: '@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 10 [authority]<>',//TODO : desc
+			desc: '@Make chiefs generate more[influence],enable [wanderer]s to find wild men and recuit them via the means of cultural intergration.@provides 5 [authority]<>From leading a tribe to commanding serveal tribes, you\'ve came a long way.',
 			icon: [22, 6],
 			cost: { 'culture': 8, 'experience': 25 },
 			req: { 'oral tradition': true },
@@ -3241,7 +3251,7 @@ G.AddData({
 			name: 'basket-weaving',
 			desc: '@[artisan]s can now craft [basket]s<>Baskets are a cheap, if flimsy means of storing food.',
 			icon: [7, 1],
-			cost: { 'insight': 2, 'experience': 20 },
+			cost: { 'insight': 2, 'experience': 20, 'stick':10 },
 			req: { 'tool-making': true },
 			effects: [
 			],
@@ -3273,7 +3283,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'stockpiling',
-			desc: '@unlocks [storage pit]s<>The foresight to store sustenance and materials ahead of time can make or break a budding civilization.',
+			desc: '@unlocks [storage pit]s@provides 10 [infrastructure]s<>The foresight to store sustenance and materials ahead of time can make or break a budding civilization.',
 			icon: [10, 1],
 			cost: { 'insight': 10, 'experience': 25 },
 			req: { 'digging': true },
@@ -3287,7 +3297,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'well-digging',
-			desc: '@unlocks [well]s<>It takes some thinking to figure out that water can be found if you dig deep enough.//It takes a lot of bravery, however, to find out if it is safe to drink.',
+			desc: '@unlocks [well]s@provides 10 [infrastructure]s<>It takes some thinking to figure out that water can be found if you dig deep enough.//It takes a lot of bravery, however, to find out if it is safe to drink.',
 			icon: [22, 7],
 			cost: { 'insight': 30, 'experience': 100 },
 			req: { 'digging': true, 'tool-making': true },
@@ -3297,7 +3307,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'bows',
-			desc: '@[artisan]s can now craft [primitive bow]s@unlocks new modes for [hunter]s<>',//TODO : desc
+			desc: '@[artisan]s can now craft [primitive bow]s@unlocks new modes for [hunter]s<>The 2nd most notorious weapon of human history, just after the spear.',
 			icon: [27, 1],
 			cost: { 'insight': 30, 'experience': 75, 'stick': 50 },
 			req: { 'spears': true },
@@ -3305,7 +3315,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'fishing hooks',
-			desc: '@unlocks new modes for [fisher]s<>',//TODO : desc
+			desc: '@unlocks new modes for [fisher]s<>if you are hooked with this mod dont forget to join discord! So that you get to join polls on how new feature works and chill.<><a href="https://discord.com/invite/7XcgfTp7V8" target="_blank">',
 			icon: [28, 1],
 			cost: { 'experience': 40 },
 			req: { 'fishing': true, 'spears': true },
@@ -3315,7 +3325,7 @@ G.AddData({
 			name: 'sewing',
 			desc: '@unlocks [clothier]s, who work with fabric and can sew [primitive clothes]<>Hides and other fabrics can be used to cover bodies, both the living and the dead. While it helps living more for the living craves warmth.',
 			icon: [29, 1],
-			cost: { 'insight': 10, 'experience': 40 },
+			cost: { 'insight': 10, 'experience': 40,'herb':20},
 			req: { 'bone-working': true },
 			effects: [
 			],
@@ -3325,7 +3335,7 @@ G.AddData({
 			name: 'pottery',
 			desc: '@unlocks [potter]s, which produce goods such as [pot]s out of [clay] and [mud]@unlocks [granary,Granaries] (with [stockpiling])@[digger]s find more [clay]<>',
 			icon: [28, 6],
-			cost: { 'insight': 25, 'experience': 75 },
+			cost: { 'insight': 25, 'experience': 50,'fire pit':1,'clay':5},
 			req: { 'fire-making': true, 'digging': true, 'tool-making': true },
 			effects: [
 			],
@@ -3334,15 +3344,15 @@ G.AddData({
 		//T4
 		new G.Tech({
 			name: 'boiling',
-			desc: '@[firekeeper]s can now use [pot] to boil [dirty water] to turn it back into clean [water]@base [health] value increased by 5%<>Making a habit of drinking warm water is instrumental to human health, ',
+			desc: '@[firekeeper]s can now use [pot] to boil [dirty water] to turn it back into clean [water]@base [health] value increased by 5%<>Making a habit of drinking warm water is instrumental to human health.',
 			icon: [17, 1],
-			cost: { 'experience': 10, 'fire pit': 1, 'food': 1 },
+			cost: { 'experience': 25, 'fire pit': 1, 'pot':1,'water':1,'food': 1 },
 			req: { 'fire-making': true,'pottery':true },
 			category: 'disc'
 		});
 		new G.Tech({
 			name: 'scouting',
-			desc: '@unlocks [scout]s, which can discover new territory<>The [scout] is an intrepid traveler equipped to deal with the unknown.',
+			desc: '@unlocks [scout]s, which can discover new territory<>The [scout] is an intrepid traveler equipped to deal with the unknown.<>Not the one from willy wonka tho.',
 			icon: [24, 7],
 			cost: { 'insight': 10, 'experience': 45 },
 			req: { 'tool-making': true, 'chieftains': true },
@@ -3387,11 +3397,11 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'building',
-			desc: '@unlocks [village]s@unlocks [stockpile]s<>Simple structures like hovels and huts are easily built and maintained.',
+			desc: '@unlocks [village]s@unlocks [stockpile]s@provide 25 [infrastructure]s<>Simple structures like hovels and huts are easily built and maintained.',
 			icon: [9, 1],
 			cost: { 'insight': 25, 'experience': 100 },
 			req: { 'sedentism': true, 'tool-making': true, 'stockpiling': true, 'burial': true },
-			effects: [{ type: 'provide res', what: { 'infrastructure': 15 } },
+			effects: [{ type: 'provide res', what: { 'infrastructure': 25 } },
 			],
 			chance: 3,
 			category: 'indu'
@@ -3401,7 +3411,7 @@ G.AddData({
 			name: 'curing',
 			desc: '@[firekeeper]s can now prepare [cured meat] and [cured seafood] with [salt], which last much longer<>Storing food with special preparations seems to ward off rot, and comes along with the advent of delicious jerky.',
 			icon: [27, 7],
-			cost: { 'experience': 50 },
+			cost: { 'insight':10,'experience': 50 },
 			req: { 'cooking': true, 'stockpiling': true },
 			category: 'disc'
 		});
@@ -3446,7 +3456,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'code of law',
-			desc: '@provides 10 [authority]@political units generate more [influence]@[clan leader]s provide [authority]<>',//TODO : desc
+			desc: '@provides 10 [authority]@political units generate more [influence]@[clan leader]s provide [authority]<>Ealier than Hammurabi!',
 			icon: [24, 6],
 			cost: { 'insight': 20, 'experience': 75 },
 			req: { 'symbolism': true, 'sedentism': true },
@@ -3457,7 +3467,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'carpentry',
-			desc: '@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>',
+			desc: '@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>Cutting logs makes for more complex structures and more effective use of materials.',
 			icon: [30, 6],
 			cost: { 'insight': 35, 'experience': 100 },
 			req: { 'building': true, 'woodcutting': true },
@@ -4152,7 +4162,7 @@ G.AddData({
 		});
 		new G.Policy({
 			name: 'systematic gathering',
-			desc: 'Improves [gatherer], [hunter] and [fisher] efficiency by 20% and lowers their influence on [resource depletetion by a fair amount]. Consumes 5 [influence] every 20 days; will stop if you run out.',
+			desc: 'Improves [gatherer], [hunter] and [fisher] efficiency by 20% and lowers their influence on [resource depletion] by a fair amount. Consumes 5 [influence] every 20 days; will stop if you run out.',
 			icon: [4, 12, 4, 7],
 			cost: { 'influence': 3 },
 			startMode: 'off',
