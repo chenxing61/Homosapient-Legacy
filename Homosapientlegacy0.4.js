@@ -3433,7 +3433,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'basic drawing',
-			desc: '@Provides 25 [inspiration]s@Unlock new modes for [carver]s and [potter]s to make [recording medium]s by using [insight]s and their methods.<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
+			desc: '@Provides 25 [inspiration]s@Unlock new modes for [carver]s and [potter]s to make [recording medium]s.<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
 			icon: [29, 4, 'H1sheet'],
 			cost: { 'insight': 20 },
 			req: { 'symbolism': true },
@@ -3488,7 +3488,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'quarrying',
-			desc: '@unlocks [quarry,Quarries]<>Strike the earth grind edition. But ever since your people discovered that pouring water down the freshly made holes on the boulders. It is becoming easier and easier.',
+			desc: '@unlocks [quarry,Quarries]<>Strike the earth grind edition. But ever since your people discovered the complex method of pouring water down the freshly made holes on the boulders. It is becoming easier and easier.',
 			icon: [25, 6],
 			cost: { 'insight': 35, 'experience': 150 },
 			req: { 'digging': true, 'building': true },
@@ -3501,7 +3501,7 @@ G.AddData({
 			name: 'masonry',
 			desc: '@unlocks [kiln]s, which produce a variety of goods such as [brick]s@[carver]s can now turn [stone]s into [cut stone] slowly<>Masonry is all the ways you can make stone and slimliar stuff useful and build better relative to only using logs and twigs.',
 			icon: [29, 6],
-			cost: { 'insight': 25, 'experience': 150 },
+			cost: { 'insight': 25, 'experience': 75 },
 			req: { 'building': true, 'pottery': true },
 			effects: [
 			],
@@ -3532,7 +3532,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'landmarks and signs',
-			desc: '@increase the amount of territories you can control<>Distances have to be put into perspective, your people might not have measurements, but they are now closer to that concepts manifestation',
+			desc: '@increase the amount of territories you can control@lowers [resource depletion]<>Distances have to be put into perspective, your people might not have measurements, but they are now closer to that concepts manifestation',
 			icon: [24, 7],
 			cost: { 'insight': 10,'influence':10, 'experience': 50 },
 			req: { 'scouting': true, 'chieftains': true,'basic drawing':true},
