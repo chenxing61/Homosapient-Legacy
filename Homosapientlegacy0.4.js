@@ -262,6 +262,9 @@ G.AddData({
 				if (happiness >= 0) { mult = (Math.pow(2, happiness + 1) / 2); }
 				else mult = 1 / (Math.pow(2, -happiness + 1) / 2);
 				if (infrastructure >= 0.1 * G.getDict('infrastructure').amount) { mult += 0.2 }
+				if (G.checkPolicy('tools type') == 'knapped tools') { mult += 0.01 }
+				else if (G.checkPolicy('tools type') == 'stone tools') { mult += 0.05 } 
+				else if (G.checkPolicy('tools type') == 'metal tools'){ mult += 0.2 }
 			}
 			return mult;
 		}
@@ -284,7 +287,7 @@ G.AddData({
 			'stats': {
 				name: 'Statistics',
 				base: ['baby', 'child', 'adult', 'elder', 'worker', 'sick', 'wounded'],
-				side: ['population', 'infrastructure', 'labour power', 'housing', 'building slot', 'corpse', 'burial spot', 'resource depletion'],
+				side: ['population', 'infrastructure', 'labour power', 'housing', 'building slot', 'corpse', 'burial spot', 'resource depletion','fuel'],
 			},
 			'food': {
 				name: 'Food & Water',
@@ -673,7 +676,7 @@ G.AddData({
 		});
 		new G.Res({
 			name: 'corpse',
-			desc: '[corpse,Corpses] are the remains of [population,People] that died, whether from old age, accident, disease, starvation or war.//Corpses left in the open air tend to spread diseases and make people unhappy, which gets even worse as superstitions develop. To mitigate this, you need a [burial spot] for each corpse.',
+			desc: '[corpse,Corpses] are the remains of [population,People] that died, whether from old age, accident, disease, starvation or war.//Corpses left in the open air tend to spread diseases and make people unhappy, which gets even worse as superstitions develop. To mitigate this, you need a [burial spot] for every 10 corpse.',
 			startWith: 0,
 			icon: [8, 3],
 			tick: function (me, tick) {
@@ -682,7 +685,7 @@ G.AddData({
 					if (me.amount > 0) {
 						//bury slowly
 						if (graves.amount > graves.used) {
-							var amount = Math.min(graves.amount - graves.used, Math.max(10, randomFloor(me.amount * 0.1)));
+							var amount = Math.min(graves.amount - graves.used, Math.max(1, randomFloor(me.amount * 0.1)));
 							graves.used += amount; G.lose('corpse', amount, 'burial');
 							G.gain('happiness', amount * 2, 'burial');
 						}
@@ -1798,6 +1801,27 @@ G.AddData({
 			researchGetDisplayAmount,
 			whenGathered: researchWhenGathered,
 		});
+		new G.Res({
+			name: 'fuel',
+			icon: [13, 7, 'H1sheet'],
+			desc: '[fuel] repersents the capability of your civlization to provide warm and lighting to its [population], the number on the left is the capability you can provide light and warmth to while the one on the right is your current [population] ',
+			category: 'main',
+			getDisplayAmount: function () {
+				return B(this.amount) + '<wbr>/' + B(G.getRes('population').displayedAmount);
+			},
+			tick: function (me, tick) {
+				var amount = 0;
+				if(G.has('cold winter')){
+				amount += G.getRes('fire pit').amount*5;
+				amount += G.getRes('torch').amount*3;}
+				else{
+				amount += G.getRes('fire pit').amount*10;
+				amount += G.getRes('torch').amount*5;}
+				
+				me.amount = amount;
+			},
+
+		});
 		/*=====================================================================================
 		UNITS
 		=======================================================================================*/
@@ -2119,7 +2143,7 @@ G.AddData({
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
 				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
-				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primititve bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
+				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primitive bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
 				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.', use: { 'tools': 1 } },
 			},
@@ -2128,7 +2152,7 @@ G.AddData({
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 7, mode: 'knap', req: { 'bone-working': true } },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone tools': 1 }, every: 3, mode: 'stone tools' },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone weapons': 1 }, every: 3, mode: 'stone weapons' },
-				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'primititve bows' },
+				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'primitive bows' },
 				{ type: 'convert', from: { 'stick': 8 }, into: { 'basket': 1 }, every: 1, mode: 'baskets' },
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2177,7 +2201,7 @@ G.AddData({
 				//any
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 15, mode: 'any' },
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'statuette': 1 }, every: 15, mode: 'any' },
-				{ type: 'convert', from: { 'insight': 1, 'log': 5 }, into: { 'recording medium': 1 }, every: 20, mode: 'any', req: { 'basic drawing': true } },
+				{ type: 'convert', from: { 'log': 5 }, into: { 'recording medium': 1 }, every: 20, mode: 'any', req: { 'basic drawing': true } },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 45, mode: 'any', req: { 'lapidary': true } },
 			],
 			req: { 'carving': true },
@@ -2232,12 +2256,12 @@ G.AddData({
 			gizmos: true,
 			modes: {
 				'drilling wood to start fire': { name: 'drilling wood to start fire', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 24 [stick]s each slowly.' },
-				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'tools': 1 } },
+				'flint and stone': { name: 'flint and stone', icon: [0, 6, 13, 7], desc: 'Craft [fire pit]s from 12 [stick]s each quickly.', use: { 'tools': 1 }, req: { 'stone-knapping': true }},
 				'make torches': { name: 'Start fires from sticks and some herbs', icon: [0, 6, 13, 7], desc: 'Craft [torch]s from 5 [stick]s each.', use: { 'tools': 1 } },
 				'cook': { name: 'Cook', icon: [6, 7, 13, 7], desc: 'Turn [meat] and [seafood] into [cooked meat] and [cooked seafood] in the embers of [fire pit]s', req: { 'cooking': true } },
 				'boiling': { name: 'Boiling', icon: [7, 6, 13, 7], desc: 'Turn [dirty water] into [water] in a [pot] at top of the embers of [fire pit]s', req: { 'boiling': true } , use: { 'pot': 1 }},
 				'cure': { name: 'Cure & smoke', icon: [11, 6, 12, 6], desc: 'Turn 1 [meat] or [seafood] into 2 [cured meat] or [cured seafood] using [salt] in the embers of [fire pit]s', req: { 'curing': true } },
-				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.', use: { 'tools': 1 }},
+				'any': { name: 'Any', desc: 'Conduct all the fire related processes currently avaliable in a slow rate.', use: { 'tools': 1 }, req: { 'stone-knapping': true }},
 
 			},
 			effects: [
@@ -2391,15 +2415,16 @@ G.AddData({
 				'undertaker': { name: 'Undertaker', icon: [13, 2], desc: 'Dig [grave]s as long as there are unburied corpses.' },
 			},
 			effects: [
-				{
-					type: 'function', func: function (me) {
-						var wiggleRoom = 50;
-						var toMake = Math.min(me.amount - me.idle, Math.max(0, (G.getRes('corpse').amount + wiggleRoom) - 10 * (G.getRes('burial spot').amount - 10 * G.getRes('burial spot').used)));
-						if (toMake > 0 && G.canBuyUnitByName('grave', toMake)) {
-							G.buyUnitByName('grave', toMake, true);
+				
+					{type:'function',func:function(me){
+						var wiggleRoom=5;
+						var toMake=Math.min(me.amount-me.idle,Math.max(0,(G.getRes('corpse').amount+wiggleRoom)-(G.getRes('burial spot').amount-G.getRes('burial spot').used)));
+						if (toMake>0)
+						{
+							G.buyUnitByName('grave',toMake,true);
 						}
-					}, mode: 'undertaker'
-				},
+					},mode:'undertaker'
+					},
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', what: { 'resource depletion': 0.001 }, req: { 'side job of the population': 'gatherer' } },
@@ -2655,7 +2680,7 @@ G.AddData({
 			cost: { 'basic building materials': 500 },
 			use: { 'building slot': 1, 'infrastructure': 8 },
 			staff: { 'worker': 3 },
-			upkeep:{'influence': 0.005},
+			upkeep:{'influence': 1},
 			effects: [
 				{ type: 'provide', what: { 'added treasury storage': 1000 } },
 				{ type: 'waste', chance: 1 / 10000 },
@@ -2765,7 +2790,17 @@ G.AddData({
 			//require:{'worker':1,'knapped tools':1},
 			effects: [
 				{ type: 'provide', what: { 'burial spot': 10 } },
-				{ type: 'waste', chance: 1 / 10000 },
+				{type:'function',func:function(me){
+					var buried=G.getRes('burial spot').used;
+					if (buried>10 && G.getRes('burial spot').amount>=buried)
+					{
+						var toDie=Math.min(me.amount,randomFloor(buried*0.0001));
+						me.targetAmount-=toDie;
+						G.wasteUnit(me,toDie);
+						G.getRes('burial spot').amount-=10*toDie;
+						G.getRes('burial spot').used-=10*toDie;
+					}
+				}}
 			],
 			req: { 'burial': true },
 			category: 'civil',
@@ -3087,7 +3122,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'stone-knapping',
-			desc: '@unlocks [artisan]s, which can create [knapped tools]<>[stone-knapping] allows you to make your very first tools - simple rocks that have been smashed against each other to fashion rather crude cleavers, choppers, and hand axes.//Tools have little use by themselves, but may be used in many other industries.',
+			desc: '@unlocks [artisan]s, which can create [knapped tools]@unlocks new modes for [firekeeper]s<>[stone-knapping] allows you to make your very first tools - simple rocks that have been smashed against each other to fashion rather crude cleavers, choppers, and hand axes.//Tools have little use by themselves, but may be used in many other industries.',
 			icon: [3, 1],
 			cost: { 'insight': 1, 'experience': 10, 'stone': 10 },
 			req: { 'use of tool': true },
@@ -3157,7 +3192,7 @@ G.AddData({
 			name: 'oral tradition',
 			desc: '@unlocks [scholar]@unlocks [storyteller]@provides 25 [inspiration]@provides 50 [record]<>[oral tradition] emerges when the members of a tribe gather at night to talk about their day. Stories, ideas, and myths are all shared and passed on from generation to generation.',
 			icon: [5, 1],
-			cost: { 'insight': 7, 'experience': 25 },
+			cost: { 'insight': 5, 'experience': 10 },
 			req: { 'language': true },
 			effects: [
 				{ type: 'provide res', what: { 'inspiration': 25 } },
@@ -4030,8 +4065,8 @@ G.AddData({
 			modes: {
 				'none': { name: 'None', desc: 'Using tools are forbidden'+hatestring },
 				'knapped tools': { name: 'Knapped tools', desc: 'Sharp stones and blunt stones, its better than nothing' },
-				'stone tools': { name: 'Stone tools', desc: 'Stone tools with handles. The earliest peak of ergonomic.' ,req: { 'tool-making': true }},
-				'metal tools': { name: 'Metal tools', desc: 'If you dont use alloy, it is quite weak.<br> But still, it can be whatever you want it to be!',req: { 'smelting': true }},
+				'stone tools': { name: 'Stone tools', desc: 'Stone tools with handles. The earliest peak of ergonomic. It also increases your productivity by 5%' ,req: { 'tool-making': true }},
+				'metal tools': { name: 'Metal tools', desc: 'If you dont use alloy, it is quite weak.<br> But still, it can be whatever you want it to be! It also increases your productivity by 20%',req: { 'smelting': true }},
 			},
 			//effects: [
 			//	{ mode:'none',type: 'make part of', what: ['knapped tools'], parent: '' },

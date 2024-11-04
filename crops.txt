@@ -42,6 +42,7 @@ feature:
 +storage friendly
 
 name: Fabaceae
+sub-section: soybean
 feature:
 +act as vegetables
 +makes oil
@@ -51,14 +52,14 @@ feature:
 name: Solanaceae
 feature:
 +act as vegetables
++synergy with potatoes
 +increases spice and medical herb productions
 -detoxification needed
 
 name: Cucurbitaceae
+sub-section: watermelon
 feature:
-+act as vegetables
-+greatly increases health and produce a lot.
--detoxification needed
++act as large amount of vegetables
 
 name: Brassicaceae
 feature:
