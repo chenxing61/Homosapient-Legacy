@@ -1,4 +1,5 @@
-name: corn
+Crops
+{name: corn
 sub-section: popcorn corn
 feature: 
 +early cross breeding
@@ -94,5 +95,41 @@ feature:
 name:Cocoa
 feature:
 +drinks
-+can be used as money
++can be used as money}
 
+Techs & Traits{
+E.name:Plant Lore in Depth
+
+
+R.name:Main Crop Domestication
+feature:Domesticate a random main Crop
+
+R.name:Side Crop Domestication
+feature:Domesticate a random side Crop
+
+R.name:Hunting Partner
+feature:unlock wolfs Domestication
+
+R.name:Tiny Thiefs
+unlock since storage.
+feature:rat problems.
+(differently sized disaster, decrease health and the amount of stored food.) 
+
+R.name:Alliance with Predators
+feature:Domesticate cats.
+
+R.name:Tame the peaceful beasts.
+feature:Domestication of cows, horses, lama and sheeps.
+
+R.name:Avian Ally
+feature:Domestication of pigeons, eagle, chicken.
+E.name:agriculture
+
+
+E.name:irrigation
+feature:
+
+E.name:milling
+
+E.name:
+}
