@@ -2144,7 +2144,7 @@ G.AddData({
 				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s and [bone]s into [knapped tools].' },
 				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
-				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primitive bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
+				'primitive bow': { name: 'Craft primitive bow', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primitive bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
 				'baskets': { name: 'Weave baskets', icon: [14, 7], desc: 'Turn [stick]s into [basket]s.', req: { 'basket-weaving': true }, use: { 'tools': 1 } },
 				'any': { name: 'Any', desc: 'Make every tools currently avaliable in a slow rate.', use: { 'tools': 1 } },
 			},
@@ -4716,7 +4716,7 @@ G.AddData({
 			desc: '[sandy soil] is the result of a [rocky substrate] eroded by wind over long periods of time. [sand] is plentiful here.',
 			icon: [12, 10],
 			res: {
-				'dig': { 'sand': 1 },
+				'dig': { 'sand': 10 },
 			},
 			noAmount: true,
 			mult: 5,
