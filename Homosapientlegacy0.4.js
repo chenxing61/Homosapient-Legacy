@@ -887,7 +887,6 @@ G.AddData({
 			tick: function (me, tick) {
 				var amount = 0;
 				amount += G.getRes('basket').amount * 10;
-				amount += G.getRes('pot').amount * 25;
 				amount += G.getRes('ice').amount;
 				amount += G.getRes('added food storage').amount;
 				me.amount = amount;
@@ -1629,6 +1628,7 @@ G.AddData({
 			desc: 'Each basket stores 10 [food].//Will decay over time.',
 			icon: [14, 7],
 			category: 'misc',
+			displayUsed: true,
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.0025;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
@@ -1638,6 +1638,7 @@ G.AddData({
 			name: 'pot',
 			desc: 'Each pot stores 25 [food].//Will decay slowly over time.',
 			icon: [13, 5],
+			displayUsed: true,
 			category: 'misc',
 			tick: function (me, tick) {
 				var toSpoil = me.amount * 0.0005;
@@ -2140,7 +2141,7 @@ G.AddData({
 			
 			gizmos: true,
 			modes: {
-				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s into [knapped tools].' },
+				'knap': { name: 'Knap flint', icon: [0, 9], desc: 'Turn [stone]s and [bone]s into [knapped tools].' },
 				'stone tools': { name: 'Craft stone tools', icon: [1, 9], desc: 'Turn [stone]s and [stick]s into [stone tools].', req: { 'tool-making': true }, use: { 'tools': 1 } },
 				'stone weapons': { name: 'Craft stone weapons', icon: [5, 9], desc: 'Turn [stone]s and [stick]s into [stone weapons].', req: { 'spears': true }, use: { 'tools': 1 } },
 				'primititve bows': { name: 'Craft primititve bows', icon: [6, 9], desc: 'Turn [stone]s and [stick]s into [primitive bow]s.', req: { 'bows': true }, use: { 'tools': 1 } },
@@ -2152,7 +2153,7 @@ G.AddData({
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'knapped tools': 1 }, every: 7, mode: 'knap', req: { 'bone-working': true } },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone tools': 1 }, every: 3, mode: 'stone tools' },
 				{ type: 'convert', from: { 'stick': 1, 'stone': 1 }, into: { 'stone weapons': 1 }, every: 3, mode: 'stone weapons' },
-				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 1, mode: 'primitive bows' },
+				{ type: 'convert', from: { 'stick': 4, 'stone': 1 }, into: { 'primitive bow': 1 }, every: 7, mode: 'primitive bows' },
 				{ type: 'convert', from: { 'stick': 8 }, into: { 'basket': 1 }, every: 1, mode: 'baskets' },
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2190,7 +2191,7 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'stone statuettes' },
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'bone statuettes' },
-				{ type: 'convert', from: { 'log': 5 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
+				{ type: 'convert', from: { 'lumber': 10 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
 				{ type: 'convert', from: { 'stone': 10 }, into: { 'cut stone': 1 }, every: 15, mode: 'cut stone' },
 				{ type: 'convert', from: { 'cut stone': 1 }, into: { 'stone': 9 }, every: 5, mode: 'smash cut stone' },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 15, mode: 'gem blocks' },
@@ -2201,7 +2202,7 @@ G.AddData({
 				//any
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 15, mode: 'any' },
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'statuette': 1 }, every: 15, mode: 'any' },
-				{ type: 'convert', from: { 'log': 5 }, into: { 'recording medium': 1 }, every: 20, mode: 'any', req: { 'basic drawing': true } },
+				{ type: 'convert', from: { 'lumber': 10 }, into: { 'recording medium': 1 }, every: 20, mode: 'any', req: { 'basic drawing': true } },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 45, mode: 'any', req: { 'lapidary': true } },
 			],
 			req: { 'carving': true },
@@ -2229,7 +2230,7 @@ G.AddData({
 				{ type: 'convert', from: { 'hide': 3 }, into: { 'primitive clothes': 1 }, every: 8, mode: 'sew hide clothing' },
 				{ type: 'convert', from: { 'herb': 30 }, into: { 'primitive clothes': 1 }, every: 20, mode: 'sew grass clothing' },
 				{ type: 'convert', from: { 'herb': 25 }, into: { 'fiber': 1 }, every: 20, mode: 'weave fiber' },
-				{ type: 'convert', from: { 'fiber':2,'leather': 1}, into: { 'basic clothes': 1 }, every: 20, mode: 'weave clothing' },
+				{ type: 'convert', from: { 'fiber':2,'leather': 1}, into: { 'basic clothes': 3 }, every: 20, mode: 'weave clothing' },
 				{ type: 'convert', from: { 'hide': 1, 'water': 5, 'salt': 1, 'log': 0.1 }, into: { 'leather': 1 }, every: 15, mode: 'make leather' },
 				{ type: 'convert', from: { 'hide': 1, 'dirty water': 5, 'herb': 10 }, into: { 'leather': 1 }, every: 30, mode: 'cheap make leather' },
 
@@ -2313,9 +2314,9 @@ G.AddData({
 				'preserve knowledge': { name: 'Carve knowledge by firing them onto the clay ', icon: [1, 7, 13, 5], desc: 'Craft [recording medium]s from 50 [clay] each; requires [fire pit]s.' },
 			},
 			effects: [
-				{ type: 'convert', from: { 'clay': 3, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 1, mode: 'any' },
-				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 1, mode: 'any' },
-				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 1, mode: 'preserve knowledge' },
+				{ type: 'convert', from: { 'clay': 3, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 2, mode: 'any' },
+				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 2, mode: 'any' },
+				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 2, mode: 'preserve knowledge' },
 
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
 				{ type: 'gather', context: 'waterGather', what: { 'water': 2, 'dirty water': 4 }, amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2695,7 +2696,7 @@ G.AddData({
 			name: 'granary',
 			desc: '@provides 1000 [food storage]<>A grain storage building built on stilts to prevent pests from getting in.',
 			icon: [23, 4],
-			cost: { 'archaic building materials': 50, 'basic building materials': 50, 'pot': 15 },
+			cost: { 'archaic building materials': 50, 'basic building materials': 50, 'pot': 50 },
 			use: { 'building slot': 1, 'infrastructure': 4 },
 			//require:{'worker':2,'stone tools':2},
 			effects: [
