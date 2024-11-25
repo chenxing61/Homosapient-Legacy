@@ -2395,7 +2395,7 @@ G.AddData({
 			effects: [
 				{ type: 'gather', what: { 'influence': 0.1 } },
 				{ type: 'provide', what: { 'authority': 2 } },
-				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
+				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } },
 				{ type: 'provide', value: 1.1, req: { 'authority': 1 } }
 			],
 			limitPer: { 'population': 500 },
