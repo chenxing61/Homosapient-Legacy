@@ -2396,6 +2396,7 @@ G.AddData({
 				{ type: 'gather', what: { 'influence': 0.1 } },
 				{ type: 'provide', what: { 'authority': 2 } },
 				{ type: 'mult', value: 1.1, req: { 'arctic origin': true } }
+				{ type: 'provide', value: 1.1, req: { 'authority': 1 } }
 			],
 			limitPer: { 'population': 500 },
 			req: { 'clans': true },
@@ -3012,15 +3013,14 @@ G.AddData({
 		//Origins
 		new G.Tech({
 			name: 'forest origin',
-			desc: 'Your people came from tribes of the forests, which granted them better eyesights in gathering.<>@[gatherer] efficiency increased by 10%.',
+			desc: '@[gatherer] efficiency increased by 10%.<>Your people came from tribes of the forests, which granted them better eyesights in gathering.',
 			icon: [4, 6, 'H1sheet'],
-
 			req: { 'tribalism': false },
 			category: 'tradi'
 		});
 		new G.Tech({
 			name: 'mountain origin',
-			desc: 'Your people came from tribes of the mountains, which granted them tougher sprits to scour the terrain .<>@[wanderer],[scout] efficiency increased by 10%.',
+			desc: '@[wanderer],[scout] efficiency increased by 10%.<>Your people came from tribes of the mountains, which granted them tougher sprits to scour the terrain.',
 			icon: [2, 6, 'H1sheet'],
 
 			req: { 'tribalism': false },
@@ -3028,7 +3028,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'desert origin',
-			desc: 'Your people came from tribes of the deserts, which granted them toughness to survive.<>@[food]&[water] rationing policy affect happiness less.',
+			desc: '@[food]&[water] rationing policy affect happiness less.<>Your people came from tribes of the deserts, which granted them toughness to survive.',
 			icon: [4, 9, 'H1sheet'],
 
 			req: { 'tribalism': false },
@@ -3036,7 +3036,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'jungle origin',
-			desc: 'Your people came from tribes of the jungle, which granted them hightened sense to sense danger.<>@[hunter] efficiency increased by 15%.',
+			desc: '@[hunter] efficiency increased by 15%.<>Your people came from tribes of the jungle, which granted them hightened sense to sense danger.',
 			icon: [4, 7, 'H1sheet'],
 
 			req: { 'tribalism': false },
@@ -3044,7 +3044,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'swamp origin',
-			desc: 'Your people came from tribes of the marsh, which granted them a...unique way of living.<>@Enables you to eat [bugs] with no penalty at start.',
+			desc: '@Enables you to eat [bugs] with no penalty at start.<>Your people came from tribes of the marsh, which granted them a...unique way of living.',
 			icon: [14, 6, 'H1sheet'],
 			effects: [
 				{ type: 'function', func: function () { G.getDict('bugs').turnToByContext['eating']['happiness'] = 0.05; } },
@@ -3054,7 +3054,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'arctic origin',
-			desc: 'Your people came from tribes of the arctic, which granted them a determination to survive no matter the cost.<>@leader gain increased by 10%.',
+			desc: '@leader jobs like [chieftain] and [clan leader] efficiency increased.<>Your people came from tribes of the arctic, which granted them a determination to survive no matter the cost.',
 			icon: [12, 7, 'H1sheet'],
 			req: { 'tribalism': false },
 			category: 'tradi'
@@ -3629,8 +3629,6 @@ G.AddData({
 			],
 			category: 'indu'
 		});
-		
-
 		new G.Tech({
 			name: 'lapidary',
 			desc: '@[carver]s can now make [gem block]s out of [gems]<>',//TODO : desc
@@ -3641,10 +3639,6 @@ G.AddData({
 			],
 			category: 'indu'
 		});
-
-		
-		
-		
 		new G.Tech({
 			name: 'cities',
 			desc: '@unlocks [city]s<>',
@@ -3655,11 +3649,6 @@ G.AddData({
 			],
 			category: 'indu'
 		});
-
-
-		
-
-
 		new G.Tech({
 			name: 'monument-building',
 			desc: '@unlocks the [mausoleum], an early wonder<>',
@@ -3694,7 +3683,7 @@ G.AddData({
 		
 		new G.Tech({
 			name: 'steel-making',
-			desc: '@[furnace]s can now make [strong metal ingot]s from [iron ore] and [coal]<>',//TODO : desc
+			desc: '@[furnace]s can now make [strong metal ingot]s from [iron ore] and [coal]<>I dont think you know how to reach temperature that high?',//TODO : desc
 			icon: [30, 5],
 			cost: { 'insight': 200, 'experience': 1000, 'science': 1 },
 			req: { 'iron-working': true },
@@ -3705,7 +3694,7 @@ G.AddData({
 		new G.Tech({
 			name: 'boat building',
 			//TODO : in the future, boats will be units or resources
-			desc: '@allows full ocean exploring<>',
+			desc: '@allows full ocean exploring<>Your people have made a bigger better version of canoe!',
 			icon: [28, 7],
 			cost: { 'insight': 50, 'experience': 200 },
 			req: { 'canoes': true, 'carpentry': true, 'construction': true },
@@ -3726,7 +3715,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'mausoleum complete',
-			desc: '@Are you in the afterlife, or are you merely being put back to all those years ago just with a different name?<>',
+			desc: '@Passively gain a trickle of [experience]<>Are you in the afterlife, or are you merely being put back to all those years ago just with a different name?',
 			icon: [26, 8, 'H1sheet'],
 			cost: { 'insight': 999 },
 			req: { 'tribalism': false },
