@@ -20,20 +20,6 @@ new G.Tech({
     ],
 });
 
-new G.Unit({
-	name:'primitive planter',
-	desc:'@Grow crops from the pile of spoiled food at slow rate.',
-	icon:[21,3],
-	cost:{'anarchic building materials':100},
-	use:{'land':1},
-	//require:{'worker':3,'metal tools':3},
-    effects:[
-		{type:'convert',from:{'spoiled food':50},into:{'wheat':0.5,'rice':0.5,'vegetable':0.1,'fruit':0.1},every:5,mode:'knap'},
-		{type:'waste',chance:0.001/1000},
-    ],
-	req:{'early farming':true},
-	category:'production',
-});
 
 new G.Tech({
     name:'domestication of wheat',
@@ -189,7 +175,7 @@ new G.Res({
 });
 
 new G.Unit({
-    name:'farmer',
+    name:'farm',
     desc:'@The backbone of a civlization, mass producing food with adquate [farm],[orchard] and [pens].',
     icon:[0,0],
     cost:{},
@@ -227,21 +213,6 @@ new G.Unit({
 	category:'production',
 });
 
-
-///Settlement overhaul,make the building cost slots
-
-    new G.Res({
-		name:'building slot',
-		desc:'Places in the settlement where you can properly build the building and workers can fit in without many problems.',
-		icon:[14,4],
-		displayUsed:true,
-		getDisplayAmount:function()
-		{
-			return B(this.displayedUsedAmount)+'<wbr>/'+B(this.displayedAmount);
-		},
-	});
-
-	{type:'waste',chance:0.1/1000,req:{'earthquake':true}}
 
 ///Order{
 	G.resCategories={
@@ -296,22 +267,6 @@ new G.Unit({
             }
         },
     });
-///More buildings
-new G.Unit({
-    name:'Library',
-    desc:'@provides 10 [wisdom]<>A place for preserving infomation medium, the most popular one being books.//Use up 2 knowledgeable men to classify and check if any morons did not place the book right',
-    icon:[12,2],
-    cost:{'basic building materials':500,},
-    use:{'land':1,'bulding slot':1,'worker':2},
-    //require:{'worker':2,'knapped tools':2},
-    effects:[
-        {type:'provide',what:{'added food storage':400}},
-        {type:'provide',what:{'added material storage':400}},
-        {type:'waste',chance:0.8/1000}
-    ],
-    req:{'stockpiling':true},
-    category:'storage',
-});
 
 ///Wonder
 	new G.Unit({

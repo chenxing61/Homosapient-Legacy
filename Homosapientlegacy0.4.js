@@ -724,7 +724,7 @@ G.AddData({
 		});
 		new G.Res({
 			name: 'land',
-			desc: 'Each tile of territory you own grants you some [land] (200 per fully-explored non-ocean tile, by default) upon which you can construct buildings. If for some reason you find yourself with less land than your buildings are using, some of them will start to slowly crumble away.//The number on the left is how much land is occupied, while the number on the right is how much land you have in total.',
+			desc: 'Each tile of territory you own grants you some [land] (200 per fully-explored non-ocean tile, by default) upon which you can construct buildings. If for some reason you find yourself with less land than your buildings are using, your building will eventually crumble as time goes. Remeber to maintain them.//The number on the left is how much land is occupied, while the number on the right is how much land you have in total.',
 			icon: [14, 4],
 			displayUsed: true,
 			tick: function (me) {
