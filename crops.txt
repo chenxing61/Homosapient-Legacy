@@ -124,13 +124,17 @@ feature:Domestication of cows, horses, lama and sheeps.
 
 R.name:Avian Ally
 feature:Domestication of pigeons, eagle, chicken.
-E.name:agriculture
-
 
 E.name:irrigation
 feature:
 
 E.name:milling
 
-E.name:
+E.name:brewing
+
+E.name:crossbreeding
+
+E.name:detoxiation
+
+E.name:tools for harvest
 }
