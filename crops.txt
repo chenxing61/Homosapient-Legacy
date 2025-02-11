@@ -1,4 +1,10 @@
 Crops
+
+Gameplay feature:
+Balance between food production to population and farmable lands.
+Extended positive effects from being able to mass produce foods.
+population => power and states
+
 {name: corn
 sub-section: popcorn corn
 feature: 
@@ -102,27 +108,28 @@ Techs & Traits{
 E.name:Plant Lore in Depth
 
 
-R.name:Main Crop Domestication
+R.name:main crop domestication
 feature:Domesticate a random main Crop
 
-R.name:Side Crop Domestication
+R.name:side crop domestication
 feature:Domesticate a random side Crop
 
-R.name:Hunting Partner
+R.name:throw a bone
 feature:unlock wolfs Domestication
 
-R.name:Tiny Thiefs
-unlock since storage.
+R.name:tiny thiefs
+unlocks from storaging a lot of food.
 feature:rat problems.
 (differently sized disaster, decrease health and the amount of stored food.) 
 
-R.name:Alliance with Predators
+R.name:uninvited beasts 
+unlocks from rat problems
 feature:Domesticate cats.
 
-R.name:Tame the peaceful beasts.
-feature:Domestication of cows, horses, lama and sheeps.
+R.name:graze the fodder, ye filthy animals
+feature:Domestication of cows, horses, lama and sheeps/goats.
 
-R.name:Avian Ally
+R.name:avian ally
 feature:Domestication of pigeons, eagle, chicken.
 
 E.name:irrigation
@@ -130,11 +137,17 @@ feature:
 
 E.name:milling
 
+E.name:tools for harvest
+
 E.name:brewing
 
 E.name:crossbreeding
 
 E.name:detoxiation
 
-E.name:tools for harvest
+E.name:wolf domestication
+
+E.name:cattle domestication
+
+E.name:chicken domestication
 }
