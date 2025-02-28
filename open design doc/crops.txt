@@ -14,7 +14,6 @@ feature:
 +side product can be used to feed animals
 -cant make alcohol properly (chicha)
 
-
 name: potato
 sub-section: yam
 feature: 
@@ -103,51 +102,3 @@ name:Cocoa
 feature:
 +drinks
 +can be used as money}
-
-Techs & Traits{
-E.name:Plant Lore in Depth
-
-
-R.name:main crop domestication
-feature:Domesticate a random main Crop
-
-R.name:side crop domestication
-feature:Domesticate a random side Crop
-
-R.name:throw a bone
-feature:unlock wolfs Domestication
-
-R.name:tiny thiefs
-unlocks from storaging a lot of food.
-feature:rat problems.
-(differently sized disaster, decrease health and the amount of stored food.) 
-
-R.name:uninvited beasts 
-unlocks from rat problems
-feature:Domesticate cats.
-
-R.name:graze the fodder, ye filthy animals
-feature:Domestication of cows, horses, lama and sheeps/goats.
-
-R.name:avian ally
-feature:Domestication of pigeons, eagle, chicken.
-
-E.name:irrigation
-feature:
-
-E.name:milling
-
-E.name:tools for harvest
-
-E.name:brewing
-
-E.name:crossbreeding
-
-E.name:detoxiation
-
-E.name:wolf domestication
-
-E.name:cattle domestication
-
-E.name:chicken domestication
-}

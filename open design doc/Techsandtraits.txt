@@ -1,0 +1,61 @@
+Techs & Traits{
+E.name:Plant Lore in Depth
+
+
+R.name:main crop domestication
+feature:Domesticate a random main Crop
+(able to choose after wonder)
+
+R.name:side crop domestication
+feature:Domesticate a random side Crop
+(able to choose after wonder)
+
+R.name:throw a bone
+feature:unlock wolfs Domestication
+
+R.name:tiny thiefs
+unlocks from storaging a lot of food.
+feature:rat problems.
+(differently sized disaster, decrease health and the amount of stored food.) 
+
+R.name:tiny predator 
+unlocks from rat problems
+feature:Domesticate cats.
+
+R.name:Husbandry 
+feature:Domestication of cows, horses, lama and sheeps/goats.
+
+R.name:avian ally
+feature:Domestication of pigeons, eagle, chicken.
+
+E.name:irrigation
+feature:River increase production or just extra building that increases irrigation as its own stat
+
+E.name:milling
+feature:Production of flour and soy
+
+E.name:compsing
+feature:Adds ranch to be a positive factor for efficiency.
+
+E.name:tools for harvest
+feature:Increase farm efficiency by increased metal tool useage
+
+E.name:brewing
+feature:Production of alcohol from fruits and grains
+
+E.name:crossbreeding
+feature:Increase farm's adaptability, production, decrease required manpower on farming or loss in disaster
+
+E.names: Tier I - V adaptability, production, and vitality
+E.name:detoxiation
+feature:Cut the production chain of needing to detoxicify.
+
+E.name:wolf domestication
+feature:Add dog which increases hunting efficiency
+
+E.name:cattle domestication
+feature:Add cattle which can be breed into producing farming workforce and provide meats and leather
+
+E.name:chicken domestication
+feature:Add chicken, a main source of meat and eggs
+}
