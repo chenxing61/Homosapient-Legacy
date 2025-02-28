@@ -1,6 +1,7 @@
 Techs & Traits{
-E.name:Plant Lore in Depth
 
+E.name:Plant Lore in Depth
+feature:Unlock Agriculture traits and tech
 
 R.name:main crop domestication
 feature:Domesticate a random main Crop
@@ -11,18 +12,20 @@ feature:Domesticate a random side Crop
 (able to choose after wonder)
 
 R.name:throw a bone
+cost: 100 bone and 300 exp
 feature:unlock wolfs Domestication
 
 R.name:tiny thiefs
-unlocks from storaging a lot of food.
+unlocks from spoiled food and requires storage techs
 feature:rat problems.
 (differently sized disaster, decrease health and the amount of stored food.) 
 
 R.name:tiny predator 
-unlocks from rat problems
+unlocks from rat problems and 300 exp
 feature:Domesticate cats.
 
-R.name:Husbandry 
+R.name:Possibility of Husbandry
+unlocks from main crops domestication 
 feature:Domestication of cows, horses, lama and sheeps/goats.
 
 R.name:avian ally
