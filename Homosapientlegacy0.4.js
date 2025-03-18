@@ -2182,7 +2182,7 @@ G.AddData({
 			modes: {
 				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { 'tools': 1 } },
 				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { 'tools': 1 } },
-				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [insight] and [log]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'basic drawing': true } },
+				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [log]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'basic drawing': true } },
 				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'tools': 1 } },
 				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'tools': 1 } },
 				'gem blocks': { name: 'Carve gem blocks', icon: [7, 9], desc: 'Slowly turn 10 [gems] into 1 [gem block].', req: { 'lapidary': true }, use: { 'tools': 1 } },
@@ -2191,7 +2191,7 @@ G.AddData({
 			effects: [
 				{ type: 'convert', from: { 'stone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'stone statuettes' },
 				{ type: 'convert', from: { 'bone': 1 }, into: { 'statuette': 1 }, every: 5, mode: 'bone statuettes' },
-				{ type: 'convert', from: { 'lumber': 10 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
+				{ type: 'convert', from: { 'log': 10 }, into: { 'recording medium': 1 }, every: 10, mode: 'carve knowledge' },
 				{ type: 'convert', from: { 'stone': 10 }, into: { 'cut stone': 1 }, every: 15, mode: 'cut stone' },
 				{ type: 'convert', from: { 'cut stone': 1 }, into: { 'stone': 9 }, every: 5, mode: 'smash cut stone' },
 				{ type: 'convert', from: { 'gems': 10 }, into: { 'gem block': 1 }, every: 15, mode: 'gem blocks' },
@@ -2314,8 +2314,8 @@ G.AddData({
 				'preserve knowledge': { name: 'Carve knowledge by firing them onto the clay ', icon: [1, 7, 13, 5], desc: 'Craft [recording medium]s from 50 [clay] each; requires [fire pit]s.' },
 			},
 			effects: [
-				{ type: 'convert', from: { 'clay': 3, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 2, mode: 'any' },
-				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 2, mode: 'any' },
+				{ type: 'convert', from: { 'clay': 3, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 3, mode: 'any' },
+				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.01 }, into: { 'pot': 1 }, every: 3, mode: 'any' },
 				{ type: 'convert', from: { 'mud': 10, 'fire pit': 0.05 }, into: { 'recording medium': 1 }, every: 2, mode: 'preserve knowledge' },
 
 				{ type: 'gather', context: 'foodGather', amount: 0.25, max: 1, req: { 'side job of the population': 'gatherer' } },
@@ -2614,7 +2614,7 @@ G.AddData({
 			},
 			effects: [
 				{ type: 'convert', from: { 'log': 1 }, into: { 'lumber': 3 }, repeat: 2, mode: 'lumber' },
-				{ type: 'convert', from: { 'log': 1 }, into: { 'stick': 21 }, repeat: 2, mode: 'lumber' },
+				{ type: 'convert', from: { 'log': 1 }, into: { 'stick': 21 }, repeat: 2, mode: 'Cut sticks' },
 			],
 			gizmos: true,
 			req: { 'carpentry': true },
