@@ -1455,7 +1455,7 @@ G.AddData({
 			icon: [2, 9],
 			category: 'misc',
 			tick: function (me, tick) {
-				var toSpoil = me.amount * 0.003;
+				var toSpoil = me.amount * 0.001;
 				var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
 			},
 		});
@@ -2182,7 +2182,7 @@ G.AddData({
 			modes: {
 				'stone statuettes': { name: 'Carve stone statuettes', icon: [8, 9], desc: 'Turn [stone]s into [statuette]s.', use: { 'tools': 1 } },
 				'bone statuettes': { name: 'Carve bone statuettes', icon: [8, 9], desc: 'Turn [bone]s into [statuette]s.', use: { 'tools': 1 } },
-				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [log]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'basic drawing': true } },
+				'carve knowledge': { name: 'Carve knowledge', icon: [8, 9], desc: 'Turn [lumber]s into [recording medium] slowly', use: { 'tools': 1 }, req: { 'carpentry': true } },
 				'cut stone': { name: 'Cut stones', icon: [0, 8], desc: 'Slowly turn 10 [stone]s into 1 [cut stone].', req: { 'masonry': true }, use: { 'tools': 1 } },
 				'smash cut stone': { name: 'Smash stone blocks', icon: [2, 6], desc: 'Turn [cut stone]s into 9 [stone]s each.', req: { 'quarrying': true }, use: { 'tools': 1 } },
 				'gem blocks': { name: 'Carve gem blocks', icon: [7, 9], desc: 'Slowly turn 10 [gems] into 1 [gem block].', req: { 'lapidary': true }, use: { 'tools': 1 } },
@@ -2817,7 +2817,7 @@ G.AddData({
 			effects: [
 				{ type: 'provide', what: { 'added food storage': 400 } },
 				{ type: 'provide', what: { 'added material storage': 400 } },
-				{ type: 'waste', chance: 50 / 10000 }
+				{ type: 'waste', chance: 5 / 1000 }
 			],
 			req: { 'stockpiling': true },
 			category: 'storage',
@@ -2835,8 +2835,8 @@ G.AddData({
 				{ type: 'provide', what: { 'building slot': 5 } },
 				{ type: 'waste', chance: 4 / 10000 },
 				{ type: 'waste', chance: 6 / 10000, req: { 'house fire': true }},
-				{ type: 'waste', chance: 10 / 10000, req: { 'earthquake': true }},
-				{ type: 'waste', chance: 10 / 10000, req: { 'flood': true }}
+				{ type: 'waste', chance: 1 / 1000, req: { 'earthquake': true }},
+				{ type: 'waste', chance: 1 / 1000, req: { 'flood': true }}
 				
 			],
 			req: { 'sedentism': true },
@@ -3469,7 +3469,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'basic drawing',
-			desc: '@Provides 25 [inspiration]s@Unlock new modes for [carver]s and [potter]s to make [recording medium]s.<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
+			desc: '@Provides 25 [inspiration]s@Unlock new modes for [potter]s to make [recording medium]s.<>Enable your civilzation to draw simple shapes to express their idea and perspective.<>',
 			icon: [29, 4, 'H1sheet'],
 			cost: { 'insight': 20 },
 			req: { 'symbolism': true },
@@ -3503,7 +3503,7 @@ G.AddData({
 		});
 		new G.Tech({
 			name: 'carpentry',
-			desc: '@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>Cutting logs makes for more complex structures and more effective use of materials.',
+			desc: '@unlocks [carpenter workshop]s, which can process [log]s into [lumber] and produce wooden goods@unlocks [barn]s (with [stockpiling])<>Cutting logs makes for more complex structures and more effective use of materials.','@unlocks new mode for [carver]s to make [recording medium]'
 			icon: [30, 6],
 			cost: { 'insight': 35, 'experience': 100 },
 			req: { 'building': true, 'woodcutting': true },
