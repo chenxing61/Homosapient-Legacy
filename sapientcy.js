@@ -91,7 +91,7 @@ G.fullApplyUnitEffects = function (me, type, amountParam) {
 									//i hope i didn't mess up somewhere in there
 									var amountToMake = myAmount;
 									for (var ii in effect.from) {
-										amountToMake = Math.min(amountToMake, G.getRes(ii).Amount / (effect.from[ii] * myAmount));
+										amountToMake = Math.min(amountToMake, G.getRes(ii).amount / (effect.from[ii] * myAmount));
 									}
 
 									amountToMake = randomFloor(Math.min(1, amountToMake) * myAmount);
@@ -121,10 +121,10 @@ G.fullApplyUnitEffects = function (me, type, amountParam) {
 							}
 							else if (effect.type == 'explore') {
 								var limit = 500;
-								limit += ((G.has("landmarks and signs") ? 3000 : 0) + (G.has("scouting") ? 1000 : 0));
-								if (G.getRes("land").amount < limit && G.isMap == 0) {
-									if (effect.explored) G.exploreOwnedTiles += Math.random() * effect.explored * myAmount;
-									if (effect.unexplored) G.exploreNewTiles += Math.random() * effect.unexplored * myAmount;
+								limit += ((G.has("scouting") ? 1000 : 0) + (G.has("landmarks and signs") ? 3000 : 0));
+								if (G.getRes("land").amount < limit) {
+									if (effect.explored) G.exploreOwnedTiles+=Math.random()*effect.explored*myAmount;
+									if (effect.unexplored) G.exploreNewTiles+=Math.random()*effect.unexplored*myAmount;
 									G.getDict('wanderer').effects[G.unitByName['wanderer'].effects.length - 1].chance = 0.01;
 									G.getDict('scout').effects[G.unitByName['scout'].effects.length - 1].chance = 0.01;
 								}

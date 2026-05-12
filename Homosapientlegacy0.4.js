@@ -4759,6 +4759,7 @@ G.AddData({
 			res: {
 				'waterGather': { 'water': 12 },
 				'fish': { 'seafood': 4 },
+				'dig' : { 'sand' : 6, 'clay': 2 },
 			},
 			mult: 5,
 		});
@@ -4769,6 +4770,7 @@ G.AddData({
 			res: {
 				'waterGather': { 'water': 8 },
 				'fish': { 'seafood': 5 },
+				'dig' : { 'sand' : 6, 'clay': 2 },
 			},
 			mult: 5,
 		});
