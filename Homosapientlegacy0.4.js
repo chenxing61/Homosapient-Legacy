@@ -22,10 +22,10 @@ G.AddData({
 		G.funcs['new game blurb'] = function () {
 			var str =
 				'<b>Your tribe :</b><div class="thingBox">' +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('adult')) + '"></div><div class="freelabel">x5</div>', '7 Adults') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('adult')) + '"></div><div class="freelabel">x5</div>', '5 Adults') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('elder')) + '"></div><div class="freelabel">x1</div>', '1 Elder') +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('child')) + '"></div><div class="freelabel">x2</div>', '4 Children') +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('baby')) + '"></div><div class="freelabel">x2</div>', 'A baby to take care of') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('child')) + '"></div><div class="freelabel">x2</div>', '2 Children') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('baby')) + '"></div><div class="freelabel">x2</div>', '2 babies to take care of') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('cured meat')) + '"></div><div class="freelabel">x250</div>', '250 cured meat') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('water')) + '"></div><div class="freelabel">x250</div>', '250 Water') +
 				'</div>' +
@@ -611,7 +611,7 @@ G.AddData({
 		new G.Res({
 			name: 'baby',
 			desc: '[baby,Babies] are what happens when you have 2 or more [adult,Adults] left to their own devices.//Any 2 adults can have babies, even if they are working. [elder]s can also have babies, though much slower.//[happiness] affects how many babies your people make.//Over time, babies will grow into [child,Children].//Babies drink and eat half as much as children.',
-			startWith: 1,
+			startWith: 2,
 			visible: true,
 			partOf: 'population',
 			icon: [2, 3],
@@ -619,7 +619,7 @@ G.AddData({
 		new G.Res({
 			name: 'child',
 			desc: '[child,Children] grow from [baby,Babies] over time.//After a while, they will grow up into [adult,Adults].//Children drink and eat half as much as adults.//Children do not count as [worker,Workers], unless special measures are in place.',
-			startWith: 3,
+			startWith: 2,
 			visible: true,
 			partOf: 'population',
 			icon: [3, 3],
@@ -634,7 +634,7 @@ G.AddData({
 		new G.Res({
 			name: 'adult',
 			desc: '[adult,Adults] grow from [child,Children] over time.//They eventually age into [elder,Elders].//Generally, adults make up most of your [worker,workforce].',
-			startWith: 7,
+			startWith: 5,
 			visible: true,
 			partOf: 'population',
 			icon: [4, 3],
@@ -649,7 +649,7 @@ G.AddData({
 		new G.Res({
 			name: 'elder',
 			desc: '[adult,Adults] that grow old are [elder,Elders].//Elders may end up [corpse,dying] of old age.//Elders do not count as [worker,Workers], unless special measures are in place.',
-			startWith: 2,
+			startWith: 1,
 			visible: true,
 			partOf: 'population',
 			icon: [5, 3],
