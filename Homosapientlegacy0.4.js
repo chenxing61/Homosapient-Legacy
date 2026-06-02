@@ -2757,6 +2757,7 @@ G.AddData({
 				{ type: 'gather', context: 'quarry', amount: 5, max: 10, every: 3, mode: 'quarry' },
 				{ type: 'gather', context: 'quarry', what: { 'cut stone': 1 }, max: 5, notMode: 'off' },
 				{ type: 'gather', context: 'mine', amount: 0.005, max: 0.05, notMode: 'off' },
+				{ type: 'gather', context: 'quarry', amount: 10, max: 30, every: 3, mode: 'advanced quarry' },
 				{ type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.01, '[X] [people].', 'quarry collapsed, wounding its workers', 'quarries collapsed, wounding their workers'), chance: 1 / 50 },
 			],
 			gizmos: true,
