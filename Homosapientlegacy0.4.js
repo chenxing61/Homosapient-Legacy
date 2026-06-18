@@ -22,10 +22,10 @@ G.AddData({
 		G.funcs['new game blurb'] = function () {
 			var str =
 				'<b>Your tribe :</b><div class="thingBox">' +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('adult')) + '"></div><div class="freelabel">x5</div>', '7 Adults') +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('elder')) + '"></div><div class="freelabel">x1</div>', '1 Elder') +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('child')) + '"></div><div class="freelabel">x2</div>', '4 Children') +
-				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('baby')) + '"></div><div class="freelabel">x2</div>', 'A baby to take care of') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('adult')) + '"></div><div class="freelabel">x7</div>', '7 Adults') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('elder')) + '"></div><div class="freelabel">x2</div>', '2 Elders') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('child')) + '"></div><div class="freelabel">x3</div>', '3 Children') +
+				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('baby')) + '"></div><div class="freelabel">x1</div>', 'A baby to take care of') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('cured meat')) + '"></div><div class="freelabel">x250</div>', '250 cured meat') +
 				G.textWithTooltip('<div class="icon freestanding" style="' + G.getIconUsedBy(G.getRes('water')) + '"></div><div class="freelabel">x250</div>', '250 Water') +
 				'</div>' +
